@@ -1,0 +1,122 @@
+{
+  "version": "0.2.1",
+  "time_utc": "2026-10-31T14:20:21.447955+00:00",
+  "classic_tests": {
+    "tests": 108,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "modern_tests": {
+    "tests": 17,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "simulated_workflows": 9,
+  "simulated_rounds": 41,
+  "synthetic_observations": 82,
+  "closed_loop_assertions": 487,
+  "additional_model_edges": 6,
+  "frozen_code_matches_source": {
+    "NaNoBO:app": true,
+    "NaNoBO:engine": true,
+    "NaNoBO:space": true,
+    "NaNoBO:analysis_view": true,
+    "NaNoBO:recipe_dialog": true,
+    "NaNoBO:table_io": true,
+    "NaNoBO:verification": true,
+    "NaNoBO:examples": true,
+    "chembo-modern-worker:engine": true,
+    "chembo-modern-worker:space": true,
+    "chembo-modern-worker:modeling": true
+  },
+  "bundle": "<installed-validation-app>",
+  "modern_worker_sha256": "0decd4a9d545570d45305cefbe525431d8dcba0b053ff9c5c8b9cb7838391065",
+  "fixed_defects": [
+    "New imported observations now invalidate persisted analysis.",
+    "Withdrawing pending conditions now invalidates persisted analysis.",
+    "After computation, task-specific disabled controls stay disabled.",
+    "Frozen PDF export previously missed its runtime module; PDF/SVG backends are now explicitly bundled and tested."
+  ],
+  "scope": "SYNTHETIC / 模拟实验；非真实测量，不得用作真实化学效果证据。 macOS arm64 only; no Windows, Intel Mac, Apple notarization or wet-lab performance validation.",
+  "frozen_file_export_check": {
+    "ok": true,
+    "checks": [
+      {
+        "case": "gryffin",
+        "operation": "recommend",
+        "pending_rows": 2,
+        "prediction_rows": 0,
+        "validation_rows": 0
+      },
+      {
+        "case": "atlas",
+        "operation": "recommend",
+        "pending_rows": 2,
+        "prediction_rows": 0,
+        "validation_rows": 0
+      },
+      {
+        "case": "bo-mcp",
+        "operation": "recommend",
+        "pending_rows": 2,
+        "prediction_rows": 4096,
+        "validation_rows": 0
+      },
+      {
+        "case": "recipe",
+        "operation": "recommend",
+        "pending_rows": 2,
+        "prediction_rows": 7,
+        "validation_rows": 0
+      },
+      {
+        "case": "pareto",
+        "operation": "recommend",
+        "pending_rows": 2,
+        "prediction_rows": 4096,
+        "validation_rows": 0
+      },
+      {
+        "case": "classification",
+        "operation": "recommend",
+        "pending_rows": 2,
+        "prediction_rows": 4096,
+        "validation_rows": 0
+      },
+      {
+        "case": "pareto-validation",
+        "operation": "analyze",
+        "pending_rows": 1,
+        "prediction_rows": 4096,
+        "validation_rows": 5
+      },
+      {
+        "case": "classification-validation",
+        "operation": "analyze",
+        "pending_rows": 1,
+        "prediction_rows": 4096,
+        "validation_rows": 5
+      },
+      {
+        "case": "frozen-import-csv",
+        "rows": 2
+      },
+      {
+        "case": "frozen-import-xls",
+        "rows": 2
+      },
+      {
+        "case": "frozen-import-xlsx",
+        "rows": 2
+      },
+      {
+        "case": "frozen-plot-and-table-exports",
+        "figure_files": 15,
+        "prediction_csv": true
+      }
+    ],
+    "error": null
+  }
+}

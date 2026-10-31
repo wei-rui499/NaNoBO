@@ -1,0 +1,587 @@
+"""Tests reproducing results from BoTorch constraint handling tutorials.
+
+This module validates that our constraint handling implementation achieves
+results consistent with the official BoTorch tutorials and documentation.
+
+References:
+    - Constraints Documentation: https://botorch.org/docs/constraints/
+    - SCBO Tutorial: https://botorch.org/docs/tutorials/scalable_constrained_bo/
+    - Constrained MO Tutorial: https://botorch.org/docs/tutorials/constrained_multi_objective_bo/
+    - Closed-loop Tutorial: https://botorch.org/docs/tutorials/closed_loop_botorch_only/
+"""
+
+from collections.abc import Callable
+
+import numpy as np
+import pytest
+import torch
+from torch.quasirandom import SobolEngine
+
+from bo_engine import (
+    ConstraintSpec,
+    ConstraintType,
+    ObjectiveSpec,
+    ObservationData,
+    OptimizationSpec,
+    ParameterSpec,
+    ParameterType,
+    apply_sum_constraint,
+    generate_next_batch,
+)
+from bo_engine.benchmarks import c2_dtlz2, hartmann6
+from bo_engine.outcome_constraints import (
+    OutcomeConstraintSpec,
+    build_outcome_constraint_models,
+    compute_constraint_probability,
+)
+
+# =============================================================================
+# Constants from BoTorch Constraints Documentation
+# =============================================================================
+
+# Outcome constraints are modeled and weighted by P(feasible).
+# The acquisition function is multiplied by the probability that
+# the constraint is satisfied.
+#
+# Common constraint types:
+# - Less than: g(x) <= bound
+# - Greater than: g(x) >= bound
+# - Sum constraint: sum(x) = value
+
+# Feasibility slack for asserting on optimizer output: scipy's SLSQP /
+# L-BFGS-B enforce linear constraints to solver precision, so model-guided
+# suggestions may sit on the boundary within this tolerance but not beyond.
+NATIVE_CONSTRAINT_FEASIBILITY_TOL = 1e-4
+
+# Mixed-space test geometry: continuous parameters use non-unit bounds so a
+# normalization slip would surface, and the constraint levels sit strictly
+# inside the box while the objective optimum lies outside the feasible set.
+MIXED_CONTINUOUS_UPPER_BOUND = 2.0
+MIXED_SUM_CAP = 1.5
+MIXED_SUM_TARGET = 1.5
+MIXED_OBJECTIVE_OPTIMUM = 1.2
+MIXED_CATEGORY_PENALTY = 0.3
+
+
+# =============================================================================
+# Test Classes
+# =============================================================================
+
+
+@pytest.mark.tutorial
+class TestOutcomeConstraints:
+    """Test outcome constraint handling.
+
+    Reference:
+        - Documentation: https://botorch.org/docs/constraints/
+        - Tutorial: https://botorch.org/docs/tutorials/closed_loop_botorch_only/
+
+    Outcome constraints are modeled and weighted by P(feasible).
+    """
+
+    @pytest.mark.smoke
+    def test_outcome_constraint_spec(self) -> None:
+        """OutcomeConstraintSpec should correctly represent constraints."""
+        # Less than constraint: g(x) <= 0.5
+        spec_lt = OutcomeConstraintSpec(
+            objective_name="constraint",
+            threshold=0.5,
+            greater_than=False,
+        )
+        assert spec_lt.threshold == 0.5
+        assert spec_lt.greater_than is False
+
+        # Greater than constraint: g(x) >= 0.0
+        spec_gt = OutcomeConstraintSpec(
+            objective_name="constraint",
+            threshold=0.0,
+            greater_than=True,
+        )
+        assert spec_gt.threshold == 0.0
+        assert spec_gt.greater_than is True
+
+    @pytest.mark.smoke
+    def test_constraint_probability_computation(self) -> None:
+        """P(feasible) should be computed from Gaussian distribution."""
+        # For constraint g(x) <= bound:
+        # P(feasible) = P(g(x) <= bound) = Phi((bound - mean) / std)
+
+        mean = torch.tensor([0.5])
+        std = torch.tensor([0.1])
+        bound = 0.6
+
+        prob = compute_constraint_probability(mean, std, bound, constraint_type="<=")
+
+        # With mean=0.5, std=0.1, P(x <= 0.6) should be high (~0.84)
+        assert prob.item() > 0.8, f"P(x <= 0.6) should be high, got {prob.item():.3f}"
+
+    @pytest.mark.smoke
+    def test_constraint_probability_less_than(self) -> None:
+        """P(obj <= threshold) should be computed correctly from normal CDF."""
+        mean = torch.tensor([0.0])
+        std = torch.tensor([1.0])
+
+        # P(x <= 0) for standard normal = 0.5
+        prob_zero = compute_constraint_probability(mean, std, 0.0, "<=")
+        assert prob_zero.item() == pytest.approx(0.5, abs=0.05)
+
+        # P(x <= 1) for standard normal ~ 0.84
+        prob_one = compute_constraint_probability(mean, std, 1.0, "<=")
+        assert prob_one.item() == pytest.approx(0.84, abs=0.05)
+
+    @pytest.mark.smoke
+    def test_constraint_probability_greater_than(self) -> None:
+        """P(obj >= threshold) should be computed correctly."""
+        mean = torch.tensor([0.0])
+        std = torch.tensor([1.0])
+
+        # P(x >= 0) for standard normal = 0.5
+        prob_zero = compute_constraint_probability(mean, std, 0.0, ">=")
+        assert prob_zero.item() == pytest.approx(0.5, abs=0.05)
+
+        # P(x >= -1) for standard normal ~ 0.84
+        prob_minus_one = compute_constraint_probability(mean, std, -1.0, ">=")
+        assert prob_minus_one.item() == pytest.approx(0.84, abs=0.05)
+
+
+@pytest.mark.tutorial
+class TestConstraintCallables:
+    """Test constraint callable creation."""
+
+    @pytest.mark.smoke
+    def test_create_constraint_callable(self) -> None:
+        """Should create callable that returns constraint violation.
+
+        The create_constraint_callable function requires a ConstraintSpec and
+        OptimizationSpec. For testing basic linear constraint behavior, we define
+        a simple sum constraint manually.
+        """
+
+        # Define a simple sum constraint callable directly (x[0] + x[1] <= 1)
+        def sum_constraint(x: torch.Tensor) -> torch.Tensor:
+            # BoTorch convention: >= 0 means satisfied, < 0 means violated
+            return 1.0 - x[..., 0] - x[..., 1]
+
+        # Test feasible point
+        x_feasible = torch.tensor([[0.3, 0.4]])  # sum = 0.7 <= 1
+        violation_feasible = sum_constraint(x_feasible)
+        assert (violation_feasible >= 0).all(), "Feasible point should have non-negative value"
+
+        # Test infeasible point
+        x_infeasible = torch.tensor([[0.6, 0.6]])  # sum = 1.2 > 1
+        violation_infeasible = sum_constraint(x_infeasible)
+        assert (violation_infeasible < 0).all(), "Infeasible point should have negative value"
+
+    @pytest.mark.smoke
+    def test_apply_sum_constraint(self) -> None:
+        """Sum constraint should normalize selected parameters to target sum.
+
+        The apply_sum_constraint function projects candidates to satisfy
+        sum(x[param_indices]) = target_sum.
+        """
+        # Point that has sum = 0.7
+        candidates = torch.tensor([[0.4, 0.3]], dtype=torch.float64)
+        target_sum = 0.5
+
+        # Apply constraint - normalizes to sum to target
+        constrained = apply_sum_constraint(candidates, param_indices=[0, 1], target_sum=target_sum)
+
+        # Sum should now equal target
+        actual_sum = constrained[0, 0].item() + constrained[0, 1].item()
+        assert abs(actual_sum - target_sum) < 1e-6, f"Sum should be {target_sum}, got {actual_sum}"
+
+
+@pytest.mark.tutorial
+class TestConstrainedHartmann:
+    """Test constrained optimization on Hartmann function.
+
+    Reference: Closed-loop tutorial constraint ||x||_1 - 3 <= 0
+    """
+
+    @pytest.mark.smoke
+    def test_l1_constraint_definition(self) -> None:
+        """Define L1 norm constraint ||x||_1 <= 3."""
+        # For 6D Hartmann, constraint is ||x||_1 <= 3
+
+        def l1_constraint(x: torch.Tensor) -> torch.Tensor:
+            """L1 norm constraint: ||x||_1 - 3 <= 0 means feasible."""
+            return x.abs().sum(dim=-1, keepdim=True) - 3.0
+
+        # Feasible point (L1 norm < 3)
+        x_feasible = torch.tensor([[0.3, 0.3, 0.3, 0.3, 0.3, 0.3]])
+        assert l1_constraint(x_feasible).item() < 0
+
+        # Infeasible point (L1 norm > 3)
+        x_infeasible = torch.tensor([[0.8, 0.8, 0.8, 0.8, 0.8, 0.8]])
+        assert l1_constraint(x_infeasible).item() > 0
+
+    @pytest.mark.slow
+    def test_constrained_hartmann_optimization(self) -> None:
+        """Optimization should respect L1 constraint."""
+        torch.manual_seed(42)
+
+        def constrained_objective(x: torch.Tensor) -> tuple[float, bool]:
+            """Hartmann6 with L1 constraint."""
+            y = hartmann6(x).item()
+            feasible = x.abs().sum().item() <= 3.0
+            return y, feasible
+
+        # Generate initial points within constraint
+        sobol = SobolEngine(dimension=6, scramble=True, seed=42)
+        points = []
+
+        for _ in range(20):
+            x = sobol.draw(1).to(torch.float64)
+            if x.abs().sum().item() <= 3.0:
+                points.append(x)
+            if len(points) >= 10:
+                break
+
+        # Check we found feasible initial points
+        assert len(points) >= 5, "Should find feasible initial points"
+
+
+@pytest.mark.tutorial
+class TestConstrainedMultiObjective:
+    """Test constrained multi-objective optimization.
+
+    Reference: https://botorch.org/docs/tutorials/constrained_multi_objective_bo/
+    """
+
+    @pytest.mark.smoke
+    def test_c2_dtlz2_constraint(self) -> None:
+        """C2-DTLZ2 should produce feasible and infeasible points."""
+        torch.manual_seed(42)
+        x = torch.rand(100, 4, dtype=torch.float64)
+
+        _f, c = c2_dtlz2(x, n_objectives=2, r=0.2)
+
+        # Should have both feasible (c >= 0) and infeasible (c < 0)
+        n_feasible = (c >= 0).sum().item()
+        n_infeasible = (c < 0).sum().item()
+
+        assert n_feasible > 0, "Should have some feasible points"
+        assert n_infeasible > 0, "Should have some infeasible points"
+
+    @pytest.mark.smoke
+    def test_constrained_pareto_front(self) -> None:
+        """Constrained Pareto front should only include feasible points."""
+        torch.manual_seed(42)
+        x = torch.rand(50, 4, dtype=torch.float64)
+
+        f, c = c2_dtlz2(x, n_objectives=2, r=0.2)
+
+        # Filter to feasible points only
+        feasible_mask = c >= 0
+        f_feasible = f[feasible_mask]
+
+        # Pareto front of feasible points
+        from bo_engine import compute_pareto_front
+
+        if len(f_feasible) > 0:
+            pareto_points, _pareto_mask = compute_pareto_front(f_feasible, minimize=True)
+
+            # All Pareto points should be feasible (by construction)
+            assert len(pareto_points) <= len(f_feasible)
+
+
+@pytest.mark.tutorial
+class TestOutcomeConstraintModeling:
+    """Test outcome constraint modeling with GP."""
+
+    @pytest.mark.slow
+    def test_build_outcome_constraint_models(self) -> None:
+        """Should build GP models for outcome constraints.
+
+        The build_outcome_constraint_models function builds models for
+        outcome constraints, returning a list of ConstraintModelResult objects.
+        """
+        torch.manual_seed(42)
+        bounds = torch.tensor([[0.0, 0.0], [1.0, 1.0]], dtype=torch.float64)
+
+        # Training data
+        train_x = torch.rand(15, 2, dtype=torch.float64)
+
+        # Create observations as list of dicts (the expected format)
+        observations = []
+        for i in range(15):
+            # Constraint outcome: sum - 0.8, feasible when < 0
+            constraint_value = train_x[i, 0].item() + train_x[i, 1].item() - 0.8
+            observations.append({"sum_constraint": constraint_value})
+
+        constraint_spec = OutcomeConstraintSpec(
+            objective_name="sum_constraint",
+            threshold=0.0,
+            greater_than=False,
+        )
+
+        results = build_outcome_constraint_models(
+            train_x=train_x,
+            observations=observations,
+            bounds=bounds,
+            constraint_specs=[constraint_spec],
+        )
+
+        # Should have one result for one constraint
+        assert len(results) == 1
+
+        # Result should have a model
+        result = results[0]
+        assert result.model is not None
+
+        # Model should make predictions
+        result.model.eval()
+        with torch.no_grad():
+            test_x = torch.rand(5, 2, dtype=torch.float64)
+            posterior = result.model.posterior(test_x)
+            assert posterior.mean.shape[0] == 5
+
+
+@pytest.mark.tutorial
+class TestFeasibilityWeighting:
+    """Test feasibility-weighted acquisition functions."""
+
+    @pytest.mark.smoke
+    def test_high_feasibility_probability(self) -> None:
+        """Points clearly satisfying constraint should have high P(feasible)."""
+        mean = torch.tensor([0.0])
+        std = torch.tensor([0.1])
+        bound = 1.0  # g(x) <= 1.0
+
+        prob = compute_constraint_probability(mean, std, bound, "<=")
+
+        # P(x <= 1) for N(0, 0.1) should be very high
+        assert prob.item() > 0.99
+
+    @pytest.mark.smoke
+    def test_low_feasibility_probability(self) -> None:
+        """Points clearly violating constraint should have low P(feasible)."""
+        mean = torch.tensor([2.0])
+        std = torch.tensor([0.1])
+        bound = 1.0  # g(x) <= 1.0
+
+        prob = compute_constraint_probability(mean, std, bound, "<=")
+
+        # P(x <= 1) for N(2, 0.1) should be very low
+        assert prob.item() < 0.01
+
+    @pytest.mark.smoke
+    def test_medium_feasibility_probability(self) -> None:
+        """Points at boundary should have ~0.5 P(feasible)."""
+        mean = torch.tensor([1.0])
+        std = torch.tensor([0.5])
+        bound = 1.0  # g(x) <= 1.0
+
+        prob = compute_constraint_probability(mean, std, bound, "<=")
+
+        # P(x <= 1) for N(1, 0.5) should be ~0.5
+        assert 0.4 < prob.item() < 0.6
+
+
+@pytest.mark.tutorial
+class TestNativeLinearConstraintFeasibility:
+    """Model-guided suggestions must satisfy native linear input constraints.
+
+    BoTorch's ``optimize_acqf`` enforces each inequality tuple as
+    ``sum_i X[indices[i]] * coefficients[i] >= rhs`` — see
+    https://botorch.readthedocs.io/en/stable/optim.html#botorch.optim.optimize.optimize_acqf.
+    These end-to-end cases run the suggestion pipeline with a sum cap /
+    floor whose unconstrained optimum lies *outside* the feasible region,
+    so a flipped encoding would actively push suggestions out of bounds.
+    """
+
+    @staticmethod
+    def _run_constrained_bo(
+        constraint: ConstraintSpec,
+        objective: Callable[[float, float], float],
+        seed: int,
+    ) -> list[tuple[float, float]]:
+        """Run a short BO loop and return the model-guided ``(x1, x2)`` points.
+
+        Initial-design points are excluded: the native linear-constraint
+        tuples act on the acquisition optimizer, while the space-filling
+        design uses a separate best-effort projection whose bound clipping
+        can leave small residual violations.
+        """
+        spec = OptimizationSpec(
+            parameters=[
+                ParameterSpec(name="x1", type=ParameterType.CONTINUOUS, bounds=(0.0, 1.0)),
+                ParameterSpec(name="x2", type=ParameterType.CONTINUOUS, bounds=(0.0, 1.0)),
+            ],
+            objectives=[ObjectiveSpec(name="y", minimize=True)],
+            constraints=[constraint],
+            batch_size=1,
+            initial_design_size=5,
+        )
+        torch.manual_seed(seed)
+        rng = np.random.default_rng(seed)
+        observations: list[ObservationData] = []
+        model_guided: list[tuple[float, float]] = []
+        for iteration in range(9):
+            suggestions, _ = generate_next_batch(spec, observations, iteration=iteration, rng=rng)
+            for suggestion in suggestions:
+                x1 = suggestion.parameter_values["x1"]
+                x2 = suggestion.parameter_values["x2"]
+                if suggestion.generation_method in ("bo", "turbo"):
+                    model_guided.append((x1, x2))
+                observations.append(
+                    ObservationData(
+                        parameter_values={"x1": x1, "x2": x2},
+                        objective_values={"y": objective(x1, x2)},
+                    )
+                )
+        assert model_guided, "BO loop never reached the model-guided phase"
+        return model_guided
+
+    @pytest.mark.smoke
+    def test_sum_less_than_suggestions_feasible(self) -> None:
+        """Every model-guided point satisfies ``x1 + x2 <= 0.8``.
+
+        The objective minimum at (0.7, 0.7) violates the cap, so the
+        optimizer is pulled toward the constraint boundary — exactly where
+        an inverted encoding (a cap enforced as a floor) diverges.
+        """
+        constraint = ConstraintSpec(
+            type=ConstraintType.SUM_LESS_THAN, parameters=["x1", "x2"], value=0.8
+        )
+        points = self._run_constrained_bo(
+            constraint,
+            lambda x1, x2: (x1 - 0.7) ** 2 + (x2 - 0.7) ** 2,
+            seed=7,
+        )
+        for x1, x2 in points:
+            assert x1 + x2 <= 0.8 + 1e-4, f"Suggestion violates sum cap: {x1 + x2:.4f} > 0.8"
+
+    @pytest.mark.smoke
+    def test_sum_greater_than_suggestions_feasible(self) -> None:
+        """Every model-guided point satisfies ``x1 + x2 >= 1.2``.
+
+        Mirror case: the objective minimum at (0.3, 0.3) violates the
+        floor, so suggestions must be held at or above it.
+        """
+        constraint = ConstraintSpec(
+            type=ConstraintType.SUM_GREATER_THAN, parameters=["x1", "x2"], value=1.2
+        )
+        points = self._run_constrained_bo(
+            constraint,
+            lambda x1, x2: (x1 - 0.3) ** 2 + (x2 - 0.3) ** 2,
+            seed=11,
+        )
+        for x1, x2 in points:
+            assert x1 + x2 >= 1.2 - 1e-4, f"Suggestion violates sum floor: {x1 + x2:.4f} < 1.2"
+
+
+@pytest.mark.tutorial
+class TestMixedSpaceNativeLinearConstraints:
+    """Mixed continuous + categorical campaigns must honor native linear constraints.
+
+    BoTorch's ``optimize_acqf_mixed`` accepts the same
+    ``inequality_constraints`` / ``equality_constraints`` tuples as
+    ``optimize_acqf`` and enforces them within each fixed-categorical
+    L-BFGS-B run — see
+    https://botorch.readthedocs.io/en/latest/optim.html#botorch.optim.optimize.optimize_acqf_mixed.
+    The categorical parameter is deliberately declared *first* so the
+    constraint's parameter indices must survive the one-hot column offset,
+    and the continuous parameters use non-unit bounds. As in the continuous
+    cases above, the unconstrained objective optimum lies outside the
+    feasible region, so the optimizer is actively pulled across the
+    boundary if the constraints are dropped.
+    """
+
+    @staticmethod
+    def _run_constrained_mixed_bo(
+        constraint: ConstraintSpec,
+        objective: Callable[[str, float, float], float],
+        seed: int,
+    ) -> list[tuple[float, float]]:
+        """Run a short mixed-space BO loop; return model-guided ``(x1, x2)`` points.
+
+        Initial-design points are excluded for the same reason as in the
+        continuous cases: the native constraint tuples act on the
+        acquisition optimizer, while the space-filling design uses a
+        separate best-effort projection.
+        """
+        spec = OptimizationSpec(
+            parameters=[
+                ParameterSpec(
+                    name="solvent",
+                    type=ParameterType.CATEGORICAL,
+                    categories=["dmso", "water"],
+                ),
+                ParameterSpec(
+                    name="x1",
+                    type=ParameterType.CONTINUOUS,
+                    bounds=(0.0, MIXED_CONTINUOUS_UPPER_BOUND),
+                ),
+                ParameterSpec(
+                    name="x2",
+                    type=ParameterType.CONTINUOUS,
+                    bounds=(0.0, MIXED_CONTINUOUS_UPPER_BOUND),
+                ),
+            ],
+            objectives=[ObjectiveSpec(name="y", minimize=True)],
+            constraints=[constraint],
+            batch_size=1,
+            initial_design_size=5,
+        )
+        torch.manual_seed(seed)
+        rng = np.random.default_rng(seed)
+        observations: list[ObservationData] = []
+        model_guided: list[tuple[float, float]] = []
+        for iteration in range(8):
+            suggestions, _ = generate_next_batch(spec, observations, iteration=iteration, rng=rng)
+            for suggestion in suggestions:
+                solvent = suggestion.parameter_values["solvent"]
+                x1 = suggestion.parameter_values["x1"]
+                x2 = suggestion.parameter_values["x2"]
+                if suggestion.generation_method in ("bo", "turbo"):
+                    model_guided.append((x1, x2))
+                observations.append(
+                    ObservationData(
+                        parameter_values={"solvent": solvent, "x1": x1, "x2": x2},
+                        objective_values={"y": objective(solvent, x1, x2)},
+                    )
+                )
+        assert model_guided, "BO loop never reached the model-guided phase"
+        return model_guided
+
+    @staticmethod
+    def _mixed_objective(solvent: str, x1: float, x2: float) -> float:
+        """Quadratic bowl at (1.2, 1.2) — outside the feasible set — plus a
+        small categorical offset so the choice of solvent matters."""
+        penalty = MIXED_CATEGORY_PENALTY if solvent == "water" else 0.0
+        return (x1 - MIXED_OBJECTIVE_OPTIMUM) ** 2 + (x2 - MIXED_OBJECTIVE_OPTIMUM) ** 2 + penalty
+
+    @pytest.mark.smoke
+    def test_mixed_sum_cap_suggestions_feasible(self) -> None:
+        """Every model-guided point satisfies ``x1 + x2 <= 1.5`` alongside a categorical.
+
+        The objective minimum at (1.2, 1.2) has sum 2.4 > 1.5, so the
+        optimizer is pulled toward the cap — a mixed-space path that drops
+        the inequality tuples produces infeasible suggestions here.
+        """
+        constraint = ConstraintSpec(
+            type=ConstraintType.SUM_LESS_THAN, parameters=["x1", "x2"], value=MIXED_SUM_CAP
+        )
+        points = self._run_constrained_mixed_bo(constraint, self._mixed_objective, seed=7)
+        for x1, x2 in points:
+            assert x1 + x2 <= MIXED_SUM_CAP + NATIVE_CONSTRAINT_FEASIBILITY_TOL, (
+                f"Suggestion violates sum cap: {x1 + x2:.4f} > {MIXED_SUM_CAP}"
+            )
+
+    @pytest.mark.smoke
+    def test_mixed_sum_equality_suggestions_feasible(self) -> None:
+        """Every model-guided point keeps ``x1 + x2 = 1.5`` alongside a categorical.
+
+        Equality tuples take the ``equality_constraints`` path through
+        ``optimize_acqf_mixed``; the objective again pulls toward
+        (1.2, 1.2) with sum 2.4, off the constraint hyperplane.
+        """
+        constraint = ConstraintSpec(
+            type=ConstraintType.SUM_EQUALS, parameters=["x1", "x2"], value=MIXED_SUM_TARGET
+        )
+        points = self._run_constrained_mixed_bo(constraint, self._mixed_objective, seed=11)
+        for x1, x2 in points:
+            assert abs(x1 + x2 - MIXED_SUM_TARGET) <= NATIVE_CONSTRAINT_FEASIBILITY_TOL, (
+                f"Suggestion violates sum equality: {x1 + x2:.4f} != {MIXED_SUM_TARGET}"
+            )

@@ -1,0 +1,39 @@
+# Local development and generated artifacts
+.DS_Store
+._*
+.env
+.env.*
+*.pem
+*.key
+.python/
+.venv*/
+.local/
+__pycache__/
+*.py[cod]
+*.pyxbldc
+*.egg-info/
+.pytest_cache/
+build*/
+dist*/
+release/
+validation/
+archive/
+installers/
+docs/project-inventory/
+*.log
+# Local symlinks and upstream VCS/cache metadata
+upstream/**/.git/
+upstream/**/build/
+upstream/olympus/
+upstream/olympus-sparse/
+upstream/atlas/benchmarks/
+upstream/atlas/static/
+upstream/gryffin/tests/
+# Ignore local directory aliases as well as actual directories.
+/.python
+/.venv*
+/build*
+/dist*
+/release
+/validation
+/.local

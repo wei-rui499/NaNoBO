@@ -1,0 +1,43 @@
+[project]
+name = "bo-engine"
+version = "0.1.0"
+description = "Bayesian Optimization engine using BoTorch for multi-objective optimization"
+readme = "README.md"
+requires-python = ">=3.13"
+license = { text = "MIT" }
+authors = [{ name = "Willi Gottstein", email = "willi.gottstein@gmail.com" }]
+keywords = ["bayesian-optimization", "botorch", "multi-objective", "pareto"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "botorch>=0.12",
+    "gpytorch>=1.13",
+    "torch>=2.0",
+    "numpy>=1.24",
+    "scipy>=1.11",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+]
+shap = [
+    "shap>=0.45",
+]
+
+[project.entry-points."bo_mcp.backends"]
+botorch = "bo_engine.botorch_backend:BoTorchBackend"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bo_engine"]

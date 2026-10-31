@@ -1,0 +1,33 @@
+# Resolved on macOS arm64 / CPython 3.13.12, 2026-10-31.
+# Windows must resolve and test its own platform wheels.
+altgraph==0.17.5
+./upstream/bo-mcp/packages/bo-engine
+botorch==0.18.1
+cloudpickle==3.1.2
+filelock==4.2.5
+fsspec==2026.9.0
+gpytorch==1.15.2
+jinja2==3.1.6
+joblib==1.6.0
+linear-operator==0.6.1
+macholib==1.16.4; sys_platform == "darwin"
+markupsafe==3.0.4
+mpmath==1.3.0
+multipledispatch==1.0.0
+mypy-extensions==1.1.0
+narwhals==2.28.0
+networkx==3.7
+ninja==1.13.2
+numpy==2.5.4
+packaging==26.3
+pyinstaller==6.16.0
+pyinstaller-hooks-contrib==2026.9
+pyre-extensions==0.0.32
+scikit-learn==1.9.1
+scipy==1.18.1
+setuptools==84.2.1
+sympy==1.14.0
+threadpoolctl==3.7.0
+torch==2.15.0
+typing-extensions==4.16.0
+typing-inspect==0.9.0

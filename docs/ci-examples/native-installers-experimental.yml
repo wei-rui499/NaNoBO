@@ -1,0 +1,176 @@
+name: Native desktop installers
+
+on:
+  workflow_dispatch:
+    inputs:
+      include_macos:
+        description: Also build the Apple Silicon macOS app
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  PYTHONUTF8: "1"
+  PIP_NO_CACHE_DIR: "1"
+  CHEMBO_INTEGRATION: "1"
+  QT_QPA_PLATFORM: offscreen
+  MPLBACKEND: Agg
+
+jobs:
+  windows:
+    name: Windows x64, native build and installed-app smoke test
+    runs-on: windows-2022
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      PYTHONPATH: ${{ github.workspace }}/src
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.10"
+          architecture: x64
+      - name: Build the classic engine environment
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          python -m venv .venv
+          .venv\Scripts\python.exe -m pip install --upgrade pip
+          .venv\Scripts\python.exe -m pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+          .venv\Scripts\python.exe scripts\bootstrap.py
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          architecture: x64
+      - name: Build and test the modern engine environment
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          python -m venv .venv-modern
+          .venv-modern\Scripts\python.exe -m pip install --upgrade pip
+          .venv-modern\Scripts\python.exe -m pip install torch==2.15.0 --index-url https://download.pytorch.org/whl/cpu
+          .venv-modern\Scripts\python.exe -m pip install -r requirements-modern.in
+          .venv-modern\Scripts\python.exe -m unittest discover -s tests -p test_modern.py -v
+          .venv-modern\Scripts\python.exe scripts\collect_licenses.py modern
+          .venv-modern\Scripts\python.exe scripts\build_modern.py
+      - name: Verify the frozen modern engine without Python on PATH
+        env:
+          CHEMBO_MODERN_WORKER: ${{ github.workspace }}/dist-modern/chembo-modern-worker/chembo-modern-worker.exe
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          .venv-modern\Scripts\python.exe -m unittest discover -s tests -p test_modern.py -v
+      - name: Test classic engines and the native UI, then bundle
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          .venv\Scripts\python.exe -m pytest tests/test_engine.py tests/test_app.py -q
+          .venv\Scripts\python.exe scripts\build.py
+          .venv\Scripts\python.exe scripts\smoke_frozen.py --bundle "dist/NaNoBO"
+      - name: Make the per-user Windows installer
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          $compiler = 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
+          if (-not (Test-Path $compiler)) {
+            choco install innosetup -y --no-progress
+            if ($LASTEXITCODE -ne 0) { throw 'Inno Setup installation failed' }
+          }
+          $dist = (Resolve-Path 'dist/NaNoBO').Path
+          & $compiler "/DDistDir=$dist" scripts/build_installer.iss
+          if ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed' }
+      - name: Install without requesting elevation and exercise installed engines
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          $installer = (Get-ChildItem 'installers/*-windows-x64-setup-unsigned.exe' | Select-Object -First 1).FullName
+          $installedApp = Join-Path $env:RUNNER_TEMP 'ChemBO installed test'
+          $arguments = @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', "/DIR=`"$installedApp`"")
+          $installation = Start-Process -FilePath $installer -ArgumentList $arguments -Wait -PassThru
+          if ($installation.ExitCode -ne 0) { throw "Installation failed: $($installation.ExitCode)" }
+          try {
+            .venv\Scripts\python.exe scripts/smoke_frozen.py --bundle "$installedApp"
+            if ($LASTEXITCODE -ne 0) { throw 'Installed application engine check failed' }
+          } finally {
+            $uninstaller = Join-Path $installedApp 'unins000.exe'
+            if (Test-Path $uninstaller) {
+              Start-Process -FilePath $uninstaller -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART' -Wait
+            }
+          }
+      - name: Record resolved Windows dependency versions
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          .venv\Scripts\python.exe -m pip freeze | Out-File -Encoding utf8 installers/windows-classic-resolved.txt
+          .venv-modern\Scripts\python.exe -m pip freeze | Out-File -Encoding utf8 installers/windows-modern-resolved.txt
+      - name: Attach corresponding source and licenses
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          .venv\Scripts\python.exe scripts/fetch_library_sources.py
+          .venv\Scripts\python.exe scripts/source_archive.py
+          Copy-Item release/NaNoBO-0.1.0-source.zip installers/
+          Compress-Archive -Path release/library-sources -DestinationPath installers/NaNoBO-library-sources.zip
+      - uses: actions/upload-artifact@v7
+        with:
+          name: NaNoBO-windows-x64-unsigned
+          path: installers/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+  macos:
+    name: Apple Silicon macOS, native build
+    if: ${{ inputs.include_macos }}
+    runs-on: macos-15
+    timeout-minutes: 90
+    env:
+      PYTHONPATH: ${{ github.workspace }}/src
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.10"
+      - name: Build the classic engine environment
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python scripts/bootstrap.py
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Build and test the modern engine environment
+        run: |
+          python -m venv .venv-modern
+          .venv-modern/bin/python -m pip install --upgrade pip
+          .venv-modern/bin/python -m pip install -r requirements-modern.in
+          .venv-modern/bin/python -m unittest discover -s tests -p test_modern.py -v
+          .venv-modern/bin/python scripts/collect_licenses.py modern
+          .venv-modern/bin/python scripts/build_modern.py
+      - name: Verify the frozen modern engine without Python on PATH
+        env:
+          CHEMBO_MODERN_WORKER: ${{ github.workspace }}/dist-modern/chembo-modern-worker/chembo-modern-worker
+        run: .venv-modern/bin/python -m unittest discover -s tests -p test_modern.py -v
+      - name: Test and bundle the native app
+        run: |
+          .venv/bin/python -m pytest tests/test_engine.py tests/test_app.py -q
+          .venv/bin/python scripts/build.py
+          .venv/bin/python scripts/smoke_frozen.py --bundle "dist/NaNoBO.app"
+      - name: Archive the unsigned app with executable permissions
+        run: |
+          mkdir -p installers
+          ditto -c -k --sequesterRsrc --keepParent "dist/NaNoBO.app" installers/NaNoBO-macos-arm64-unsigned.zip
+          .venv/bin/python -m pip freeze > installers/macos-arm64-classic-resolved.txt
+          .venv-modern/bin/python -m pip freeze > installers/macos-arm64-modern-resolved.txt
+          .venv/bin/python scripts/fetch_library_sources.py
+          .venv/bin/python scripts/source_archive.py
+          cp release/NaNoBO-0.1.0-source.zip installers/
+          ditto -c -k --keepParent release/library-sources installers/NaNoBO-library-sources.zip
+      - uses: actions/upload-artifact@v7
+        with:
+          name: NaNoBO-macos-arm64-unsigned
+          path: installers/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14

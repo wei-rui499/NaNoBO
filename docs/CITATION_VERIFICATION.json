@@ -1,0 +1,457 @@
+{
+  "verified_on": "2026-10-31",
+  "scope": "Bibliographic identities and actual-method attribution for NaNoBO 0.2.1; not a legal opinion or a scientific performance benchmark.",
+  "primary_sources": "Publisher/official proceedings, authors book site, Crossref registered metadata, pinned upstream documentation and licenses.",
+  "summary": {
+    "references": 14,
+    "verified": 14,
+    "invented_dois": 0
+  },
+  "records": [
+    {
+      "reference_key": "Hase2021Gryffin",
+      "status": "verified",
+      "title": "Gryffin: An algorithm for Bayesian optimization of categorical variables informed by expert knowledge",
+      "authors": [
+        "Florian Häse",
+        "Matteo Aldeghi",
+        "Riley J. Hickman",
+        "Loïc M. Roch",
+        "Alán Aspuru-Guzik"
+      ],
+      "year": 2021,
+      "doi": "10.1063/5.0048164",
+      "sources": [
+        "https://doi.org/10.1063/5.0048164",
+        "https://api.crossref.org/works/10.1063/5.0048164"
+      ],
+      "notes": [
+        "Normalized publisher small-caps HTML in the title. Corrected the pinned citation snippet to volume 8, issue 3, article 031406."
+      ],
+      "crossref_fields": {
+        "title": [
+          "G\n                    <scp>ryffin</scp>\n                    : An algorithm for Bayesian optimization of categorical variables informed by expert knowledge"
+        ],
+        "published": {
+          "date-parts": [
+            [
+              2021,
+              7,
+              15
+            ]
+          ]
+        },
+        "container-title": [
+          "Applied Physics Reviews"
+        ],
+        "volume": "8",
+        "issue": "3",
+        "page": null,
+        "article-number": "031406",
+        "URL": "https://doi.org/10.1063/5.0048164",
+        "type": "journal-article"
+      }
+    },
+    {
+      "reference_key": "Hase2018Phoenics",
+      "status": "verified",
+      "title": "Phoenics: A Bayesian Optimizer for Chemistry",
+      "authors": [
+        "Florian Häse",
+        "Loïc M. Roch",
+        "Christoph Kreisbeck",
+        "Alán Aspuru-Guzik"
+      ],
+      "year": 2018,
+      "doi": "10.1021/acscentsci.8b00307",
+      "sources": [
+        "https://doi.org/10.1021/acscentsci.8b00307",
+        "https://api.crossref.org/works/10.1021/acscentsci.8b00307"
+      ],
+      "notes": [],
+      "crossref_fields": {
+        "title": [
+          "Phoenics: A Bayesian Optimizer for Chemistry"
+        ],
+        "published": {
+          "date-parts": [
+            [
+              2018,
+              8,
+              24
+            ]
+          ]
+        },
+        "container-title": [
+          "ACS Central Science"
+        ],
+        "volume": "4",
+        "issue": "9",
+        "page": "1134-1145",
+        "article-number": null,
+        "URL": "https://doi.org/10.1021/acscentsci.8b00307",
+        "type": "journal-article"
+      }
+    },
+    {
+      "reference_key": "Hase2018Chimera",
+      "status": "verified",
+      "title": "Chimera: enabling hierarchy based multi-objective optimization for self-driving laboratories",
+      "authors": [
+        "Florian Häse",
+        "Loïc M. Roch",
+        "Alán Aspuru-Guzik"
+      ],
+      "year": 2018,
+      "doi": "10.1039/C8SC02239A",
+      "sources": [
+        "https://doi.org/10.1039/C8SC02239A",
+        "https://api.crossref.org/works/10.1039/C8SC02239A"
+      ],
+      "notes": [],
+      "crossref_fields": {
+        "title": [
+          "Chimera: enabling hierarchy based multi-objective optimization for self-driving laboratories"
+        ],
+        "published": {
+          "date-parts": [
+            [
+              2018
+            ]
+          ]
+        },
+        "container-title": [
+          "Chemical Science"
+        ],
+        "volume": "9",
+        "issue": "39",
+        "page": "7642-7655",
+        "article-number": null,
+        "URL": "https://doi.org/10.1039/c8sc02239a",
+        "type": "journal-article"
+      }
+    },
+    {
+      "reference_key": "Hickman2022KnownConstraints",
+      "status": "verified",
+      "title": "Bayesian optimization with known experimental and design constraints for chemistry applications",
+      "authors": [
+        "Riley J. Hickman",
+        "Matteo Aldeghi",
+        "Florian Häse",
+        "Alán Aspuru-Guzik"
+      ],
+      "year": 2022,
+      "doi": "10.1039/D2DD00028H",
+      "sources": [
+        "https://pubs.rsc.org/en/content/articlehtml/2022/dd/d2dd00028h"
+      ],
+      "notes": [
+        "Gryffin adapter uses the upstream known_constraints interface to exclude measured/pending conditions. Cited final 2022 journal article instead of the older arXiv snippet; this does not attribute NaNoBO BoTorch recipe-domain code to Gryffin."
+      ]
+    },
+    {
+      "reference_key": "Hickman2025Atlas",
+      "status": "verified",
+      "title": "Atlas: a brain for self-driving laboratories",
+      "authors": [
+        "Riley J. Hickman",
+        "Malcolm Sim",
+        "Sergio Pablo-García",
+        "Gary Tom",
+        "Ivan Woolhouse",
+        "Han Hao",
+        "Zeqing Bao",
+        "Pauric Bannigan",
+        "Christine Allen",
+        "Matteo Aldeghi",
+        "Alán Aspuru-Guzik"
+      ],
+      "year": 2025,
+      "doi": "10.1039/D4DD00115J",
+      "sources": [
+        "https://doi.org/10.1039/D4DD00115J",
+        "https://api.crossref.org/works/10.1039/D4DD00115J"
+      ],
+      "notes": [
+        "Cited the final 2025 Digital Discovery article, not an early preprint. Repaired the malformed upstream BibTeX entry without editing upstream source."
+      ],
+      "crossref_fields": {
+        "title": [
+          "Atlas: a brain for self-driving laboratories"
+        ],
+        "published": {
+          "date-parts": [
+            [
+              2025
+            ]
+          ]
+        },
+        "container-title": [
+          "Digital Discovery"
+        ],
+        "volume": "4",
+        "issue": "4",
+        "page": "1006-1029",
+        "article-number": null,
+        "URL": "https://doi.org/10.1039/d4dd00115j",
+        "type": "journal-article"
+      }
+    },
+    {
+      "reference_key": "Hase2021Olympus",
+      "status": "verified",
+      "title": "Olympus: a benchmarking framework for noisy optimization and experiment planning",
+      "authors": [
+        "Florian Häse",
+        "Matteo Aldeghi",
+        "Riley J. Hickman",
+        "Loïc M. Roch",
+        "Melodie Christensen",
+        "Elena Liles",
+        "Jason E. Hein",
+        "Alán Aspuru-Guzik"
+      ],
+      "year": 2021,
+      "doi": "10.1088/2632-2153/abedc8",
+      "sources": [
+        "https://doi.org/10.1088/2632-2153/abedc8",
+        "https://api.crossref.org/works/10.1088/2632-2153/abedc8"
+      ],
+      "notes": [],
+      "crossref_fields": {
+        "title": [
+          "Olympus: a benchmarking framework for noisy optimization and experiment planning"
+        ],
+        "published": {
+          "date-parts": [
+            [
+              2021,
+              7,
+              12
+            ]
+          ]
+        },
+        "container-title": [
+          "Machine Learning: Science and Technology"
+        ],
+        "volume": "2",
+        "issue": "3",
+        "page": "035021",
+        "article-number": null,
+        "URL": "https://doi.org/10.1088/2632-2153/abedc8",
+        "type": "journal-article"
+      }
+    },
+    {
+      "reference_key": "Hickman2023OlympusEnhanced",
+      "status": "verified",
+      "title": "Olympus, enhanced: benchmarking mixed-parameter and multi-objective optimization in chemistry and materials science",
+      "authors": [
+        "Riley Hickman",
+        "Priyansh Parakh",
+        "Austin Cheng",
+        "Qianxiang Ai",
+        "Joshua Schrier",
+        "Matteo Aldeghi",
+        "Alán Aspuru-Guzik"
+      ],
+      "year": 2023,
+      "doi": "10.26434/chemrxiv-2023-74w8d",
+      "sources": [
+        "https://doi.org/10.26434/chemrxiv-2023-74w8d",
+        "https://api.crossref.org/works/10.26434/chemrxiv-2023-74w8d"
+      ],
+      "notes": [
+        "This DOI identifies posted content, not a journal article. Explicitly labeled as a ChemRxiv preprint, as requested by the pinned upstream README."
+      ],
+      "crossref_fields": {
+        "title": [
+          "Olympus, enhanced: benchmarking mixed-parameter and multi-objective optimization in chemistry and materials science"
+        ],
+        "published": {
+          "date-parts": [
+            [
+              2023,
+              5,
+              17
+            ]
+          ]
+        },
+        "container-title": [],
+        "volume": null,
+        "issue": null,
+        "page": null,
+        "article-number": null,
+        "URL": "https://doi.org/10.26434/chemrxiv-2023-74w8d",
+        "type": "posted-content"
+      }
+    },
+    {
+      "reference_key": "Balandat2020BoTorch",
+      "status": "verified",
+      "title": "BoTorch: A Framework for Efficient Monte-Carlo Bayesian Optimization",
+      "authors": [
+        "Maximilian Balandat",
+        "Brian Karrer",
+        "Daniel R. Jiang",
+        "Samuel Daulton",
+        "Ben Letham",
+        "Andrew Gordon Wilson",
+        "Eytan Bakshy"
+      ],
+      "year": 2020,
+      "doi": null,
+      "sources": [
+        "https://papers.neurips.cc/paper_files/paper/2020/hash/f5b1b89d98b7286673128a5fb112cb9a-Abstract.html"
+      ],
+      "notes": []
+    },
+    {
+      "reference_key": "Ament2023LogEI",
+      "status": "verified",
+      "title": "Unexpected Improvements to Expected Improvement for Bayesian Optimization",
+      "authors": [
+        "Sebastian Ament",
+        "Samuel Daulton",
+        "David Eriksson",
+        "Maximilian Balandat",
+        "Eytan Bakshy"
+      ],
+      "year": 2023,
+      "doi": "10.52202/075280-0904",
+      "sources": [
+        "https://papers.neurips.cc/paper_files/paper/2023/hash/419f72cbd568ad62183f8132a3605a2a-Abstract-Conference.html"
+      ],
+      "notes": []
+    },
+    {
+      "reference_key": "Daulton2021NEHVI",
+      "status": "verified",
+      "title": "Parallel Bayesian Optimization of Multiple Noisy Objectives with Expected Hypervolume Improvement",
+      "authors": [
+        "Samuel Daulton",
+        "Maximilian Balandat",
+        "Eytan Bakshy"
+      ],
+      "year": 2021,
+      "doi": null,
+      "sources": [
+        "https://papers.neurips.cc/paper_files/paper/2021/hash/11704817e347269b7254e744b5e22dac-Abstract.html"
+      ],
+      "notes": []
+    },
+    {
+      "reference_key": "Gardner2018GPyTorch",
+      "status": "verified",
+      "title": "GPyTorch: Blackbox Matrix-Matrix Gaussian Process Inference with GPU Acceleration",
+      "authors": [
+        "Jacob R. Gardner",
+        "Geoff Pleiss",
+        "David Bindel",
+        "Kilian Q. Weinberger",
+        "Andrew Gordon Wilson"
+      ],
+      "year": 2018,
+      "doi": null,
+      "sources": [
+        "https://proceedings.neurips.cc/paper_files/paper/2018/file/27e8e17134dd7083b050476733207ea1-Paper.pdf",
+        "https://github.com/cornellius-gp/gpytorch#citing-us"
+      ],
+      "notes": [
+        "The proceedings landing-page author order differs from the paper PDF and maintainer citation. Used the paper PDF and maintainer citation: Gardner, Pleiss, Bindel, Weinberger, Wilson."
+      ]
+    },
+    {
+      "reference_key": "Pedregosa2011ScikitLearn",
+      "status": "verified",
+      "title": "Scikit-learn: Machine Learning in Python",
+      "authors": [
+        "Fabian Pedregosa",
+        "Gaël Varoquaux",
+        "Alexandre Gramfort",
+        "Vincent Michel",
+        "Bertrand Thirion",
+        "Olivier Grisel",
+        "Mathieu Blondel",
+        "Peter Prettenhofer",
+        "Ron Weiss",
+        "Vincent Dubourg",
+        "Jake Vanderplas",
+        "Alexandre Passos",
+        "David Cournapeau",
+        "Matthieu Brucher",
+        "Matthieu Perrot",
+        "Édouard Duchesnay"
+      ],
+      "year": 2011,
+      "doi": null,
+      "sources": [
+        "https://www.jmlr.org/papers/v12/pedregosa11a.html"
+      ],
+      "notes": []
+    },
+    {
+      "reference_key": "Rasmussen2006GPML",
+      "status": "verified",
+      "title": "Gaussian Processes for Machine Learning",
+      "authors": [
+        "Carl Edward Rasmussen",
+        "Christopher K. I. Williams"
+      ],
+      "year": 2006,
+      "doi": "10.7551/mitpress/3206.001.0001",
+      "sources": [
+        "https://gaussianprocess.org/gpml/",
+        "https://api.crossref.org/works/10.7551/mitpress/3206.001.0001",
+        "https://gaussianprocess.org/gpml/chapters/RW.pdf"
+      ],
+      "notes": [
+        "Crossref gives electronic publication 2005-11-23. Used 2006 for the cited print edition, consistent with the authors website and copyright/title page."
+      ],
+      "crossref_fields": {
+        "title": [
+          "Gaussian Processes for Machine Learning"
+        ],
+        "published": {
+          "date-parts": [
+            [
+              2005,
+              11,
+              23
+            ]
+          ]
+        },
+        "container-title": [],
+        "volume": null,
+        "issue": null,
+        "page": null,
+        "article-number": null,
+        "URL": "https://doi.org/10.7551/mitpress/3206.001.0001",
+        "type": "monograph"
+      }
+    },
+    {
+      "reference_key": "Gottstein2026BOMCP",
+      "status": "verified",
+      "title": "BO-MCP: bo-engine software",
+      "authors": [
+        "Willi Gottstein"
+      ],
+      "year": 2026,
+      "doi": null,
+      "sources": [
+        "https://github.com/AccelerationConsortium/bo-mcp/tree/56d590b91ac120d0f22a3e41e770843d271808cd"
+      ],
+      "notes": [
+        "Software-source attribution verified against the pinned repository LICENSE (Copyright (c) 2026 Willi Gottstein). No paper or DOI invented."
+      ]
+    }
+  ],
+  "artifact_checks": {
+    "cff_official_1_2_0_schema": "passed",
+    "bibtex_parser": "passed",
+    "bibliography_entries": 14,
+    "local_markdown_links": "passed"
+  }
+}

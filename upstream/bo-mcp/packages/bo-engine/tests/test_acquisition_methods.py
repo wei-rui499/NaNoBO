@@ -1,0 +1,568 @@
+"""Tests for acquisition function methods (v1.0.1 and v1.1)."""
+
+import numpy as np
+import pytest
+import torch
+from botorch.acquisition import AcquisitionFunction
+
+from bo_engine import (
+    AcquisitionMethod,
+    ObjectiveSpec,
+    ObservationData,
+    OptimizationSpec,
+    ParameterSpec,
+    ParameterType,
+    create_acquisition,
+    create_and_fit_model,
+    create_and_fit_single_task_model,
+    create_multi_objective_acquisition,
+    create_single_objective_acquisition,
+    generate_next_batch,
+    get_reference_point,
+    optimize_acquisition,
+)
+
+
+@pytest.fixture
+def train_data(request: pytest.FixtureRequest) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    """Create sample training data."""
+    request.getfixturevalue("torch_rng")
+    train_x = torch.rand(10, 2, dtype=torch.double)
+    train_y = torch.rand(10, 2, dtype=torch.double)
+    bounds = torch.tensor([[0.0, 0.0], [1.0, 1.0]], dtype=torch.double)
+    return train_x, train_y, bounds
+
+
+@pytest.mark.usefixtures("torch_rng")
+class TestSingleObjectiveAcquisitionMethods:
+    """Test single-objective acquisition methods."""
+
+    def test_qlognei_acquisition(self) -> None:
+        """Test qLogNEI (Noisy Expected Improvement) acquisition."""
+        train_x = torch.rand(10, 2, dtype=torch.double)
+        train_y = torch.rand(10, 1, dtype=torch.double)
+        bounds = torch.tensor([[0.0, 0.0], [1.0, 1.0]], dtype=torch.double)
+
+        model = create_and_fit_single_task_model(train_x, train_y, bounds)
+        acqf = create_single_objective_acquisition(
+            model=model,
+            train_x=train_x,
+            train_y=train_y,
+            maximize=True,
+            use_noisy=True,  # qLogNEI
+        )
+
+        # Should be callable and produce valid outputs
+        test_x = torch.rand(5, 1, 2, dtype=torch.double)  # q=1, d=2
+        values = acqf(test_x)
+        assert values.shape == (5,)
+
+    def test_qlogei_acquisition(self) -> None:
+        """Test qLogEI (Expected Improvement) acquisition."""
+        train_x = torch.rand(10, 2, dtype=torch.double)
+        train_y = torch.rand(10, 1, dtype=torch.double)
+        bounds = torch.tensor([[0.0, 0.0], [1.0, 1.0]], dtype=torch.double)
+
+        model = create_and_fit_single_task_model(train_x, train_y, bounds)
+        acqf = create_single_objective_acquisition(
+            model=model,
+            train_x=train_x,
+            train_y=train_y,
+            maximize=True,
+            use_noisy=False,  # qLogEI
+            best_f=train_y.max().item(),
+        )
+
+        # Should be callable and produce valid outputs
+        test_x = torch.rand(5, 1, 2, dtype=torch.double)
+        values = acqf(test_x)
+        assert values.shape == (5,)
+
+
+class TestMultiObjectiveAcquisitionMethods:
+    """Test multi-objective acquisition methods."""
+
+    def test_qlognehvi_acquisition(
+        self, train_data: tuple[torch.Tensor, torch.Tensor, torch.Tensor]
+    ) -> None:
+        """Test qLogNEHVI (Noisy Expected Hypervolume Improvement) acquisition."""
+        train_x, train_y, bounds = train_data
+
+        model = create_and_fit_model(train_x, train_y, bounds)
+        maximize_mask = torch.tensor([True, True], dtype=torch.bool)
+        # get_reference_point works in minimization form; negate around it to
+        # obtain a maximization-form reference point below all observations.
+        ref_point = -get_reference_point(-train_y, torch.tensor([True, True], dtype=torch.bool))
+
+        acqf = create_multi_objective_acquisition(
+            model=model,
+            ref_point=ref_point,
+            train_x=train_x,
+            train_y=train_y,
+            maximize_mask=maximize_mask,
+            method=AcquisitionMethod.HYPERVOLUME_IMPROVEMENT,
+        )
+
+        # Should be callable and produce valid outputs
+        test_x = torch.rand(5, 1, 2, dtype=torch.double)
+        values = acqf(test_x)
+        assert values.shape == (5,)
+
+    def test_qlognparego_acquisition(
+        self, train_data: tuple[torch.Tensor, torch.Tensor, torch.Tensor]
+    ) -> None:
+        """Test qLogNParEGO (Parallel EGO with Chebyshev scalarization) acquisition."""
+        train_x, train_y, bounds = train_data
+
+        model = create_and_fit_model(train_x, train_y, bounds)
+        maximize_mask = torch.tensor([True, True], dtype=torch.bool)
+        # get_reference_point works in minimization form; negate around it to
+        # obtain a maximization-form reference point below all observations.
+        ref_point = -get_reference_point(-train_y, torch.tensor([True, True], dtype=torch.bool))
+
+        acqf = create_multi_objective_acquisition(
+            model=model,
+            ref_point=ref_point,
+            train_x=train_x,
+            train_y=train_y,
+            maximize_mask=maximize_mask,
+            method=AcquisitionMethod.SCALARIZED_MULTI_OBJ,
+        )
+
+        # Should be callable and produce valid outputs
+        test_x = torch.rand(5, 1, 2, dtype=torch.double)
+        values = acqf(test_x)
+        assert values.shape == (5,)
+
+
+@pytest.mark.usefixtures("torch_rng")
+class TestUnifiedAcquisitionCreation:
+    """Test unified acquisition creation function."""
+
+    def test_auto_selects_single_objective(self) -> None:
+        """Test that AUTO selects qLogNEI for single-objective."""
+        train_x = torch.rand(10, 2, dtype=torch.double)
+        train_y = torch.rand(10, 1, dtype=torch.double)
+        bounds = torch.tensor([[0.0, 0.0], [1.0, 1.0]], dtype=torch.double)
+
+        model = create_and_fit_single_task_model(train_x, train_y, bounds)
+        acqf = create_acquisition(
+            model=model,
+            ref_point=None,
+            train_x=train_x,
+            train_y=train_y,
+            n_objectives=1,
+            maximize=True,
+            method=AcquisitionMethod.AUTO,
+        )
+
+        assert acqf is not None
+
+    def test_auto_selects_multi_objective(
+        self, train_data: tuple[torch.Tensor, torch.Tensor, torch.Tensor]
+    ) -> None:
+        """Test that AUTO selects qLogNEHVI for multi-objective."""
+        train_x, train_y, bounds = train_data
+
+        model = create_and_fit_model(train_x, train_y, bounds)
+        maximize_mask = torch.tensor([True, True], dtype=torch.bool)
+        # get_reference_point works in minimization form; negate around it to
+        # obtain a maximization-form reference point below all observations.
+        ref_point = -get_reference_point(-train_y, torch.tensor([True, True], dtype=torch.bool))
+
+        acqf = create_acquisition(
+            model=model,
+            ref_point=ref_point,
+            train_x=train_x,
+            train_y=train_y,
+            n_objectives=2,
+            maximize_mask=maximize_mask,
+            method=AcquisitionMethod.AUTO,
+        )
+
+        assert acqf is not None
+
+    def test_explicit_method_selection(
+        self, train_data: tuple[torch.Tensor, torch.Tensor, torch.Tensor]
+    ) -> None:
+        """Test explicit acquisition method selection."""
+        train_x, train_y, bounds = train_data
+
+        model = create_and_fit_model(train_x, train_y, bounds)
+        maximize_mask = torch.tensor([True, True], dtype=torch.bool)
+        # get_reference_point works in minimization form; negate around it to
+        # obtain a maximization-form reference point below all observations.
+        ref_point = -get_reference_point(-train_y, torch.tensor([True, True], dtype=torch.bool))
+
+        # Explicit qLogNParEGO selection
+        acqf = create_acquisition(
+            model=model,
+            ref_point=ref_point,
+            train_x=train_x,
+            train_y=train_y,
+            n_objectives=2,
+            maximize_mask=maximize_mask,
+            method=AcquisitionMethod.SCALARIZED_MULTI_OBJ,
+        )
+
+        assert acqf is not None
+
+
+@pytest.mark.usefixtures("torch_rng")
+class TestAcquisitionOptimization:
+    """Test acquisition function optimization."""
+
+    def test_optimize_single_objective_acquisition(self) -> None:
+        """Test optimization of single-objective acquisition."""
+        train_x = torch.rand(10, 2, dtype=torch.double)
+        train_y = torch.rand(10, 1, dtype=torch.double)
+        bounds = torch.tensor([[0.0, 0.0], [1.0, 1.0]], dtype=torch.double)
+
+        model = create_and_fit_single_task_model(train_x, train_y, bounds)
+        acqf = create_single_objective_acquisition(
+            model=model,
+            train_x=train_x,
+            train_y=train_y,
+            maximize=True,
+        )
+
+        candidates, _values = optimize_acquisition(
+            acqf=acqf,
+            bounds=bounds,
+            batch_size=3,
+            num_restarts=5,
+            raw_samples=64,
+        )
+
+        assert candidates.shape == (3, 2)
+        assert torch.all(candidates >= 0)
+        assert torch.all(candidates <= 1)
+
+    def test_optimize_multi_objective_acquisition(
+        self, train_data: tuple[torch.Tensor, torch.Tensor, torch.Tensor]
+    ) -> None:
+        """Test optimization of multi-objective acquisition."""
+        train_x, train_y, bounds = train_data
+
+        model = create_and_fit_model(train_x, train_y, bounds)
+        maximize_mask = torch.tensor([True, True], dtype=torch.bool)
+        # get_reference_point works in minimization form; negate around it to
+        # obtain a maximization-form reference point below all observations.
+        ref_point = -get_reference_point(-train_y, torch.tensor([True, True], dtype=torch.bool))
+
+        acqf = create_multi_objective_acquisition(
+            model=model,
+            ref_point=ref_point,
+            train_x=train_x,
+            train_y=train_y,
+            maximize_mask=maximize_mask,
+        )
+
+        candidates, _values = optimize_acquisition(
+            acqf=acqf,
+            bounds=bounds,
+            batch_size=3,
+            num_restarts=5,
+            raw_samples=64,
+        )
+
+        assert candidates.shape == (3, 2)
+        assert torch.all(candidates >= 0)
+        assert torch.all(candidates <= 1)
+
+
+class TestLinearConstraintValidation:
+    """Tests for the shape-validation guard on BoTorch linear constraints.
+
+    Reference: BoTorch ``optimize_acqf`` expects each linear constraint to be
+    ``(indices, coefficients, rhs)`` with 1-D index/coefficient tensors of
+    matching length and indices in ``[0, n_dims)``. See
+    https://botorch.readthedocs.io/en/stable/optim.html#botorch.optim.optimize.optimize_acqf
+    for the contract this helper enforces.
+    """
+
+    def _build_acqf(self) -> tuple[AcquisitionFunction, torch.Tensor]:
+        train_x = torch.rand(8, 2, dtype=torch.double)
+        train_y = torch.rand(8, 1, dtype=torch.double)
+        bounds = torch.tensor([[0.0, 0.0], [1.0, 1.0]], dtype=torch.double)
+        model = create_and_fit_single_task_model(train_x, train_y, bounds)
+        acqf = create_single_objective_acquisition(
+            model=model, train_x=train_x, train_y=train_y, maximize=True
+        )
+        return acqf, bounds
+
+    def test_rejects_mismatched_index_coefficient_length(self) -> None:
+        """Mismatched 1-D lengths are rejected with the offending position labelled."""
+        acqf, bounds = self._build_acqf()
+        bad = [
+            (
+                torch.tensor([0, 1], dtype=torch.long),
+                torch.tensor([1.0], dtype=torch.double),
+                0.0,
+            )
+        ]
+        with pytest.raises(ValueError, match="inequality_constraints\\[0\\]"):
+            optimize_acquisition(
+                acqf=acqf,
+                bounds=bounds,
+                batch_size=1,
+                num_restarts=2,
+                raw_samples=8,
+                inequality_constraints=bad,
+            )
+
+    def test_rejects_out_of_range_index(self) -> None:
+        """Indices outside ``[0, n_dims)`` are surfaced before BoTorch runs."""
+        acqf, bounds = self._build_acqf()
+        bad = [
+            (
+                torch.tensor([0, 5], dtype=torch.long),
+                torch.tensor([1.0, -1.0], dtype=torch.double),
+                0.0,
+            )
+        ]
+        with pytest.raises(ValueError, match="out of range"):
+            optimize_acquisition(
+                acqf=acqf,
+                bounds=bounds,
+                batch_size=1,
+                num_restarts=2,
+                raw_samples=8,
+                equality_constraints=bad,
+            )
+
+    def test_rejects_non_finite_rhs(self) -> None:
+        """Non-finite ``rhs`` values would silently blow up downstream."""
+        acqf, bounds = self._build_acqf()
+        bad = [
+            (
+                torch.tensor([0], dtype=torch.long),
+                torch.tensor([1.0], dtype=torch.double),
+                float("nan"),
+            )
+        ]
+        with pytest.raises(ValueError, match="rhs"):
+            optimize_acquisition(
+                acqf=acqf,
+                bounds=bounds,
+                batch_size=1,
+                num_restarts=2,
+                raw_samples=8,
+                inequality_constraints=bad,
+            )
+
+    def test_moves_linear_constraints_to_optimization_tensor(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Linear constraints must live beside the bounds passed to BoTorch."""
+        acqf, bounds = self._build_acqf()
+        captured_bounds: torch.Tensor | None = None
+        captured_constraints: list[tuple[torch.Tensor, torch.Tensor, float]] | None = None
+
+        def fake_optimize_acqf(**kwargs: object) -> tuple[torch.Tensor, torch.Tensor]:
+            nonlocal captured_bounds, captured_constraints
+            opt_bounds = kwargs["bounds"]
+            assert isinstance(opt_bounds, torch.Tensor)
+            opt_constraints = kwargs["inequality_constraints"]
+            assert isinstance(opt_constraints, list)
+            captured_bounds = opt_bounds
+            captured_constraints = opt_constraints
+            candidates = torch.zeros(2, 2, device=opt_bounds.device, dtype=opt_bounds.dtype)
+            values = torch.zeros(2, device=opt_bounds.device, dtype=opt_bounds.dtype)
+            return candidates, values
+
+        monkeypatch.setattr("bo_engine.acquisition.optimize_acqf", fake_optimize_acqf)
+        constraints: list[tuple[torch.Tensor, torch.Tensor, float]] = [
+            (
+                torch.tensor([0], dtype=torch.int32),
+                torch.tensor([1.0], dtype=torch.float32),
+                0.0,
+            )
+        ]
+
+        optimize_acquisition(
+            acqf=acqf,
+            bounds=bounds,
+            batch_size=2,
+            num_restarts=2,
+            raw_samples=8,
+            inequality_constraints=constraints,
+        )
+
+        assert captured_bounds is not None
+        assert captured_constraints is not None
+        indices, coefficients, rhs = captured_constraints[0]
+        assert indices.device == captured_bounds.device
+        assert indices.dtype == torch.long
+        assert coefficients.device == captured_bounds.device
+        assert coefficients.dtype == captured_bounds.dtype
+        assert rhs == 0.0
+
+
+class TestAcquisitionInWorkflow:
+    """Test acquisition methods in full workflow."""
+
+    def test_qlogparego_in_workflow(self, rng: np.random.Generator) -> None:
+        """Test qLogNParEGO in a complete optimization workflow."""
+        spec = OptimizationSpec(
+            parameters=[
+                ParameterSpec(name="x1", type=ParameterType.CONTINUOUS, bounds=(0.0, 1.0)),
+                ParameterSpec(name="x2", type=ParameterType.CONTINUOUS, bounds=(0.0, 1.0)),
+            ],
+            objectives=[
+                ObjectiveSpec(name="f1", minimize=True),
+                ObjectiveSpec(name="f2", minimize=True),
+            ],
+            batch_size=2,
+            acquisition_method=AcquisitionMethod.SCALARIZED_MULTI_OBJ,
+        )
+
+        observations = [
+            ObservationData(
+                parameter_values={"x1": 0.2, "x2": 0.3},
+                objective_values={"f1": 1.0, "f2": 2.0},
+            ),
+            ObservationData(
+                parameter_values={"x1": 0.8, "x2": 0.7},
+                objective_values={"f1": 2.0, "f2": 1.0},
+            ),
+            ObservationData(
+                parameter_values={"x1": 0.5, "x2": 0.5},
+                objective_values={"f1": 1.5, "f2": 1.5},
+            ),
+            ObservationData(
+                parameter_values={"x1": 0.3, "x2": 0.8},
+                objective_values={"f1": 1.2, "f2": 1.8},
+            ),
+            ObservationData(
+                parameter_values={"x1": 0.6, "x2": 0.2},
+                objective_values={"f1": 1.8, "f2": 1.2},
+            ),
+        ]
+
+        suggestions, _ = generate_next_batch(spec, observations, iteration=1, rng=rng)
+
+        assert len(suggestions) == 2
+        assert all(s.generation_method == "bo" for s in suggestions)
+        assert all(s.acquisition_function == "scalarized_multi_objective" for s in suggestions)
+
+    def test_qlognehvi_default_in_workflow(self, rng: np.random.Generator) -> None:
+        """Test that qLogNEHVI is the default for multi-objective."""
+        spec = OptimizationSpec(
+            parameters=[
+                ParameterSpec(name="x", type=ParameterType.CONTINUOUS, bounds=(0.0, 1.0)),
+            ],
+            objectives=[
+                ObjectiveSpec(name="f1", minimize=True),
+                ObjectiveSpec(name="f2", minimize=False),
+            ],
+            batch_size=2,
+            acquisition_method=AcquisitionMethod.AUTO,  # Should select qLogNEHVI
+        )
+
+        observations = [
+            ObservationData(
+                parameter_values={"x": 0.2},
+                objective_values={"f1": 1.0, "f2": 2.0},
+            ),
+            ObservationData(
+                parameter_values={"x": 0.8},
+                objective_values={"f1": 2.0, "f2": 1.0},
+            ),
+            ObservationData(
+                parameter_values={"x": 0.5},
+                objective_values={"f1": 1.5, "f2": 1.5},
+            ),
+        ]
+
+        suggestions, _ = generate_next_batch(spec, observations, iteration=1, rng=rng)
+
+        assert len(suggestions) == 2
+        assert all(s.acquisition_function == "hypervolume_improvement" for s in suggestions)
+
+
+@pytest.mark.usefixtures("torch_rng")
+class TestSignConventionGuards:
+    """Verify that the maximization-form contract is enforced at construction.
+
+    Every acquisition factory must surface a hard error when the caller
+    passes data that is not in the canonical maximization form, instead of
+    silently pointing EI the wrong way.  The sign convention is documented
+    in ``bo_engine.types``.
+
+    Regression context: BoTorch's qLog* acquisition family has no direction
+    flag and always maximizes — see
+    https://botorch.org/docs/tutorials/closed_loop_botorch_only/ and the
+    multi-objective maximization convention BoTorch uses internally
+    (``botorch.utils.multi_objective.hypervolume.Hypervolume``).
+    """
+
+    def test_single_objective_rejects_non_maximization_form(self) -> None:
+        """Passing ``maximize=False`` to the single-objective factory must raise.
+
+        The engine convention is that the caller negates minimization
+        objectives and always hands ``maximize=True`` to the factory.
+        """
+        train_x = torch.rand(5, 2, dtype=torch.double)
+        train_y = torch.rand(5, 1, dtype=torch.double)
+        bounds = torch.tensor([[0.0, 0.0], [1.0, 1.0]], dtype=torch.double)
+        model = create_and_fit_single_task_model(train_x, train_y, bounds)
+
+        with pytest.raises(ValueError, match="maximization form"):
+            create_single_objective_acquisition(
+                model=model,
+                train_x=train_x,
+                train_y=train_y,
+                maximize=False,
+            )
+
+    def test_multi_objective_rejects_non_maximization_mask(
+        self, train_data: tuple[torch.Tensor, torch.Tensor, torch.Tensor]
+    ) -> None:
+        """Any False entry in ``maximize_mask`` must be rejected as a sign error."""
+        train_x, train_y, bounds = train_data
+        model = create_and_fit_model(train_x, train_y, bounds)
+        maximize_mask = torch.tensor([True, False], dtype=torch.bool)
+        ref_point = -get_reference_point(-train_y, torch.tensor([True, True], dtype=torch.bool))
+
+        with pytest.raises(ValueError, match="maximization form"):
+            create_multi_objective_acquisition(
+                model=model,
+                ref_point=ref_point,
+                train_x=train_x,
+                train_y=train_y,
+                maximize_mask=maximize_mask,
+            )
+
+    def test_create_acquisition_requires_maximize_for_single_objective(self) -> None:
+        """Dispatcher must require ``maximize`` when ``n_objectives == 1``."""
+        train_x = torch.rand(5, 2, dtype=torch.double)
+        train_y = torch.rand(5, 1, dtype=torch.double)
+        bounds = torch.tensor([[0.0, 0.0], [1.0, 1.0]], dtype=torch.double)
+        model = create_and_fit_single_task_model(train_x, train_y, bounds)
+
+        with pytest.raises(ValueError, match="maximize"):
+            create_acquisition(
+                model=model,
+                ref_point=None,
+                train_x=train_x,
+                train_y=train_y,
+                n_objectives=1,
+            )
+
+    def test_create_acquisition_requires_maximize_mask_for_multi_objective(
+        self, train_data: tuple[torch.Tensor, torch.Tensor, torch.Tensor]
+    ) -> None:
+        """Dispatcher must require ``maximize_mask`` when ``n_objectives >= 2``."""
+        train_x, train_y, bounds = train_data
+        model = create_and_fit_model(train_x, train_y, bounds)
+        ref_point = -get_reference_point(-train_y, torch.tensor([True, True], dtype=torch.bool))
+
+        with pytest.raises(ValueError, match="maximize_mask"):
+            create_acquisition(
+                model=model,
+                ref_point=ref_point,
+                train_x=train_x,
+                train_y=train_y,
+                n_objectives=2,
+            )

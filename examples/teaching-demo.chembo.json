@@ -1,0 +1,61 @@
+{
+  "name": "教学示例 · 模拟响应",
+  "engine": "gryffin",
+  "seed": 42,
+  "batch_size": 2,
+  "parameters": [
+    {
+      "name": "x",
+      "type": "continuous",
+      "low": 0,
+      "high": 1,
+      "unit": ""
+    },
+    {
+      "name": "category",
+      "type": "categorical",
+      "options": [
+        "A",
+        "B",
+        "C"
+      ],
+      "unit": ""
+    }
+  ],
+  "objectives": [
+    {
+      "name": "response",
+      "goal": "max",
+      "tolerance": 0.2
+    }
+  ],
+  "observations": [
+    {
+      "x": 0.1,
+      "category": "A",
+      "response": 0.2
+    },
+    {
+      "x": 0.4,
+      "category": "B",
+      "response": 0.8
+    },
+    {
+      "x": 0.8,
+      "category": "C",
+      "response": 0.4
+    },
+    {
+      "x": 0.65,
+      "category": "B",
+      "response": 0.95
+    },
+    {
+      "x": 0.3,
+      "category": "A",
+      "response": 0.5
+    }
+  ],
+  "pending": [],
+  "notes": "仅用于演示软件流程，所有响应数据均为模拟数据。"
+}

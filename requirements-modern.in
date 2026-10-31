@@ -1,0 +1,10 @@
+# Native Python 3.13 worker, separate from Atlas/Gryffin Python 3.10.
+# Tested versions; upstream fixed by upstream/bo-mcp/UPSTREAM_REVISION.
+./upstream/bo-mcp/packages/bo-engine
+botorch==0.18.1
+gpytorch==1.15.2
+torch==2.15.0
+numpy==2.5.4
+scipy==1.18.1
+scikit-learn==1.9.1
+pyinstaller==6.16.0
