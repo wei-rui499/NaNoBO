@@ -1,0 +1,79 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Windows 原生安装包与构建说明 · NaNoBO</title><style>*{box-sizing:border-box}body{margin:0;background:#f7faf8;color:#243d33;font:16px/1.8 -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif}header{padding:20px 5%;background:#e8f2ec;border-bottom:1px solid #ccdcd1}header a{margin-right:24px}a{color:#176b50}a:hover{color:#104331}main{max-width:1280px;margin:28px auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:0 24px}nav{position:sticky;top:20px;max-height:90vh;overflow:auto;font-size:14px}nav a{display:block;text-decoration:none;padding:5px 10px;border-left:2px solid #d5e4db}nav .sub{padding-left:24px}article{min-width:0;background:white;border:1px solid #dce7df;border-radius:12px;padding:26px 36px}h1,h2,h3{line-height:1.35;scroll-margin-top:20px}h1{font-size:30px}h2{margin-top:2em;border-bottom:1px solid #dce7df;padding-bottom:10px}h3{margin-top:1.7em}table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;width:100%;margin:18px 0}th,td{border:1px solid #d5e1d9;padding:9px 12px;text-align:left}th{background:#edf5ef}pre{overflow:auto;background:#f1f5f2;padding:14px;border-radius:6px}code{font-family:ui-monospace,Consolas,monospace;font-size:.91em}img{max-width:100%;height:auto}blockquote{margin-left:0;border-left:4px solid #6c9d83;padding:8px 18px;background:#f3f8f4}footer{margin-top:32px;color:#64786b;font-size:13px;border-top:1px solid #dce7df;padding-top:14px}@media(max-width:850px){main{display:block;padding:0 12px}nav{position:static;max-height:270px;margin-bottom:20px}article{padding:20px}header a{display:inline-block;margin-right:16px}}</style><header><strong>NaNoBO</strong> &nbsp; <a href="TUTORIAL.zh-CN.html">简体中文</a><a href="TUTORIAL.en.html">English</a><a href="index.html">教程首页 / Help home</a></header><main><nav aria-label="Table of contents"><a class="" href="#给使用者下载哪个文件">给使用者：下载哪个文件</a><a class="" href="#github-如何构建并保存-windows-版本">GitHub 如何构建并保存 Windows 版本</a><a class="" href="#维护者在-windows-本机重建">维护者在 Windows 本机重建</a><a class="" href="#使用者自行测试时如何反馈">使用者自行测试时如何反馈</a><a class="" href="#科研来源与许可">科研来源与许可</a></nav><article><h1 id="windows-原生安装包与构建说明">Windows 原生安装包与构建说明</h1>
+<p><a href="TUTORIAL.zh-CN.html">简体中文教程</a> · <a href="TUTORIAL.en.html">English tutorial</a> · <a href="https://github.com/wei-rui499/NaNoBO/releases">下载页</a></p>
+<h2 id="给使用者下载哪个文件">给使用者：下载哪个文件</h2>
+<p>Windows 版使用与 Mac 相同的应用源码、模型适配、双语教程和练习数据，直接在原生 Windows 上运行。使用者无需安装 WSL、Ubuntu、Python、Conda、Docker 或编译器，也不要求 GPU。</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NaNoBO-0.2.2-windows-x64-setup-unsigned.exe</code></td>
+<td>普通用户安装器；安装到自己的用户目录，可建立开始菜单和桌面快捷方式</td>
+</tr>
+<tr>
+<td><code>NaNoBO-0.2.2-windows-x64-portable-unsigned.zip</code></td>
+<td>便携版；完整解压后打开 <code>NaNoBO/NaNoBO.exe</code>，保留旁边的 <code>_internal</code> 文件夹</td>
+</tr>
+<tr>
+<td><code>WINDOWS_BUILD-0.2.2.json</code></td>
+<td>构建记录、文件清单、依赖版本及本次验证边界</td>
+</tr>
+<tr>
+<td><code>SHA256SUMS-windows-0.2.2.txt</code></td>
+<td>下载文件的 SHA-256 校验值</td>
+</tr>
+<tr>
+<td><code>NaNoBO-0.2.2-windows-source.zip</code></td>
+<td>该 Windows 构建对应的应用与适配源码</td>
+</tr>
+<tr>
+<td><code>NaNoBO-0.2.2-windows-library-sources.zip</code></td>
+<td>适用第三方依赖的对应版本源码和校验记录</td>
+</tr>
+</tbody>
+</table>
+<p>安装后，从帮助菜单打开“中文使用教程”或“English tutorial”，通过“导出教程练习数据…”把练习文件复制到自己的实验文件夹。教程、练习数据和计算引擎均随程序安装，日常使用不需网络或 API 账户。</p>
+<p>本次按使用者要求，<strong>只在 Windows 编译和封装，不启动应用，不进行模型、GUI、安装／卸载功能测试</strong>。下载页和构建记录标为 <strong>BUILD ONLY / RUNTIME UNVERIFIED</strong>，Windows 实际运行由使用者自行验收。Mac 的功能验收不作为 Windows 已验证的证据。</p>
+<p>安装器目前未进行代码签名；若受机构终端策略限制，按所在机构的软件安装流程处理。Windows ARM64 上运行 x64 程序未纳入本次兼容声明。当前目标为 Windows 10/11 x64；较老系统或受限环境的运行情况待实际反馈。</p>
+<h2 id="github-如何构建并保存-windows-版本">GitHub 如何构建并保存 Windows 版本</h2>
+<p>工作流文件是 <a href="https://github.com/wei-rui499/NaNoBO/blob/main/.github/workflows/windows-release.yml"><code>.github/workflows/windows-release.yml</code></a>，名称为 <strong>Windows native installer (build only)</strong>。</p>
+<ol>
+<li><code>main</code> 有新提交时自动构建，也可在仓库 <strong>Actions → Windows native installer (build only) → Run workflow</strong> 手动启动。</li>
+<li>在原生 <code>windows-2022</code> x64 runner 上建立 Python 3.10 经典环境和 Python 3.13 现代环境。Gryffin 的两个 Cython 扩展由目标系统的 Microsoft C++ 工具链编译，PyTorch 从官方 CPU 轮子源安装。</li>
+<li>分别用 PyInstaller 封装现代工作进程与桌面应用；两套 Python 运行时保持隔离，避免 DLL 或模型依赖版本混用。随后把同一份离线教程和练习文件放入应用。</li>
+<li>仅检查打包目录中所需的 EXE、DLL、C 扩展、Qt 插件、许可证、双语教程和至少四个练习项目是否存在；生成 Inno Setup 安装器和便携 ZIP，校验 ZIP CRC 与文件 SHA-256。<strong>不执行应用或安装器。</strong></li>
+<li>构建产物保存在 <code>NaNoBO-0.2.2-windows-x64-build-only</code> Artifact 中，保留 14 天。只有上一步成功才进入产物上传和 Release 附件步骤。</li>
+<li>发布步骤只新建或复用对应源码提交的 <strong>Draft / Pre-release</strong>，附加 Windows 文件，绝不自动把草稿公开，也不覆盖已经公开的同版本 Release。维护者完成本次发布整理后统一公开。若已有标签，必须指向本次构建的提交。</li>
+</ol>
+<p>工作流启动、排队或配置文件存在，都不代表 EXE 已经构建成功；以 Actions 的最终状态和实际下载附件为准。构建完成也不代表 Windows 应用功能已验证。</p>
+<h2 id="维护者在-windows-本机重建">维护者在 Windows 本机重建</h2>
+<p>需要原生 Windows x64、Python 3.10 和 3.13、Microsoft C++ Build Tools（含 Windows SDK），以及 Inno Setup 6.5+。这些是发布端工具，最终使用者不需要安装。以下命令在仓库根目录的 PowerShell 中执行：</p>
+<pre><code class="language-powershell">$env:PYTHONUTF8 = '1'
+py -3.10 -m venv .venv
+.venv\Scripts\python.exe -m pip install --upgrade pip
+.venv\Scripts\python.exe -m pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+.venv\Scripts\python.exe scripts\bootstrap.py
+
+py -3.13 -m venv .venv-modern
+.venv-modern\Scripts\python.exe -m pip install --upgrade pip
+.venv-modern\Scripts\python.exe -m pip install torch==2.15.0 --index-url https://download.pytorch.org/whl/cpu
+.venv-modern\Scripts\python.exe -m pip install -r requirements-modern.in
+.venv-modern\Scripts\python.exe scripts\collect_licenses.py modern
+.venv-modern\Scripts\python.exe scripts\build_modern.py
+
+.venv\Scripts\python.exe scripts\build.py --bundle-only
+.venv\Scripts\python.exe scripts\fetch_library_sources.py
+.venv\Scripts\python.exe scripts\package_windows.py --compiler 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
+</code></pre>
+<p>产物位于 <code>installers/</code>。<code>package_windows.py</code> 只编译、封装和检查文件完整性；不会启动应用、worker 或安装器。Mac 的锁文件包含 Mac 平台解析结果，不能直接作为 Windows 全量依赖锁使用；本次实际 Windows 依赖版本会写入 <code>WINDOWS_BUILD-*.json</code>。</p>
+<h2 id="使用者自行测试时如何反馈">使用者自行测试时如何反馈</h2>
+<p>建议先用教程的合成练习，保存文件到安装目录以外的工作文件夹。反馈时说明 Windows 版本、NaNoBO 版本、所用教程步骤、弹窗内容和最小可复现的合成项目。请先移除真实实验数据、个人目录与其他敏感信息。若问题涉及计算，在界面保留的日志中定位报错；不要为了运行程序关闭系统防护。</p>
+<p>原有 <code>scripts/smoke_frozen.py</code> 和 <code>--verify-ui</code> 是可选维护工具，本次 Windows 工作流没有调用。源码中保留这些工具不表示本次 Windows 已经运行过这些检查。</p>
+<h2 id="科研来源与许可">科研来源与许可</h2>
+<p>Gryffin、Atlas、BoTorch、scikit-learn 等原始方法的作者署名见 <a href="ACKNOWLEDGMENTS.html">公开致谢</a>；按实际使用的方法引用，见 <a href="HOW_TO_CITE.html">如何引用</a>。完整许可证、修改说明及适用依赖的对应源码随应用或 Release 提供，见 <a href="THIRD_PARTY_NOTICES.html">第三方说明</a>。教程或安装包不会改变上游算法归属。</p>
+<p>技术依据：<a href="https://pyinstaller.org/en/stable/operating-mode.html">PyInstaller 目标系统构建要求</a>、<a href="https://pyinstaller.org/en/stable/common-issues-and-pitfalls.html">Windows DLL 搜索路径</a>、<a href="https://jrsoftware.org/ishelp/topic_setup_privilegesrequired.htm">Inno Setup 普通用户安装</a>、<a href="https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md">GitHub Windows runner 软件清单</a>。</p>
+<footer>NaNoBO · 离线教程 / Offline guide · 教学实验数据均为模拟 / Teaching data are synthetic.</footer></article></main></html>

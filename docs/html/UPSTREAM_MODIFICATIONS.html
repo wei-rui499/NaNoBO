@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>固定来源及修改记录 · NaNoBO</title><style>*{box-sizing:border-box}body{margin:0;background:#f7faf8;color:#243d33;font:16px/1.8 -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif}header{padding:20px 5%;background:#e8f2ec;border-bottom:1px solid #ccdcd1}header a{margin-right:24px}a{color:#176b50}a:hover{color:#104331}main{max-width:1280px;margin:28px auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:0 24px}nav{position:sticky;top:20px;max-height:90vh;overflow:auto;font-size:14px}nav a{display:block;text-decoration:none;padding:5px 10px;border-left:2px solid #d5e4db}nav .sub{padding-left:24px}article{min-width:0;background:white;border:1px solid #dce7df;border-radius:12px;padding:26px 36px}h1,h2,h3{line-height:1.35;scroll-margin-top:20px}h1{font-size:30px}h2{margin-top:2em;border-bottom:1px solid #dce7df;padding-bottom:10px}h3{margin-top:1.7em}table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;width:100%;margin:18px 0}th,td{border:1px solid #d5e1d9;padding:9px 12px;text-align:left}th{background:#edf5ef}pre{overflow:auto;background:#f1f5f2;padding:14px;border-radius:6px}code{font-family:ui-monospace,Consolas,monospace;font-size:.91em}img{max-width:100%;height:auto}blockquote{margin-left:0;border-left:4px solid #6c9d83;padding:8px 18px;background:#f3f8f4}footer{margin-top:32px;color:#64786b;font-size:13px;border-top:1px solid #dce7df;padding-top:14px}@media(max-width:850px){main{display:block;padding:0 12px}nav{position:static;max-height:270px;margin-bottom:20px}article{padding:20px}header a{display:inline-block;margin-right:16px}}</style><header><strong>NaNoBO</strong> &nbsp; <a href="TUTORIAL.zh-CN.html">简体中文</a><a href="TUTORIAL.en.html">English</a><a href="index.html">教程首页 / Help home</a></header><main><nav aria-label="Table of contents"><a class="" href="#v02-增强工作流的科学归属">v0.2 增强工作流的科学归属</a></nav><article><h1 id="固定来源及修改记录">固定来源及修改记录</h1>
+<p>核对日期：2026-10-31。</p>
+<table>
+<thead>
+<tr>
+<th>来源</th>
+<th>固定提交</th>
+<th>本地处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>the-matter-lab/gryffin</td>
+<td>fb149d18f9c81b96179cc682c46e05db60bc7229</td>
+<td>用 Cython 3.3.0 从未修改的两个 <code>.pyx</code> 重生成 <code>.c</code>，解决旧生成代码与 Python 3.10 的兼容问题；重生成文件有显著修改标记</td>
+</tr>
+<tr>
+<td>the-matter-lab/atlas</td>
+<td>ebb1f4f728107f759c48289c2faecfa3af19254f</td>
+<td>使用原生 GPPlanner；适配层显式选择 Pymoo 采集优化器处理非连续变量或批量。Pymoo known_constraints 包装器修复为先将内部索引/类别编码还原到实际变量，再评估约束，防止排除错条件；修改行有显著标记。未改变 GP 或采集函数公式</td>
+</tr>
+<tr>
+<td>the-matter-lab/olympus，olympus-atlas 分支</td>
+<td>def3dda70c981c667aed40a3e8a7d8143b284887</td>
+<td>只下载运行源码/元数据，不下载超过 1GB 的研究数据集和训练模型；setup.py 固定源码快照版本；插件加载器对不存在的 Python <code>__dunder__</code> 元数据抛出标准 AttributeError，避免 Qt 的源代码检查把它误认成插件名</td>
+</tr>
+<tr>
+<td>AccelerationConsortium/bo-mcp</td>
+<td>56d590b91ac120d0f22a3e41e770843d271808cd</td>
+<td>兼容路径保留 bo-engine 的原生 BoTorchBackend；独立 Python 3.13 进程。v0.2 增强工作流在 NaNoBO modeling.py 中直接使用 BoTorch / scikit-learn；未把可选 BayBE/RDKit/MCP 服务一起装入</td>
+</tr>
+</tbody>
+</table>
+<p>没有改写模型公式，没有拿随机搜索代替训练失败。类别描述符等未接入能力见 README。</p>
+<p>公开源码省略 Gryffin 上游遗留的两个 <code>.pyxbldc</code> 文件。它们是 Python 2.7 生成的构建配置字节码缓存，包含上游开发机器路径；当前构建使用保留的 <code>.pyx</code>、<code>.pyxbld</code> 和 <code>.c</code> 源文件，不依赖这些缓存。原始缓存仅保存在本地历史档案，不随公开源码分发。</p>
+<p>冻结应用通过自定义启动 hook 在 Qt 初始化前导入 <code>typing_extensions</code>，处理 Qt 类型注解与 Python 3.10／PyTorch 的兼容问题。当前分发的 PySide6 版本为 6.12.0；该兼容处理不改变科学计算。</p>
+<p>新增的输入校验、CSV、项目保存、GUI、子进程适配、排除已测/待实验条件和打包脚本属于 NaNoBO。上游项目保存各自的 LICENSE。现代引擎依赖清单与经典引擎分开收集，避免把同名不同版本依赖误当成同一个。</p>
+<h2 id="v02-增强工作流的科学归属">v0.2 增强工作流的科学归属</h2>
+<p><code>src/chembo/modeling.py</code> 直接调用 BoTorch 的 SingleTaskGP、ModelListGP、qLogExpectedImprovement 和 qLogNoisyExpectedHypervolumeImprovement，以及 scikit-learn 的 GaussianProcessClassifier。NaNoBO 实现候选域筛选、任务编排和同模型留一重拟合，不把这些已有模型／采集函数宣称为自研新算法。BO-MCP 兼容实现与新版增强路径分开记录，不能将二者的原始作者归属混同。</p>
+<p>原作者公开致谢见 <a href="ACKNOWLEDGMENTS.html">ACKNOWLEDGMENTS.md</a>，实际方法的引用选择见 <a href="HOW_TO_CITE.html">HOW_TO_CITE.md</a>，完整条目见 <a href="https://github.com/wei-rui499/NaNoBO/blob/main/REFERENCES.bib">REFERENCES.bib</a>。已有的版权、许可证、修改行标记及固定来源记录继续保留。</p>
+<footer>NaNoBO · 离线教程 / Offline guide · 教学实验数据均为模拟 / Teaching data are synthetic.</footer></article></main></html>

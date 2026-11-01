@@ -1,0 +1,731 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NaNoBO 使用教程：跟着模拟实验学会规划下一批 · NaNoBO</title><style>*{box-sizing:border-box}body{margin:0;background:#f7faf8;color:#243d33;font:16px/1.8 -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif}header{padding:20px 5%;background:#e8f2ec;border-bottom:1px solid #ccdcd1}header a{margin-right:24px}a{color:#176b50}a:hover{color:#104331}main{max-width:1280px;margin:28px auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:0 24px}nav{position:sticky;top:20px;max-height:90vh;overflow:auto;font-size:14px}nav a{display:block;text-decoration:none;padding:5px 10px;border-left:2px solid #d5e4db}nav .sub{padding-left:24px}article{min-width:0;background:white;border:1px solid #dce7df;border-radius:12px;padding:26px 36px}h1,h2,h3{line-height:1.35;scroll-margin-top:20px}h1{font-size:30px}h2{margin-top:2em;border-bottom:1px solid #dce7df;padding-bottom:10px}h3{margin-top:1.7em}table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;width:100%;margin:18px 0}th,td{border:1px solid #d5e1d9;padding:9px 12px;text-align:left}th{background:#edf5ef}pre{overflow:auto;background:#f1f5f2;padding:14px;border-radius:6px}code{font-family:ui-monospace,Consolas,monospace;font-size:.91em}img{max-width:100%;height:auto}blockquote{margin-left:0;border-left:4px solid #6c9d83;padding:8px 18px;background:#f3f8f4}footer{margin-top:32px;color:#64786b;font-size:13px;border-top:1px solid #dce7df;padding-top:14px}@media(max-width:850px){main{display:block;padding:0 12px}nav{position:static;max-height:270px;margin-bottom:20px}article{padding:20px}header a{display:inline-block;margin-right:16px}}</style><header><strong>NaNoBO</strong> &nbsp; <a href="TUTORIAL.zh-CN.html">简体中文</a><a href="TUTORIAL.en.html">English</a><a href="index.html">教程首页 / Help home</a></header><main><nav aria-label="Table of contents"><a class="" href="#目录">目录</a><a class="" href="#1-安装与第一次打开">1. 安装与第一次打开</a><a class="" href="#2-十分钟完成一次实验循环">2. 十分钟完成一次实验循环</a><a class="sub" href="#21-打开已经填好数据的项目">2.1 打开已经填好数据的项目</a><a class="sub" href="#22-先看模型如何理解已有数据">2.2 先看模型如何理解已有数据</a><a class="sub" href="#23-让软件提出下一批条件">2.3 让软件提出下一批条件</a><a class="sub" href="#24-用模拟答案完成做实验并回填">2.4 用模拟答案完成“做实验并回填”</a><a class="sub" href="#25-完成一轮后的图表示例">2.5 完成一轮后的图表示例</a><a class="" href="#3-练习文件的用法">3. 练习文件的用法</a><a class="sub" href="#31-四套练习与检查数字">3.1 四套练习与检查数字</a><a class="sub" href="#32-完全固定的回填练习">3.2 完全固定的回填练习</a><a class="sub" href="#33-初始没有结果时会怎样">3.3 初始没有结果时会怎样</a><a class="" href="#4-从零建立自己的项目">4. 从零建立自己的项目</a><a class="sub" href="#41-先决定要回答什么问题">4.1 先决定要回答什么问题</a><a class="sub" href="#42-填写变量表">4.2 填写变量表</a><a class="sub" href="#43-目标与标签">4.3 目标与标签</a><a class="sub" href="#44-批量与随机种子">4.4 批量与随机种子</a><a class="sub" href="#45-录入与导入">4.5 录入与导入</a><a class="" href="#5-总量步长与合法配方">5. 总量、步长与合法配方</a><a class="sub" href="#51-规定可执行档位">5.1 规定可执行档位</a><a class="sub" href="#52-添加总量或线性规则">5.2 添加总量或线性规则</a><a class="sub" href="#53-添加配比">5.3 添加配比</a><a class="sub" href="#54-导入候选配方清单">5.4 导入候选配方清单</a><a class="sub" href="#55-修改或清除">5.5 修改或清除</a><a class="" href="#6-pareto-多目标">6. Pareto 多目标</a><a class="sub" href="#61-保留性能折衷">6.1 保留性能折衷</a><a class="sub" href="#62-超体积历史">6.2 超体积历史</a><a class="sub" href="#63-三维-pareto">6.3 三维 Pareto</a><a class="" href="#7-分类主动学习">7. 分类主动学习</a><a class="sub" href="#71-探索文字标签">7.1 探索文字标签</a><a class="sub" href="#72-成功失败">7.2 成功／失败</a><a class="sub" href="#73-类别不够时">7.3 类别不够时</a><a class="" href="#8-读懂模型与可视化">8. 读懂模型与可视化</a><a class="sub" href="#81-候选预测表">8.1 候选预测表</a><a class="sub" href="#82-预测与探索">8.2 预测与探索</a><a class="sub" href="#83-模型验证">8.3 模型验证</a><a class="sub" href="#84-分布与历史">8.4 分布与历史</a><a class="sub" href="#85-导图与导表">8.5 导图与导表</a><a class="" href="#9-gryffinatlas-与引擎选择">9. Gryffin、Atlas 与引擎选择</a><a class="sub" href="#91-按任务选择">9.1 按任务选择</a><a class="sub" href="#92-gryffin-的优先级">9.2 Gryffin 的优先级</a><a class="" href="#10-保存导出与项目记录">10. 保存、导出与项目记录</a><a class="sub" href="#101-项目和表格各管什么">10.1 项目和表格各管什么</a><a class="sub" href="#102-手动转入撤回与重复实验">10.2 手动转入、撤回与重复实验</a><a class="sub" href="#103-计算日志与取消">10.3 计算、日志与取消</a><a class="" href="#11-常见问题">11. 常见问题</a><a class="" href="#12-完整功能索引">12. 完整功能索引</a></nav><article><h1 id="nanobo-使用教程跟着模拟实验学会规划下一批">NaNoBO 使用教程：跟着模拟实验学会规划下一批</h1>
+<p><strong>简体中文</strong> | <a href="TUTORIAL.en.html">English</a> | <a href="README.zh-CN.html">返回项目首页</a></p>
+<p>本教程对应 <strong>NaNoBO 0.2.2 及更新版本</strong>。旧版用户请先更新，才能看到新增的离线教程和练习导出入口。</p>
+<p>这份教程面向会设计实验、会用 Excel，但没有编程经验的化学研究者。你不必先学习贝叶斯优化公式：把已有实验放进软件，让软件建议下一批条件；做完实验，再把结果填回来。</p>
+<p>教程中的产率、形貌、成本和配方全部是 <strong>SYNTHETIC / 模拟教学数据</strong>，由数学规则生成，用于练习软件，不代表真实化学体系，也不是实际合成操作建议。先做第 2 节，再按需要学习配方约束、多目标和分类。</p>
+<h2 id="目录">目录</h2>
+<ul>
+<li><a href="#1-%E5%AE%89%E8%A3%85%E4%B8%8E%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%89%93%E5%BC%80">1. 安装与第一次打开</a></li>
+<li><a href="#2-%E5%8D%81%E5%88%86%E9%92%9F%E5%AE%8C%E6%88%90%E4%B8%80%E6%AC%A1%E5%AE%9E%E9%AA%8C%E5%BE%AA%E7%8E%AF">2. 十分钟完成一次实验循环</a></li>
+<li><a href="#3-%E7%BB%83%E4%B9%A0%E6%96%87%E4%BB%B6%E7%9A%84%E7%94%A8%E6%B3%95">3. 练习文件的用法</a></li>
+<li><a href="#4-%E4%BB%8E%E9%9B%B6%E5%BB%BA%E7%AB%8B%E8%87%AA%E5%B7%B1%E7%9A%84%E9%A1%B9%E7%9B%AE">4. 从零建立自己的项目</a></li>
+<li><a href="#5-%E6%80%BB%E9%87%8F%E6%AD%A5%E9%95%BF%E4%B8%8E%E5%90%88%E6%B3%95%E9%85%8D%E6%96%B9">5. 总量、步长与合法配方</a></li>
+<li><a href="#6-pareto-%E5%A4%9A%E7%9B%AE%E6%A0%87">6. Pareto 多目标</a></li>
+<li><a href="#7-%E5%88%86%E7%B1%BB%E4%B8%BB%E5%8A%A8%E5%AD%A6%E4%B9%A0">7. 分类主动学习</a></li>
+<li><a href="#8-%E8%AF%BB%E6%87%82%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%8F%AF%E8%A7%86%E5%8C%96">8. 读懂模型与可视化</a></li>
+<li><a href="#9-gryffinatlas-%E4%B8%8E%E5%BC%95%E6%93%8E%E9%80%89%E6%8B%A9">9. Gryffin、Atlas 与引擎选择</a></li>
+<li><a href="#10-%E4%BF%9D%E5%AD%98%E5%AF%BC%E5%87%BA%E4%B8%8E%E9%A1%B9%E7%9B%AE%E8%AE%B0%E5%BD%95">10. 保存、导出与项目记录</a></li>
+<li><a href="#11-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98">11. 常见问题</a></li>
+<li><a href="#12-%E5%AE%8C%E6%95%B4%E5%8A%9F%E8%83%BD%E7%B4%A2%E5%BC%95">12. 完整功能索引</a></li>
+</ul>
+<h2 id="1-安装与第一次打开">1. 安装与第一次打开</h2>
+<p>从 <a href="https://github.com/wei-rui499/NaNoBO/releases">GitHub Releases</a> 下载与你的电脑匹配的安装包。应用已包括计算引擎，日常使用不需要安装 Python、WSL、Docker 或申请 API 账户。科学计算在本机进行；打开在线 GitHub 链接才需要联网。</p>
+<table>
+<thead>
+<tr>
+<th>电脑</th>
+<th>安装方法</th>
+<th>当前状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Apple Silicon Mac（M 系列，macOS 14+）</td>
+<td>打开 <code>.dmg</code>，把 NaNoBO.app 拖入 Applications，再从 Applications 启动</td>
+<td>科研测试包尚未 Apple 公证。若系统提示无法确认开发者，可在系统“隐私与安全”中检查应用来源并选择允许打开；无需修改系统级安全设置。</td>
+</tr>
+<tr>
+<td>Windows x64</td>
+<td>下载 Release 中本版本的 Windows 安装器，运行后从开始菜单启动</td>
+<td>代码、教程和构建流程同步更新；安装器是否已生成以 Release 附件为准。本次不宣称完成 Windows 实机功能验证，需由使用者试用确认。</td>
+</tr>
+<tr>
+<td>Intel Mac</td>
+<td>暂不使用 arm64 的 Mac 包</td>
+<td>当前没有经过验证的 Intel Mac 完整安装包。</td>
+</tr>
+</tbody>
+</table>
+<p>窗口左侧是“这个实验允许怎样做”，右侧是“已经做过什么、接下来做什么”，底部显示已完成和待实验的数量。</p>
+<p>新版 <strong>帮助 → 中文使用教程 / English tutorial</strong> 打开随应用附带的离线教程。<strong>帮助 → 导出教程练习数据…</strong> 把练习复制到你指定的文件夹。请使用这份可写副本，不直接修改安装目录。源码用户也可使用 <a href="../../examples/tutorial">examples/tutorial</a>。下文的 <code>examples/tutorial</code> 指仓库内位置；安装应用导出后，它对应你保存的练习根目录，各个 <code>01_quickstart</code> 等文件夹的用法相同。</p>
+<h2 id="2-十分钟完成一次实验循环">2. 十分钟完成一次实验循环</h2>
+<p>这一节使用 <code>examples/tutorial/01_quickstart</code>，先不改任何参数。</p>
+<h3 id="21-打开已经填好数据的项目">2.1 打开已经填好数据的项目</h3>
+<ol>
+<li>点顶部 <strong>打开</strong>，选择 <code>01_quickstart/project.chembo.json</code>。</li>
+<li>检查底部：<strong>已完成 6 个实验，待实验 0 个</strong>。</li>
+<li>左侧应为 <strong>数值优化 / 优先级</strong>、<strong>BoTorch · 优化与分类</strong>、本批实验数 <strong>2</strong>、随机种子 <strong>42</strong>。</li>
+</ol>
+<p>本例假想要提高模拟 <code>yield_pct</code>。A、B 只是类别名称，不代表实际化学品。</p>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>如何理解</th>
+<th>允许取值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>temperature_C</code></td>
+<td>温度</td>
+<td>20、30、40、50、60 °C</td>
+</tr>
+<tr>
+<td><code>cycles</code></td>
+<td>整数次数</td>
+<td>1 或 2</td>
+</tr>
+<tr>
+<td><code>additive</code></td>
+<td>添加剂类别</td>
+<td>A 或 B</td>
+</tr>
+<tr>
+<td><code>yield_pct</code></td>
+<td>已完成实验的模拟产率</td>
+<td>数值，目标为最大化</td>
+</tr>
+</tbody>
+</table>
+<p>共有 20 个合法组合，6 个已有结果，初始最佳模拟产率为 <strong>73.5</strong>。打开项目已载入这些设置，不需要重新输入。</p>
+<h3 id="22-先看模型如何理解已有数据">2.2 先看模型如何理解已有数据</h3>
+<ol>
+<li>点 <strong>分析与交叉验证</strong>，等待完成。</li>
+<li>在 <strong>模型与可视化 → 候选预测表</strong>应看到 <strong>14 个未测候选</strong>。</li>
+<li>每行有变量条件、<code>yield_pct · 预测</code>、<code>yield_pct · 标准差</code>和采集分值。</li>
+<li>切换 <strong>模型验证 → 预测与实测</strong>，应显示 <strong>验证 6 行</strong>，以及 RMSE、MAE、R²。</li>
+</ol>
+<p>分析只检查模型，不排队新实验，此时仍为 6 个已完成、0 个待实验。预测的具体小数可能随平台或数值库版本略有差异；首先检查任务状态、候选数量和数据对应关系。</p>
+<h3 id="23-让软件提出下一批条件">2.3 让软件提出下一批条件</h3>
+<ol>
+<li>点 <strong>生成下一批实验 →</strong>。</li>
+<li>完成后进入 <strong>下一批 / 待实验</strong>，应有 <strong>2 行条件</strong>。</li>
+<li>底部为 <strong>已完成 6 个，待实验 2 个</strong>，原来的结果不会变成 8 条。</li>
+<li>点 <strong>导出待回填 CSV</strong>，保存为 <code>round-1-pending.csv</code>。</li>
+</ol>
+<p>CSV 含变量列和空的 <code>yield_pct</code> 列。空目标表示“还没有测”，不是产率 0。待实验表不可直接编辑，请在导出的表里填结果。</p>
+<p>生成时的预测表保留本次选择前的 14 个候选，以“本批推荐 = 是”标记选中的 2 行。这时再点一次 <strong>分析与交叉验证</strong>，已排队的 2 条被排除，应剩 <strong>12 个未测且未排队候选</strong>。</p>
+<h3 id="24-用模拟答案完成做实验并回填">2.4 用模拟答案完成“做实验并回填”</h3>
+<p>这里不做真实实验，用 <code>all-simulated-results.csv</code> 模拟“测到了什么”。</p>
+<ol>
+<li>用 Excel 打开 <code>round-1-pending.csv</code> 和本例 <code>all-simulated-results.csv</code>。</li>
+<li>对每个待实验，按<strong>温度、次数、添加剂三个变量共同匹配</strong>找到完全一致的一行。</li>
+<li>只把该行的模拟 <code>yield_pct</code> 填入待回填文件。不改条件，不整表导入所有答案。</li>
+<li>把填好两行的文件保存为 CSV UTF-8 或 XLSX。</li>
+<li>回到 <strong>已完成实验 → 导入 Excel / CSV</strong>，导入这两条结果。</li>
+<li>检查：<strong>已完成 8 个，待实验 0 个</strong>。匹配的待实验会自动移除。</li>
+<li>点 <strong>保存</strong>，存为自己的 <code>quickstart-round-1.chembo.json</code>，再分析或生成下一批。</li>
+</ol>
+<p><strong>不要直接用 <code>followup-results.csv</code> 回填刚生成的建议。</strong> 它对应单独的固定待实验练习，见第 3.2 节；新推荐的条件应逐一查完整模拟答案。</p>
+<p>一批实验没有提高最佳产率，不一定表示流程有错：模型也会选择不确定的区域以收集信息。保存每轮数据，再判断整个实验过程。</p>
+<h3 id="25-完成一轮后的图表示例">2.5 完成一轮后的图表示例</h3>
+<p><img src="media/docs/screenshots/tutorial-quickstart.png" alt="练习 1 回填到 8 条模拟结果后的候选预测图"></img></p>
+<p>上图由应用实际使用的模型和绘图界面导出，来自<strong>完成一轮回填后的 8 条模拟结果</strong>，因此有 12 个未测候选，而不是初次分析的 14 个。绿色点是模型预测，浅绿色是模型区间。你的具体推荐和小数可能不同，仍按变量组合查答案、检查数量并保存项目。</p>
+<h2 id="3-练习文件的用法">3. 练习文件的用法</h2>
+<h3 id="31-四套练习与检查数字">3.1 四套练习与检查数字</h3>
+<table>
+<thead>
+<tr>
+<th>文件夹</th>
+<th>练习内容</th>
+<th>起始结果</th>
+<th>全部合法候选</th>
+<th>首次分析预测行数</th>
+<th>生成 2 条后再分析</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>01_quickstart</code></td>
+<td>单目标、三种变量、完整循环</td>
+<td>6</td>
+<td>20</td>
+<td>14</td>
+<td>12</td>
+</tr>
+<tr>
+<td><code>02_recipe</code></td>
+<td>步长、总量、配比、候选表</td>
+<td>6</td>
+<td>21</td>
+<td>15</td>
+<td>13</td>
+</tr>
+<tr>
+<td><code>03_pareto</code></td>
+<td>产率最大化、成本最小化</td>
+<td>6</td>
+<td>28</td>
+<td>22</td>
+<td>20</td>
+</tr>
+<tr>
+<td><code>04_classification</code></td>
+<td>团聚／球形／棒状</td>
+<td>6，每类 2 条</td>
+<td>28</td>
+<td>22</td>
+<td>20</td>
+</tr>
+</tbody>
+</table>
+<p>以上数字只针对每个文件夹 <code>project.chembo.json</code> 的初始状态。顶部“教学示例”里的四个小例子是另一套数据，不套用此表的数字。</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>用途</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>project.chembo.json</code></td>
+<td>直接体验分析和推荐</td>
+<td>已有 6 条，<strong>不再导入 seed 文件</strong>。</td>
+</tr>
+<tr>
+<td><code>empty-project.chembo.json</code></td>
+<td>练习导入</td>
+<td>初始无结果，导入一种 seed 文件一次，得到 6 条。</td>
+</tr>
+<tr>
+<td><code>seed-observations.csv/.xlsx/.xls</code></td>
+<td>同一份六行数据的三种格式</td>
+<td>三者任选一种，不是三批不同实验。Excel 选择 <strong>Results</strong> 工作表。</td>
+</tr>
+<tr>
+<td><code>pending-practice.chembo.json</code></td>
+<td>固定回填练习</td>
+<td>打开为 6 个已完成、2 个固定待实验。</td>
+</tr>
+<tr>
+<td><code>followup-results.csv</code></td>
+<td>固定待实验对应的两条结果</td>
+<td>只与同文件夹的 pending-practice 配对。</td>
+</tr>
+<tr>
+<td><code>candidates.csv</code></td>
+<td>允许做的变量组合</td>
+<td>通过“配方约束 / 候选表…”导入，不从结果按钮导入。</td>
+</tr>
+<tr>
+<td><code>all-simulated-results.csv</code></td>
+<td>所有合法组合的模拟答案</td>
+<td>查找新推荐条件，不整表导入。</td>
+</tr>
+<tr>
+<td><code>README.txt</code>、<code>manifest.json</code></td>
+<td>文件说明与检查数字</td>
+<td>不作为实验结果导入。</td>
+</tr>
+</tbody>
+</table>
+<p>Excel 中 <strong>ReadMe</strong> 是说明页，不是结果页。<code>.xls</code> 是真实旧版 Excel 文件，并非将 <code>.xlsx</code> 改扩展名。</p>
+<h3 id="32-完全固定的回填练习">3.2 完全固定的回填练习</h3>
+<p>四个文件夹都能这样操作：打开 <code>pending-practice.chembo.json</code>，确认 <strong>6 个已完成／2 个待实验</strong>；从“已完成实验”导入同文件夹的 <code>followup-results.csv</code>；应得到 <strong>8 个已完成／0 个待实验</strong>。</p>
+<p>这验证“回填完整结果后自动移除匹配待实验”，不假定不同平台的优化器一定推荐同样两条条件。</p>
+<h3 id="33-初始没有结果时会怎样">3.3 初始没有结果时会怎样</h3>
+<p>打开 <code>empty-project.chembo.json</code>，不导入起始数据，直接生成下一批。数值结果少于 2 条时做合法候选中的分散初始设计；分类实际只见过一个类别时也先探索，不提供虚构概率。预测图会解释尚无已拟合模型。</p>
+<p>完成若干实验并回填后才有后验预测。练习完初始设计，应重新打开原教学项目，不把不同练习状态混在一起。</p>
+<h2 id="4-从零建立自己的项目">4. 从零建立自己的项目</h2>
+<h3 id="41-先决定要回答什么问题">4.1 先决定要回答什么问题</h3>
+<p>点 <strong>新项目</strong>，先选 <strong>任务类型</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>你的问题</th>
+<th>任务</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一个数值越高／越低越好</td>
+<td>数值优化 / 优先级，保留一个目标</td>
+<td>产率最大化、粒径偏差最小化</td>
+</tr>
+<tr>
+<td>几种性能需要权衡</td>
+<td>Pareto 多目标</td>
+<td>提高产率并降低成本</td>
+</tr>
+<tr>
+<td>想了解什么条件产生什么标签</td>
+<td>分类主动学习</td>
+<td>成功／失败、不同形貌</td>
+</tr>
+<tr>
+<td>目标有明确先后顺序</td>
+<td>数值优化 / 优先级 + Gryffin</td>
+<td>先关注目标 1，再考虑目标 2，见第 9 节</td>
+</tr>
+</tbody>
+</table>
+<p>初学、需要约束和详细图表时，选 <strong>BoTorch · 优化与分类</strong>。这不是对不同算法效果的排名。</p>
+<h3 id="42-填写变量表">4.2 填写变量表</h3>
+<p>点 <strong>＋ 变量</strong>，填写变量名、类型、范围、类别、单位、步长：</p>
+<table>
+<thead>
+<tr>
+<th>设置</th>
+<th>填法</th>
+<th>注意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>变量名</td>
+<td><code>temperature_C</code>、<code>volume_mL</code> 等</td>
+<td>与数据表列名完全一致；变量和目标不能重名。</td>
+</tr>
+<tr>
+<td>连续</td>
+<td>实数范围，如 20–80</td>
+<td>不填步长表示范围内连续取值；仪器只能按档位执行时填步长。</td>
+</tr>
+<tr>
+<td>整数</td>
+<td>如次数 1–5</td>
+<td>上下限、记录和步长均须整数。</td>
+</tr>
+<tr>
+<td>类别</td>
+<td>`A</td>
+<td>B</td>
+</tr>
+<tr>
+<td>单位</td>
+<td>mL、°C、min 等</td>
+<td>仅记录，不自动把 μL 换成 mL。</td>
+</tr>
+<tr>
+<td>步长</td>
+<td>0.1 mL、5 °C 等</td>
+<td>从<strong>下限</strong>起算，下限 20、步长 7 是 20、27、34……，不强行凑上限。</td>
+</tr>
+</tbody>
+</table>
+<p>类别不填数值上下限和步长。删除时选中变量行，点 <strong>删除选中变量</strong>。已有数据时先另存版本再改结构；软件不会把旧列悄悄重新命名。</p>
+<h3 id="43-目标与标签">4.3 目标与标签</h3>
+<p>数值目标填写名称和 <strong>最大化 / 最小化</strong>，如 <code>yield_pct</code> 最大化、<code>size_error_nm</code> 最小化。百分数可填 73.5，但同一列别混用 0.735 和 73.5。</p>
+<p><strong>＋ 目标</strong>添加，<strong>删除选中目标</strong>删除。BoTorch 单目标保留一个目标，两个以上用 Pareto。分类只保留一个结果列，在 <strong>分类标签</strong>填 <code>成功 | 失败</code> 等；分类目标的方向不参与排序。</p>
+<p>“容忍比例”只在 Gryffin 优先级多目标显示，是 Chimera 相对容忍设置，不是安全阈值、测量误差或“允许失败 20%”。BoTorch／Pareto 不使用它。</p>
+<h3 id="44-批量与随机种子">4.4 批量与随机种子</h3>
+<p><strong>本批实验数</strong>是本次排队数量，范围 1–24。不会为凑够数量而重复已测或已排队条件。</p>
+<p><strong>随机种子</strong>帮助复现。完整项目、数据、待实验和环境相同时更容易重复计算；固定种子不承诺跨所有系统和库版本逐位相同。正式研究应保存软件版本和原始数据。</p>
+<h3 id="45-录入与导入">4.5 录入与导入</h3>
+<p>手动：<strong>已完成实验 → ＋ 录入一行</strong>，填齐全部变量和目标。不能把空目标留在已完成表里；未测的条件留在待实验表。</p>
+<p>导入：点 <strong>导入 Excel / CSV</strong>。表头必须<strong>恰好</strong>含全部变量和目标，没有额外序号、备注或单位列；列顺序可以不同，列名不能不同。单位和来源写进项目设置、备注。</p>
+<p>练习 1 的结果表格式是：</p>
+<pre><code class="language-csv">temperature_C,cycles,additive,yield_pct
+20,1,A,44.5
+30,1,A,57
+</code></pre>
+<p>支持 UTF-8 CSV、XLS、XLSX；多工作表时选择结果所在的一张。全空白行可跳过，单个缺失单元格、重复表头会报错。Excel 公式读取已保存的数值缓存，不在应用内运行；无缓存时请用 Excel 计算保存，或粘贴为数值。</p>
+<p><strong>导入追加记录，也允许重复实验。</strong> 不按文件名去重；同一份六行文件导入两次会成 12 行。请区分真正重复测量与重复导入。</p>
+<h2 id="5-总量步长与合法配方">5. 总量、步长与合法配方</h2>
+<p>打开 <code>02_recipe/project.chembo.json</code>。假想 A、B 总量为 1 mL、A/B 在 0.25–4、老化时间只能 10/20/30 min。已有 6 条结果，合法候选 21 个。</p>
+<h3 id="51-规定可执行档位">5.1 规定可执行档位</h3>
+<p>变量表中 <code>A_mL</code>、<code>B_mL</code> 步长均为 0.1；<code>aging_min</code> 为整数、步长 10。建议从这些档位选择，不是在任意小数建议后随意四舍五入。</p>
+<h3 id="52-添加总量或线性规则">5.2 添加总量或线性规则</h3>
+<ol>
+<li>点 <strong>配方约束 / 候选表…</strong>。本例已有两条规则；想重建时，选中旧规则后点 <strong>删除选中规则</strong>。</li>
+<li>点 <strong>＋ 总量／线性</strong>。</li>
+<li><code>A_mL</code> 和 <code>B_mL</code> 系数填 <strong>1</strong>，<code>aging_min</code> 系数填 <strong>0</strong>。</li>
+<li>关系选 <strong>=</strong>，右侧填 <strong>1</strong>，确认。</li>
+</ol>
+<p>数值变量的系数默认可能是 1，<strong>不参与求和的变量务必改为 0</strong>。不能直接把分钟和毫升相加。也可用 <code>≤</code>、<code>≥</code>表达预算上限或用量下限，例如 <code>2 × A + B ≤ 3</code>，各项必须量纲一致。</p>
+<h3 id="53-添加配比">5.3 添加配比</h3>
+<p>点 <strong>＋ 配比</strong>，分子 <code>A_mL</code>，分母 <code>B_mL</code>，最小 <strong>0.25</strong>、最大 <strong>4</strong>。分母必须大于零。所有规则同时生效。</p>
+<h3 id="54-导入候选配方清单">5.4 导入候选配方清单</h3>
+<p>点 <strong>导入合法候选表（Excel / CSV）</strong>，选本例 <code>candidates.csv</code>，再点 <strong>应用（使用 BoTorch）</strong>。该文件只有 <code>A_mL,B_mL,aging_min</code> 三列，没有目标。对话框应显示 <strong>21 个配方</strong>；首次分析为 <strong>15 个未测候选</strong>。</p>
+<p>候选表回答“允许做什么”，结果表回答“做过什么、结果是多少”。历史结果可来自候选表外，但仍须满足边界、步长和约束；新待实验必须来自候选表。</p>
+<p>生成两条后检查：A+B=1、0.25≤A/B≤4、体积符合 0.1 档位、时间为 10/20/30。若实验实际执行了不同条件，应按真实执行值回填，不篡改真实数据以匹配建议。</p>
+<p><img src="media/docs/screenshots/tutorial-recipe.png" alt="练习 2 回填到 8 条模拟结果后的合法配方预测图"></img></p>
+<p>本图由应用对<strong>8 条模拟结果</strong>拟合后实际导出。21 个合法配方中已有 8 个完成，图中比较其余 13 个候选；它们的总量、配比和步长仍受同一组规则约束。预测值不是真实测得的产率。</p>
+<h3 id="55-修改或清除">5.5 修改或清除</h3>
+<p>删除单条规则用 <strong>删除选中规则</strong>；只移除候选表用 <strong>清除候选表</strong>。主窗口 <strong>清除联合限制</strong>同时移除联合约束和候选表，<strong>不会清空变量步长</strong>。</p>
+<p>本例即使清掉候选表，仍可由范围／步长和规则生成 21 个合法组合。改规则后若旧结果不合法，先保留旧项目、核对实际实验，再建立适当新项目，不能改写真实记录来通过校验。</p>
+<p>有限域最多检查 200,000 组源组合，一次排序最多 4,096 个合法未做候选。大空间可增加步长或用实验室预筛选清单；排名只针对这次实际评分的候选池。连续域可能只采样一个可行子集，不表示已找到全局最优。</p>
+<h2 id="6-pareto-多目标">6. Pareto 多目标</h2>
+<h3 id="61-保留性能折衷">6.1 保留性能折衷</h3>
+<p>打开 <code>03_pareto/project.chembo.json</code>，6 条模拟结果、0 条待实验。任务为 <strong>Pareto 多目标</strong>、引擎 BoTorch；<code>yield_pct</code> 最大化、<code>cost_index</code> 最小化（无量纲模拟成本）。</p>
+<p>点 <strong>分析与交叉验证</strong>，预测表应有 <strong>22 行</strong>。顶部 <strong>查看目标</strong>可切换产率／成本，分别看预测与验证。</p>
+<p>进入 <strong>Pareto 多目标 → 二维 Pareto</strong>，X 选 <code>yield_pct</code>，Y 选 <code>cost_index</code>。绿色是全目标下的非支配已测点：没有另一个已测条件在所有方向上都不差、并至少一个方向更好。灰色是其他已测点。未测预测、待实验不进入实测前沿。</p>
+<p>Pareto 帮助比较折衷，不自动决定最终配方；研究者仍需考虑可放大性、测量可靠性、预算等。</p>
+<p><img src="media/docs/screenshots/tutorial-pareto.png" alt="练习 3 回填到 8 条模拟结果后的 Pareto 投影"></img></p>
+<p>这是本练习实际模型分析与应用绘图界面输出的<strong>8 条模拟结果</strong>。横轴产率向右更好，纵轴成本向下更好，绿色点保留不同折衷；灰色点是其他模拟结果。图中的“实测”表示项目已完成结果栏，数据来源仍全部为 SYNTHETIC，不是湿实验。</p>
+<h3 id="62-超体积历史">6.2 超体积历史</h3>
+<p>同页选择 <strong>超体积历史</strong>。本例固定参考点为 <code>yield_pct=0,cost_index=10</code>，表示同一标准下已测折衷方案覆盖的目标空间；参考点不是一条测量结果。</p>
+<p>一般项目默认参考点会随本次数据变化，跨轮比较绝对超体积应使用相同参考点。当前 GUI 没有单独的参考点输入框；教学项目已预置，无需初学者编辑 JSON。</p>
+<h3 id="63-三维-pareto">6.3 三维 Pareto</h3>
+<p>打开 <code>three-objective-project.chembo.json</code>，额外包含要最小化的 <code>waste_index</code>，已有 6 条完整三目标结果。分析后选择 <strong>三维 Pareto</strong>，X/Y/Z 分别选 <code>yield_pct/cost_index/waste_index</code>，即可查看和导出。</p>
+<p>三维需要三个不同目标，二目标项目不能凭空产生第三目标。三目标回填必须填齐三个结果，可查 <code>three-objective-all-simulated-results.csv</code>；不能导入只有两个目标的起始表。三个以上目标的二维投影，不一定形成直观的有序曲线。</p>
+<h2 id="7-分类主动学习">7. 分类主动学习</h2>
+<h3 id="71-探索文字标签">7.1 探索文字标签</h3>
+<p>打开 <code>04_classification/project.chembo.json</code>，标签为 <code>团聚 | 球形 | 棒状</code>，唯一结果列为 <code>morphology</code>。已有 6 条，每类 2 条。</p>
+<p>点 <strong>分析与交叉验证</strong>，候选表应有 <strong>22 行</strong>，显示 <code>P(团聚)</code>、<code>P(球形)</code>、<code>P(棒状)</code>和“熵”。在 <strong>分类分析</strong>查看：</p>
+<table>
+<thead>
+<tr>
+<th>图形</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>候选类别概率</td>
+<td>同一候选的已观察类别概率加和为 1。图显示前 40 个候选，完整信息在表格。</td>
+</tr>
+<tr>
+<td>分类不确定性</td>
+<td>熵越高，模型越拿不准；本策略优先探索这样的条件。</td>
+</tr>
+<tr>
+<td>已测类别分布</td>
+<td>当前已完成记录的类别计数，本例初始 2、2、2。</td>
+</tr>
+<tr>
+<td>混淆矩阵</td>
+<td>行是留出记录的实际类别，列是预测类别；对角线上是预测正确的次数。本例累计 6 个留出预测。</td>
+</tr>
+</tbody>
+</table>
+<p>生成 2 条后，用完整模拟答案查找变量组合，回填一个允许的完整标签。不要把概率或“80% 球形”填进结果列。</p>
+<p><img src="media/docs/screenshots/tutorial-classification.png" alt="练习 4 回填到 8 条模拟结果后的类别概率"></img></p>
+<p>本图来自实际分类器对<strong>8 条模拟标签</strong>的分析，剩余 20 个未测候选。每根柱子表示一个候选在三种已见类别之间的概率分配；你的下一批条件可能不同，应读取自己项目中的完整预测表。</p>
+<p><img src="media/docs/screenshots/tutorial-confusion.png" alt="同一份 8 条模拟结果的留一混淆矩阵"></img></p>
+<p>同一次分析的混淆矩阵共有 8 个留出预测，对角线上是 5 个，因此本图准确率为 5/8，即 0.625。它直观展示了哪些形貌容易被分错，不应只看一个总体准确率；这里的“实测类别”仍指教学项目中填入的模拟标签。</p>
+<h3 id="72-成功失败">7.2 成功／失败</h3>
+<p>打开同文件夹 <code>binary-project.chembo.json</code>，标签改为 <code>成功 | 失败</code>，结果列为 <code>outcome</code>，已有 6 条结果；答案查 <code>binary-all-simulated-results.csv</code>。</p>
+<p>本分类策略按<strong>不确定性</strong>选点，帮助了解类别边界，不是优先选择最可能成功的条件。要最大化连续产率应选择数值任务。</p>
+<h3 id="73-类别不够时">7.3 类别不够时</h3>
+<p>至少预定义两个标签，实际数据见到两个类别后才拟合分类器。只见过一个类别时先初始探索，不给虚假概率。预定义但未观察过的类别保持缺失，不补为 0%；当前概率只在见过的类别间归一化。</p>
+<p>分类留一后若训练集只剩一个类别，该折跳过并显示实际验证数量。少量样本的准确率不能替代独立实验确认。</p>
+<h2 id="8-读懂模型与可视化">8. 读懂模型与可视化</h2>
+<p><strong>生成下一批实验</strong>会排队条件；<strong>分析与交叉验证</strong>只拟合和诊断，不增加待实验。Gryffin／Atlas 保留原生推荐，没有用另一个模型冒充它们的后验诊断。</p>
+<h3 id="81-候选预测表">8.1 候选预测表</h3>
+<p>点表头可数值排序。每行包含实际变量条件；数值任务显示均值／标准差，分类显示概率／熵。</p>
+<p>采集分值表示<strong>本次计算中值得尝试的程度</strong>，不是产率或成功率，也不跨两次计算比较绝对值。批次依次选择时会把刚选中的点加入待实验后重评分，因此“本批推荐”不一定是首轮排名的前两条。</p>
+<h3 id="82-预测与探索">8.2 预测与探索</h3>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>回答什么问题</th>
+<th>如何理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>候选预测与区间</td>
+<td>哪些条件预计较好，哪里不确定？</td>
+<td>色带为均值±1.96×模型标准差，未校准覆盖率，不表示实验测量误差；金色星号为本批推荐。</td>
+</tr>
+<tr>
+<td>预测均值与不确定性</td>
+<td>高预测与高不确定的点分别在哪？</td>
+<td>横轴均值、纵轴模型标准差；不确定性高不保证性能高。</td>
+</tr>
+<tr>
+<td>采集分值排序</td>
+<td>这次候选的优先级如何分布？</td>
+<td>同一次分析内比较。</td>
+</tr>
+</tbody>
+</table>
+<p>点击候选散点，下方显示对应变量组合。工具栏支持平移、缩放、还原。</p>
+<h3 id="83-模型验证">8.3 模型验证</h3>
+<p>点 <strong>分析与交叉验证</strong>后，在 <strong>模型验证</strong>选择：</p>
+<ul>
+<li><strong>预测与实测</strong>：每条记录拿走一次，用其余记录重新训练同一个实际模型再预测它；点越接近对角线越一致。</li>
+<li><strong>验证误差</strong>：显示“预测−实测”，方便检查偏高、偏低和个别大偏差。</li>
+<li><strong>RMSE</strong>：均方根误差，对大偏差更敏感。</li>
+<li><strong>MAE</strong>：平均绝对误差，与原目标同单位。</li>
+<li><strong>R²</strong>：相对于当前数据均值的比较指标，可为负；实测值全相同时不报告。</li>
+</ul>
+<p>至少 3 条才能留一；超过 30 条时均匀选最多 30 条分别留出，每折仍用其余全部记录训练。分类验证在“分类分析 → 混淆矩阵”，不在数值散点。留一检查当前数据的预测能力，不替代独立真实实验。</p>
+<p><img src="media/docs/screenshots/tutorial-validation.png" alt="练习 1 的 8 条模拟结果经过实际留一重拟合得到的预测与实测图"></img></p>
+<p>本图由应用实际留一重拟合并导出，使用<strong>8 条模拟结果</strong>。横轴是被留出记录中的模拟产率，纵轴是没有用到该记录时的预测；例如图中 RMSE 约 4.48，按本例尺度可读作约 4.48 个产率百分点。误差条是模型不确定性，不是仪器重复测量误差；你的数据和留出指标可能不同。</p>
+<h3 id="84-分布与历史">8.4 分布与历史</h3>
+<p><strong>数据分布</strong>里选择变量，再选 <strong>观测分布 / 实测历史</strong>。数值显示直方图，类别显示计数；查看数值目标历史时还显示对应方向的历史最佳值。主窗口趋势只画首个数值目标，分类不显示该数值曲线。</p>
+<p>只统计已完成记录，包含重复实验；记录序号不等于实际时间间隔。</p>
+<h3 id="85-导图与导表">8.5 导图与导表</h3>
+<p>先选所需图，再点 <strong>导出当前图…</strong>，选择 <strong>PNG / PDF / SVG</strong>。PNG 便于幻灯片，PDF/SVG 保留矢量信息。导图附带模型状态和说明，帮助区分预测和实测。</p>
+<p>**导出预测表 CSV…**保留全部候选，不只是屏幕能看到的行。在候选表页点“导出当前图”会导出数值预测图，分类项目则导出分类图，不是表格截图。</p>
+<p>应用提供单张图、预测 CSV 和项目导出，没有“一键完整论文报告”按钮。汇报时组合所需图、已测结果、备注与引用信息；预测 CSV 不能作为实测结果导入。</p>
+<h2 id="9-gryffinatlas-与引擎选择">9. Gryffin、Atlas 与引擎选择</h2>
+<h3 id="91-按任务选择">9.1 按任务选择</h3>
+<table>
+<thead>
+<tr>
+<th>需求</th>
+<th>选择</th>
+<th>本版范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>四套教学练习、约束配方、Pareto、分类、详细图表</td>
+<td>BoTorch · 优化与分类</td>
+<td>数值固定 GP，分类固定概率分类器，无需选择额外模型菜单。</td>
+</tr>
+<tr>
+<td>Gryffin 原生连续／整数／类别推荐、先后顺序目标</td>
+<td>Gryffin · 类别与连续变量</td>
+<td>原生推荐，多目标用 Chimera；没有 BoTorch 后验诊断。</td>
+</tr>
+<tr>
+<td>Atlas 原生单目标与批量</td>
+<td>Atlas · 高斯过程</td>
+<td>原生 GPPlanner；描述符、多保真、元学习等尚未开放为用户功能。</td>
+</tr>
+</tbody>
+</table>
+<p>没有 GP／随机森林／SVM 或 EI／UCB 的切换菜单。步长、联合规则、显式候选、Pareto、分类走 BoTorch；不兼容组合会提示，不静默换算法。</p>
+<p>练习 1 的 <code>gryffin-project.chembo.json</code>、<code>atlas-project.chembo.json</code>保留 6 条模拟记录，去掉步长和显式候选。打开即可体验原生推荐。它们可能给出完整答案表之外的连续数值，不能四舍五入去冒充已知结果。需要第 8 节诊断时，重新打开 BoTorch 项目。</p>
+<h3 id="92-gryffin-的优先级">9.2 Gryffin 的优先级</h3>
+<p>Gryffin 选择“数值优化 / 优先级”时，目标自上而下为优先顺序。容忍比例是 Chimera 相对设置，不能直接读成绝对化学阈值。想保留“高产率／低成本”的折衷时，可按第 6 节使用 Pareto。</p>
+<p>切换引擎不删除原始记录，但应按新设置重新计算模型，不能直接比较不同引擎的分值。方法归属见<a href="HOW_TO_CITE.html">引用指南</a>与<a href="ACKNOWLEDGMENTS.html">公开致谢</a>。</p>
+<h2 id="10-保存导出与项目记录">10. 保存、导出与项目记录</h2>
+<h3 id="101-项目和表格各管什么">10.1 项目和表格各管什么</h3>
+<table>
+<thead>
+<tr>
+<th>入口</th>
+<th>内容</th>
+<th>使用时机</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>保存／文件 → 保存项目</td>
+<td>变量、目标、规则、候选、结果、待实验、历史、最近分析、备注</td>
+<td>每次导入、推荐、分析后保存，完整继续项目。</td>
+</tr>
+<tr>
+<td>文件 → 项目另存为…</td>
+<td>独立项目副本</td>
+<td>每轮前后或更改结构前。</td>
+</tr>
+<tr>
+<td>已完成实验 → 导出结果</td>
+<td>变量和已测目标 CSV</td>
+<td>交给同事核对或另行分析。</td>
+</tr>
+<tr>
+<td>下一批 / 待实验 → 导出待回填 CSV</td>
+<td>变量和空目标 CSV</td>
+<td>安排实验、填写结果。</td>
+</tr>
+<tr>
+<td>模型与可视化 → 导出预测表 CSV…</td>
+<td>候选均值、标准差／概率、分值等</td>
+<td>解释推荐依据，不能当实测导入。</td>
+</tr>
+</tbody>
+</table>
+<p>Mac：⌘N 新建、⌘O 打开、⌘S 保存、⌘⇧S 另存。Windows 使用 Ctrl 对应组合。项目 <code>.chembo.json</code> 是数据文件，不要求使用者编程。</p>
+<p>标题前圆点表示未保存修改。切换项目、示例或关窗时会询问保存、放弃或取消。点击推荐不会自动把项目数据上传 GitHub。</p>
+<h3 id="102-手动转入撤回与重复实验">10.2 手动转入、撤回与重复实验</h3>
+<p>在待实验表选中条件，点 <strong>将选中条件转入结果表</strong>，变量复制到结果表的空目标行。立即填齐结果，再保存或计算；通过完整结果校验后，对应待实验移除。</p>
+<p>不打算做的条件选 <strong>撤回选中条件</strong>。撤回不产生测量值，该条件以后可能再被推荐，不要随便填 0 代替撤回。</p>
+<p><strong>删除选中行</strong>移除误录结果；真实重复实验可保留。改删结果会影响模型，并不自动留一份被删行快照，正式数据先另存版本。</p>
+<h3 id="103-计算日志与取消">10.3 计算、日志与取消</h3>
+<p>计算时编辑控件暂时禁用，进度条表示工作中，不是已完成百分比。<strong>运行日志</strong>显示状态；<strong>取消计算</strong>停止当前计算，原始实验记录保留，未完成计算不冒充新结果。</p>
+<p>改数据、目标、空间或规则后，旧分析失效并清空，需要重新分析。空图不等于数据丢失，先检查已完成数量和页面说明。</p>
+<p>正式研究每轮保留独立项目、原始仪器数据、已测 CSV、软件版本和随机种子。真实单位、表征方法、标签标准写进备注。</p>
+<h2 id="11-常见问题">11. 常见问题</h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因与处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>列名不一致</td>
+<td>去掉额外编号／备注，补齐全部变量和目标；先用空教学项目导入六行表练习。</td>
+</tr>
+<tr>
+<td>中文乱码</td>
+<td>CSV 另存为 UTF-8，或直接导入 XLSX。</td>
+</tr>
+<tr>
+<td>Excel 公式显示缺失</td>
+<td>用 Excel 计算保存缓存，或粘贴为数值；应用不执行公式。</td>
+</tr>
+<tr>
+<td>未知分类标签</td>
+<td>按项目统一文字，新增标签前保留旧版本并检查全部记录。</td>
+</tr>
+<tr>
+<td>不在允许档位</td>
+<td>核对下限和步长：下限 0.1、步长 0.2 不包括 0.2；不能随意改真实记录来过校验。</td>
+</tr>
+<tr>
+<td>没有合法配方</td>
+<td>检查量纲、系数、边界、比例和清单是否矛盾；配比的分母须大于 0。</td>
+</tr>
+<tr>
+<td>候选只剩 1 个，却要 2 个</td>
+<td>降低本批数量，先完成待实验，或有依据地扩展范围。</td>
+</tr>
+<tr>
+<td>预测图为空</td>
+<td>初始设计、尚未训练，或经典引擎没有这套诊断；读页面说明，BoTorch 下回填后分析。</td>
+</tr>
+<tr>
+<td>没有留一结果</td>
+<td>至少 3 条，点击分析；分类还需足够类别，部分折可能被跳过。</td>
+</tr>
+<tr>
+<td>图表突然消失</td>
+<td>设置或数据改变使旧分析过期，重新运行分析。</td>
+</tr>
+<tr>
+<td>六行变成十二行</td>
+<td>同一起始文件重复导入，检查并删除误导入副本。</td>
+</tr>
+<tr>
+<td>回填后待实验没消失</td>
+<td>比较全部变量组合，不只温度；不要改写推荐的小数。固定练习要配对应 followup 文件。</td>
+</tr>
+<tr>
+<td>长时间计算或失败</td>
+<td>首次启动、复杂数据或训练错误；看日志，需要时取消并保存。失败会报错，不伪装有效推荐。</td>
+</tr>
+<tr>
+<td>提示 BoTorch 组件缺失</td>
+<td>获取完整安装包，日常用户不需要自行拼装 Python 环境。</td>
+</tr>
+<tr>
+<td>Windows 是否通过实机验证</td>
+<td>教程、代码与构建同步，不把 Mac 验证当作 Windows 实机结论；以 Release 状态和实际试用为准。</td>
+</tr>
+</tbody>
+</table>
+<p>报告问题时写明版本、系统／架构、任务／引擎、按钮和错误文字。能用模拟教学项目复现时，优先提供这一操作顺序，不公开保密配方、原始敏感数据、密码或令牌。</p>
+<p><strong>关于 / 许可</strong>显示版本和方法范围，并可打开随附许可证目录。开源界面不改变原模型作者归属；发表研究时请按实际使用的方法<a href="HOW_TO_CITE.html">引用原始论文与软件</a>。</p>
+<h2 id="12-完整功能索引">12. 完整功能索引</h2>
+<table>
+<thead>
+<tr>
+<th>需求</th>
+<th>入口</th>
+<th>对应章节</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>中英文离线教程、复制练习文件</td>
+<td>帮助菜单</td>
+<td>1</td>
+</tr>
+<tr>
+<td>内置四个模拟小例子</td>
+<td>教学示例</td>
+<td>2–3；检查数字与文件练习不同</td>
+</tr>
+<tr>
+<td>新建、打开、保存、另存</td>
+<td>顶部／文件菜单</td>
+<td>4、10</td>
+</tr>
+<tr>
+<td>连续／整数／类别、单位、步长</td>
+<td>变量表</td>
+<td>4–5</td>
+</tr>
+<tr>
+<td>目标方向、目标增删</td>
+<td>目标表</td>
+<td>4、6</td>
+</tr>
+<tr>
+<td>批次、种子、备注</td>
+<td>左侧设置</td>
+<td>4、10</td>
+</tr>
+<tr>
+<td>总量／线性、比例、候选表、清除规则</td>
+<td>配方约束 / 候选表…</td>
+<td>5</td>
+</tr>
+<tr>
+<td>手动录入、XLS/XLSX/CSV、选工作表</td>
+<td>已完成实验</td>
+<td>3–4</td>
+</tr>
+<tr>
+<td>结果导出、删误录、重复实验</td>
+<td>已完成实验</td>
+<td>10</td>
+</tr>
+<tr>
+<td>下一批、排除已测／待实验重复</td>
+<td>生成下一批实验</td>
+<td>2</td>
+</tr>
+<tr>
+<td>待实验导出、手动转入、回填、撤回</td>
+<td>下一批 / 待实验</td>
+<td>2、3.2、10.2</td>
+</tr>
+<tr>
+<td>预测、标准差、分值、排序</td>
+<td>模型与可视化</td>
+<td>8.1–8.2</td>
+</tr>
+<tr>
+<td>留一、RMSE、MAE、R²</td>
+<td>模型验证</td>
+<td>8.3</td>
+</tr>
+<tr>
+<td>数值分布、类别计数、最佳历史</td>
+<td>数据分布</td>
+<td>8.4</td>
+</tr>
+<tr>
+<td>二／三维 Pareto、目标轴、超体积</td>
+<td>Pareto 多目标</td>
+<td>6</td>
+</tr>
+<tr>
+<td>二／多分类、概率、熵、混淆矩阵</td>
+<td>分类分析</td>
+<td>7</td>
+</tr>
+<tr>
+<td>点选、平移、缩放、还原</td>
+<td>图表工具栏</td>
+<td>8</td>
+</tr>
+<tr>
+<td>PNG/PDF/SVG、完整预测表导出</td>
+<td>图表导出按钮</td>
+<td>8.5</td>
+</tr>
+<tr>
+<td>Gryffin／Atlas 原生、Chimera 优先级</td>
+<td>推荐引擎／任务</td>
+<td>9</td>
+</tr>
+<tr>
+<td>日志、取消、分析过期</td>
+<td>运行日志／取消计算</td>
+<td>10.3、11</td>
+</tr>
+<tr>
+<td>版本、许可、引用</td>
+<td>关于 / 许可</td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+<p>计算边界详见 <a href="V0.2_FEATURES.html">V0.2_FEATURES.md</a>，开发构建见 <a href="DEVELOPMENT.html">DEVELOPMENT.md</a>。日常使用只需安装应用、准备清楚的实验表，并保存每轮项目。</p>
+<footer>NaNoBO · 离线教程 / Offline guide · 教学实验数据均为模拟 / Teaching data are synthetic.</footer></article></main></html>

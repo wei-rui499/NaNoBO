@@ -1,0 +1,210 @@
+{
+  "name": "练习 2 · 固定总量的配方 · SYNTHETIC",
+  "engine": "bo-mcp",
+  "task": "optimization",
+  "objective_mode": "hierarchical",
+  "seed": 42,
+  "batch_size": 2,
+  "parameters": [
+    {
+      "name": "A_mL",
+      "type": "continuous",
+      "low": 0.1,
+      "high": 0.9,
+      "step": 0.1,
+      "unit": "mL"
+    },
+    {
+      "name": "B_mL",
+      "type": "continuous",
+      "low": 0.1,
+      "high": 0.9,
+      "step": 0.1,
+      "unit": "mL"
+    },
+    {
+      "name": "aging_min",
+      "type": "discrete",
+      "low": 10,
+      "high": 30,
+      "step": 10,
+      "unit": "min"
+    }
+  ],
+  "objectives": [
+    {
+      "name": "yield_pct",
+      "goal": "max",
+      "tolerance": 0.2
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "linear",
+      "coefficients": {
+        "A_mL": 1,
+        "B_mL": 1
+      },
+      "relation": "eq",
+      "rhs": 1
+    },
+    {
+      "kind": "ratio",
+      "numerator": "A_mL",
+      "denominator": "B_mL",
+      "low": 0.25,
+      "high": 4
+    }
+  ],
+  "candidates": [
+    {
+      "A_mL": 0.2,
+      "B_mL": 0.8,
+      "aging_min": 10
+    },
+    {
+      "A_mL": 0.2,
+      "B_mL": 0.8,
+      "aging_min": 20
+    },
+    {
+      "A_mL": 0.2,
+      "B_mL": 0.8,
+      "aging_min": 30
+    },
+    {
+      "A_mL": 0.3,
+      "B_mL": 0.7,
+      "aging_min": 10
+    },
+    {
+      "A_mL": 0.3,
+      "B_mL": 0.7,
+      "aging_min": 20
+    },
+    {
+      "A_mL": 0.3,
+      "B_mL": 0.7,
+      "aging_min": 30
+    },
+    {
+      "A_mL": 0.4,
+      "B_mL": 0.6,
+      "aging_min": 10
+    },
+    {
+      "A_mL": 0.4,
+      "B_mL": 0.6,
+      "aging_min": 20
+    },
+    {
+      "A_mL": 0.4,
+      "B_mL": 0.6,
+      "aging_min": 30
+    },
+    {
+      "A_mL": 0.5,
+      "B_mL": 0.5,
+      "aging_min": 10
+    },
+    {
+      "A_mL": 0.5,
+      "B_mL": 0.5,
+      "aging_min": 20
+    },
+    {
+      "A_mL": 0.5,
+      "B_mL": 0.5,
+      "aging_min": 30
+    },
+    {
+      "A_mL": 0.6,
+      "B_mL": 0.4,
+      "aging_min": 10
+    },
+    {
+      "A_mL": 0.6,
+      "B_mL": 0.4,
+      "aging_min": 20
+    },
+    {
+      "A_mL": 0.6,
+      "B_mL": 0.4,
+      "aging_min": 30
+    },
+    {
+      "A_mL": 0.7,
+      "B_mL": 0.3,
+      "aging_min": 10
+    },
+    {
+      "A_mL": 0.7,
+      "B_mL": 0.3,
+      "aging_min": 20
+    },
+    {
+      "A_mL": 0.7,
+      "B_mL": 0.3,
+      "aging_min": 30
+    },
+    {
+      "A_mL": 0.8,
+      "B_mL": 0.2,
+      "aging_min": 10
+    },
+    {
+      "A_mL": 0.8,
+      "B_mL": 0.2,
+      "aging_min": 20
+    },
+    {
+      "A_mL": 0.8,
+      "B_mL": 0.2,
+      "aging_min": 30
+    }
+  ],
+  "observations": [
+    {
+      "A_mL": 0.2,
+      "B_mL": 0.8,
+      "aging_min": 10,
+      "yield_pct": 74.5
+    },
+    {
+      "A_mL": 0.3,
+      "B_mL": 0.7,
+      "aging_min": 20,
+      "yield_pct": 83.5
+    },
+    {
+      "A_mL": 0.4,
+      "B_mL": 0.6,
+      "aging_min": 20,
+      "yield_pct": 88.3
+    },
+    {
+      "A_mL": 0.5,
+      "B_mL": 0.5,
+      "aging_min": 20,
+      "yield_pct": 90.7
+    },
+    {
+      "A_mL": 0.7,
+      "B_mL": 0.3,
+      "aging_min": 10,
+      "yield_pct": 86.5
+    },
+    {
+      "A_mL": 0.8,
+      "B_mL": 0.2,
+      "aging_min": 30,
+      "yield_pct": 81.7
+    }
+  ],
+  "pending": [],
+  "notes": "SYNTHETIC / 模拟教学数据：由明确的数学规则生成，不来自真实化学实验，不是可执行的化学合成建议，也不能作为优化算法优越性的证据。",
+  "teaching": {
+    "data_status": "SYNTHETIC",
+    "purpose": "software learning only"
+  }
+}

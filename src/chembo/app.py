@@ -2,6 +2,7 @@
 import copy
 import json
 import os
+import shutil
 import sys
 import tempfile
 from pathlib import Path
@@ -103,7 +104,7 @@ class Window(QMainWindow):
         heading.addWidget(title)
         heading.addWidget(subtitle)
         heading.addStretch()
-        for label, callback in [("新项目", self.new_project), ("教学示例", self.load_example), ("打开", self.open_project), ("保存", self.save), ("关于 / 许可", self.about)]:
+        for label, callback in [("新项目", self.new_project), ("教学示例", self.load_example), ("打开", self.open_project), ("保存", self.save), ("使用教程", lambda: self.open_tutorial("zh-CN")), ("关于 / 许可", self.about)]:
             button = QPushButton(label)
             button.clicked.connect(callback)
             self.action_buttons.append(button)
@@ -229,6 +230,13 @@ class Window(QMainWindow):
             action.triggered.connect(callback)
             file_menu.addAction(action)
         help_menu = self.menuBar().addMenu("帮助")
+        for label, callback in [("中文使用教程", lambda: self.open_tutorial("zh-CN")),
+                                ("English tutorial", lambda: self.open_tutorial("en")),
+                                ("导出教程练习数据…", self.export_tutorial_data)]:
+            action = QAction(label, self)
+            action.triggered.connect(callback)
+            help_menu.addAction(action)
+        help_menu.addSeparator()
         about_action = QAction("关于 NaNoBO", self)
         about_action.setMenuRole(QAction.AboutRole)
         about_action.triggered.connect(self.about)
@@ -696,6 +704,34 @@ class Window(QMainWindow):
         if self.process:
             self.cancelled = True
             self.process.kill()
+
+    def open_tutorial(self, language="zh-CN"):
+        path = resources() / "docs" / "html" / f"TUTORIAL.{language}.html"
+        if not path.is_file():
+            self.error("未找到随附教程，请重新安装包含教程的完整 NaNoBO 安装包。")
+            return
+        if not QDesktopServices.openUrl(QUrl.fromLocalFile(str(path))):
+            self.error("系统未能打开教程。可从 GitHub 项目的中英文 README 进入使用指南。")
+
+    def export_tutorial_data(self):
+        source = resources() / "examples" / "tutorial"
+        if not source.is_dir():
+            self.error("未找到教程练习数据，请重新安装完整 NaNoBO 安装包。")
+            return
+        parent = QFileDialog.getExistingDirectory(self, "选择练习数据的保存位置")
+        if not parent:
+            return
+        try:
+            destination = Path(parent) / f"NaNoBO-tutorial-{__version__}"
+            number = 2
+            while destination.exists():
+                destination = Path(parent) / f"NaNoBO-tutorial-{__version__} ({number})"
+                number += 1
+            shutil.copytree(source, destination)
+            self.message.setText(f"练习数据已导出到 {destination}。点击“打开”选择练习文件夹中的 project.chembo.json；数据均为模拟数据。")
+            QDesktopServices.openUrl(QUrl.fromLocalFile(str(destination)))
+        except Exception as exc:
+            self.error(exc)
 
     def about(self):
         dialog = QDialog(self)

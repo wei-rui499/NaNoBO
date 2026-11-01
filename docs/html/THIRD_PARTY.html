@@ -1,0 +1,82 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>第三方许可与对应源码 · NaNoBO</title><style>*{box-sizing:border-box}body{margin:0;background:#f7faf8;color:#243d33;font:16px/1.8 -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif}header{padding:20px 5%;background:#e8f2ec;border-bottom:1px solid #ccdcd1}header a{margin-right:24px}a{color:#176b50}a:hover{color:#104331}main{max-width:1280px;margin:28px auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:0 24px}nav{position:sticky;top:20px;max-height:90vh;overflow:auto;font-size:14px}nav a{display:block;text-decoration:none;padding:5px 10px;border-left:2px solid #d5e4db}nav .sub{padding-left:24px}article{min-width:0;background:white;border:1px solid #dce7df;border-radius:12px;padding:26px 36px}h1,h2,h3{line-height:1.35;scroll-margin-top:20px}h1{font-size:30px}h2{margin-top:2em;border-bottom:1px solid #dce7df;padding-bottom:10px}h3{margin-top:1.7em}table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;width:100%;margin:18px 0}th,td{border:1px solid #d5e1d9;padding:9px 12px;text-align:left}th{background:#edf5ef}pre{overflow:auto;background:#f1f5f2;padding:14px;border-radius:6px}code{font-family:ui-monospace,Consolas,monospace;font-size:.91em}img{max-width:100%;height:auto}blockquote{margin-left:0;border-left:4px solid #6c9d83;padding:8px 18px;background:#f3f8f4}footer{margin-top:32px;color:#64786b;font-size:13px;border-top:1px solid #dce7df;padding-top:14px}@media(max-width:850px){main{display:block;padding:0 12px}nav{position:static;max-height:270px;margin-bottom:20px}article{padding:20px}header a{display:inline-block;margin-right:16px}}</style><header><strong>NaNoBO</strong> &nbsp; <a href="TUTORIAL.zh-CN.html">简体中文</a><a href="TUTORIAL.en.html">English</a><a href="index.html">教程首页 / Help home</a></header><main><nav aria-label="Table of contents"><a class="" href="#可以上传什么">可以上传什么</a><a class="" href="#本次保存的证据">本次保存的证据</a><a class="" href="#qt--pyside6-的具体处理">Qt / PySide6 的具体处理</a><a class="" href="#其他运行库与构建工具">其他运行库与构建工具</a><a class="" href="#公开二进制前的核对">公开二进制前的核对</a></nav><article><h1 id="第三方许可与对应源码">第三方许可与对应源码</h1>
+<p>核查日期：2026-10-31。本文记录本次选用版本的许可证据、随附文件和发行者仍需核对的事项，不是法律认证。Gryffin 允许再分发，不等于包含 Qt、科学计算库的整个安装包自动完成全部许可义务。</p>
+<h2 id="可以上传什么">可以上传什么</h2>
+<p>可以将本项目自己的界面和构建代码，以及按各自许可证保留声明的上游代码，上传到自己的 GitHub。Gryffin 为 Apache-2.0；Atlas、BO-MCP 等的许可正文保存在 <code>licenses/upstream/</code>。第三方代码仍受各自许可证约束，不因项目根目录采用 Apache-2.0 而改变。不要把该独立界面称为上游官方产品，也不要暗示原作者背书。更完整的上游核查见 <code>research/license_audit.md</code>。</p>
+<p>分发安装包时，应将对应版本的应用源码、构建说明、第三方声明及 LGPL 库对应源码一起提供。当前发布目录的安排是：安装包旁的 <code>Source-and-Licenses</code> 目录包含应用 <code>source.zip</code>、<code>licenses</code> 和 <code>library-sources</code>。上传 GitHub Release 时应同样保留这些附件及下载路径；本地目录结构不是已经存在的公开下载地址。</p>
+<h2 id="本次保存的证据">本次保存的证据</h2>
+<table>
+<thead>
+<tr>
+<th>内容</th>
+<th>位置</th>
+<th>证据与边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>安装环境的精确依赖版本、元数据、已收集的 LICENSE/NOTICE</td>
+<td><code>licenses/classic/</code>、<code>licenses/modern/</code> 中的 <code>dependency-inventory.json</code> 及同级文件</td>
+<td>由实际环境收集；安装环境也含构建工具，不等同于最终二进制模块清单。Windows 构建需要重新生成自己的清单。</td>
+</tr>
+<tr>
+<td>固定优化器源码的许可证</td>
+<td><code>licenses/upstream/</code></td>
+<td>与各上游固定 SHA、修改记录一起保留。BO-MCP 的 <code>bo-engine</code> 由其仓库 MIT 许可证覆盖。</td>
+</tr>
+<tr>
+<td>PySide6 / Shiboken、Qt 6.12.0 许可正文</td>
+<td><code>licenses/manual/qt-6.12.0/pyside/LICENSES/</code> 及各 Qt 模块的 <code>LICENSES/</code></td>
+<td>经官方 SHA-256 校验的 6.12.0 源码档案中的 LGPLv3、GPLv3 等原文；同时保留源码内的历史 COPYING，不据此改变当前模块的许可选择。</td>
+</tr>
+<tr>
+<td>Qt 6.12.0 内含第三方组件归属</td>
+<td><code>licenses/manual/qt-6.12.0/qtbase/</code>、<code>qtsvg/</code>、<code>qtimageformats/</code>、<code>pyside/</code></td>
+<td>保存 85 份 <code>qt_attribution.json</code>、相应许可原文及引用的 Python PSF 归属文件。包含未必进入本应用的平台或可选组件；最终按实际携带模块确认适用范围。</td>
+</tr>
+<tr>
+<td>torchbnn 1.2 的 MIT 正文</td>
+<td><code>licenses/manual/torchbnn-1.2-MIT-LICENSE.txt</code></td>
+<td>从作者仓库发布年代已存在的 LICENSE 取得，Copyright 2019 Harry Kim。轮子的元数据声明 MIT，但轮子未附正文。</td>
+</tr>
+<tr>
+<td>pyDOE 0.3.8 的 BSD-3-Clause 正文及作者归属</td>
+<td><code>licenses/manual/pyDOE-0.3.8-BSD-3-Clause-LICENSE.txt</code>、<code>pyDOE-0.3.8-AUTHORS-NOTICE.txt</code></td>
+<td>许可证取自 2014 年历史版本；保留 2015 年 0.3.8 原始发行包中的作者说明。未用 2025 年新版版权声明替代老版本。</td>
+</tr>
+<tr>
+<td>手动取得文件的 URL 与散列</td>
+<td><code>licenses/manual/SOURCES.json</code></td>
+<td>Qt 6.12.0 文件从经官方 SHA-256 验证的源码档案提取，记录档案成员路径和本地 SHA-256；其他文件记录精确历史 URL、发行包校验值。</td>
+</tr>
+<tr>
+<td>LGPL 库的完整官方源码压缩包</td>
+<td>发布材料中的 <code>library-sources/</code></td>
+<td>精确版本和 SHA-256 见该目录的 <code>SOURCE-ARCHIVES.json</code>、<code>SHA256SUMS.txt</code>。这些档案与应用 <code>source.zip</code> 分开提供。</td>
+</tr>
+</tbody>
+</table>
+<p>Qt 在线文档会随版本更新；本次原文从官方 6.12.0 精确版本源码档案取得，不能将在线新版表直接当成本包的版本清单。旧版 6.8.3 的许可、散列和源码仅保留为本地开发历史，不随本源码或新版安装包混发。</p>
+<h2 id="qt--pyside6-的具体处理">Qt / PySide6 的具体处理</h2>
+<p>本应用选择 PySide6-Essentials / Shiboken 6.12.0 的 LGPLv3 路径，使用动态库形式的 QtCore、QtGui、QtWidgets、QtSvg 等。Qt 另有 GPL-only 模块；Essentials 包名也不等于只含 QtBase：本应用实际图片插件使用 QtSvg 与 QtImageFormats，所以对应源码一并随附。当前构建不需要 QtCharts、QtDataVisualization、QtPdf 或 WebEngine，并排除 PDF 图片插件 <code>qpdf</code>；正式发布前仍应检查打包工具实际收集了什么。</p>
+<p>发行者应落实以下事项：</p>
+<ol>
+<li><strong>保留明显声明和许可正文。</strong> 应用“关于 / 许可”说明使用 Qt/PySide6，并允许打开随附许可目录；安装包及其附件保留 LGPLv3、GPLv3 和相应第三方声明。</li>
+<li><strong>提供实际使用库的对应源码。</strong> 已准备 Qt 6.12.0 的 <code>qtbase</code>、<code>qtsvg</code>、<code>qtimageformats</code>，以及 PySide/Shiboken 6.12.0 的 <code>pyside-setup</code> 官方源码压缩包。它们包含自身构建文件和原始许可。最终如果额外带入其他 Qt 模块，需同时补充其精确源码、补丁和相应构建信息。只有本应用 Python 源码，或仅放一个 Qt 首页链接，不能替代库对应源码的交付。</li>
+<li><strong>允许用户修改、替换、重新链接和调试。</strong> 本项目不禁止为调试库修改而进行的逆向工程，不要求联网授权来运行用户重建的程序，也不以产品条款限制 LGPL 授予的权利。修改者可以使用随附应用源码及构建脚本，以自己重建的兼容 Qt/PySide6 重新打包。直接替换动态库时应保持 ABI、Python 和架构兼容；Mac 修改会使旧签名失效，可自行重建并作本地签名，而不是依赖原发布者的私钥。</li>
+<li><strong>使源码可随二进制取得。</strong> DMG 的 <code>Source-and-Licenses/library-sources</code> 与 Windows 安装器同页附件应包含下列压缩包，并保留校验清单。若改用书面源码提供承诺，需要另行落实有效期、接收地址和履行方式；本文没有代替发行者作出这种承诺。</li>
+</ol>
+<p>6.12.0 的 LGPLv3/GPLv3 正文已与 6.8.3 保存副本逐字节核对一致。第三方组件和归属按本次精确版本重新收集，不能用旧组件清单代替。</p>
+<p>本次对应源码的官方取得地址：</p>
+<ul>
+<li><a href="https://download.qt.io/official_releases/qt/6.12/6.12.0/submodules/">Qt 6.12.0 子模块官方目录</a>：<code>qtbase-everywhere-src-6.12.0.tar.xz</code>、<code>qtsvg-everywhere-src-6.12.0.tar.xz</code>、<code>qtimageformats-everywhere-src-6.12.0.tar.xz</code>；每个档案的 <code>.sha256</code> 端点提供官方散列。</li>
+<li><a href="https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.12.0-src/">PySide6 6.12.0 官方源码目录</a>：<code>pyside-setup-everywhere-src-6.12.0.tar.xz</code>，同样核对官方 <code>.sha256</code>。</li>
+<li>固定标签的官方镜像：<a href="https://github.com/pyside/pyside-setup/tree/v6.12.0">PySide / Shiboken</a>、<a href="https://github.com/qt/qtbase/tree/v6.12.0">Qt Base</a>、<a href="https://github.com/qt/qtsvg/tree/v6.12.0">Qt SVG</a>、<a href="https://github.com/qt/qtimageformats/tree/v6.12.0">Qt Image Formats</a>。</li>
+</ul>
+<p>义务依据为随附 LGPL/GPL 正文及 <a href="https://www.qt.io/development/open-source-lgpl-obligations">Qt 官方 LGPL 义务说明</a>。动态链接不免除提供库对应源码、保留许可或允许用户替换库的要求。</p>
+<h2 id="其他运行库与构建工具">其他运行库与构建工具</h2>
+<p>DEAP 1.4.4 的源码 <code>LICENSE.txt</code> 为 LGPLv3；moocore 0.3.2 的官方发行元数据标明 <code>LGPL-2.1-or-later</code>，其 <code>COPYRIGHTS</code> 说明 C 库大部分文件采用 MPLv2，因包含 AVL 树组件，组合库按 LGPLv2.1 或更高版本分发。它们的精确 PyPI 源码发行包随 <code>library-sources/deap/</code>、<code>library-sources/moocore/</code> 提供，并对照 <a href="https://pypi.org/pypi/deap/1.4.4/json">DEAP 1.4.4 官方发行元数据</a>、<a href="https://pypi.org/pypi/moocore/0.3.2/json">moocore 0.3.2 官方发行元数据</a> 中的 SHA-256。moocore 的完整 LGPLv2.1、MPLv2 规范文本另存于 <code>licenses/manual/moocore-0.3.2-*.txt</code>；其各文件作者和其他所含组件的归属继续由未修改源码及 <code>COPYRIGHTS</code> 保留。</p>
+<p>torchbnn 的正确作者仓库是 <a href="https://github.com/Harry24k/bayesian-neural-network-pytorch">Harry24k/bayesian-neural-network-pytorch</a>，其 <a href="https://pypi.org/project/torchbnn/1.2/">1.2 发行页</a> 的安装说明也指向此处；安装包元数据中省略 <code>-pytorch</code> 的旧主页链接已无法访问。手动补充的 MIT 文件使用 <a href="https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/361dc428bbe5bbe9470293730808d66b031e79f1/LICENSE">2019 年固定历史源码</a>。pyDOE 的旧项目链接现重定向到新组织；本次使用 <a href="https://github.com/pydoe/pydoe/blob/7a78bfa72fc59cd7cc6f58b8a910dcfad7f605bd/LICENSE">2014 年固定 LICENSE</a>，并保留原 0.3.8 作者说明。</p>
+<p>Cython 3.3.0 仅在发布端从 Gryffin 原始 <code>.pyx</code> 重新生成 C 文件，许可为 Apache-2.0；构建脚本已显式排除 Cython 编译器。科学计算库中名称含 <code>cython</code> 的已编译扩展或随附 <code>.pyx</code> 不等同于分发 Cython 编译器，其许可由相应科学计算库保留。PyInstaller 的 bootloader 具有允许分发生成应用的许可例外；该例外不覆盖应用内其他库的独立义务。</p>
+<h2 id="公开二进制前的核对">公开二进制前的核对</h2>
+<p>当前已经取得许可正文、固定版本来源及对应源码档案；尚不能据此声称最终安装包通过法律认证。发布每个平台的最终产物时，需核对实际 DLL / framework / 扩展模块清单与本文件相符，确认没有意外加入 GPL-only Qt 模块，确认对应源码含该库使用的全部补丁和所需构建信息，并检查 <code>Source-and-Licenses</code> 真正进入 DMG 或与安装器在同一发布位置提供。Windows CI 的许可证应由 Windows 构建环境重收集，库源码和校验清单也必须放入同次发布材料；不得只上传 <code>.exe</code> 后省略这些附件。</p>
+<footer>NaNoBO · 离线教程 / Offline guide · 教学实验数据均为模拟 / Teaching data are synthetic.</footer></article></main></html>

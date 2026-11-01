@@ -2,12 +2,14 @@
 from pathlib import Path
 import zipfile
 import os
+import re
 
 ROOT = Path(__file__).resolve().parents[1]
+VERSION = re.search(r'__version__ = "([^"]+)"', (ROOT / "src/chembo/__init__.py").read_text()).group(1)
 
 
 def main():
-    target = ROOT / "release" / "NaNoBO-0.2.1-source.zip"
+    target = ROOT / "release" / f"NaNoBO-{VERSION}-source.zip"
     target.parent.mkdir(exist_ok=True)
     prefixes = ("src", "tests", "scripts", "docs", "research", "assets", "licenses", ".github", "examples")
     excluded = {".git", "__pycache__", "build", "dist", "node_modules", ".pytest_cache"}
@@ -26,7 +28,7 @@ def main():
             parts = relative.parts
             if not path.is_file() or path.is_symlink() or path.name == ".DS_Store" or path.name.startswith("._") or "project-inventory" in parts or any(p in excluded or p.endswith(".egg-info") for p in parts):
                 continue
-            include = parts[0] in prefixes or len(parts) == 1 and (path.suffix in (".md", ".txt", ".toml", ".in") or path.name in ("LICENSE", ".gitignore", "CITATION.cff", "REFERENCES.bib"))
+            include = parts[0] in prefixes or len(parts) == 1 and (path.suffix in (".md", ".txt", ".toml", ".in") or path.name in ("LICENSE", ".gitignore", ".gitattributes", "CITATION.cff", "REFERENCES.bib"))
             if parts[0] == "upstream" and len(parts) >= 3:
                 package, rest = parts[1], "/".join(parts[2:])
                 include = package in ("gryffin", "atlas", "olympus-runtime") and (rest.startswith("src/") or "/" not in rest)

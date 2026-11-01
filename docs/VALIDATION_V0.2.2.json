@@ -1,0 +1,65 @@
+{
+  "version": "0.2.2",
+  "data_status": "SYNTHETIC",
+  "scope": "macOS source model checks; not Windows runtime or wet-lab validation",
+  "exercises": [
+    {
+      "exercise": "01_quickstart",
+      "model": "BoTorch SingleTaskGP + qLogEI",
+      "recommended": 2,
+      "completed_after_simulated_refill": 8,
+      "loo_evaluated": 8,
+      "candidate_rows_before_recommendation": 14,
+      "candidate_rows_after_queue": 12,
+      "passed": true
+    },
+    {
+      "exercise": "02_recipe",
+      "model": "BoTorch SingleTaskGP + qLogEI",
+      "recommended": 2,
+      "completed_after_simulated_refill": 8,
+      "loo_evaluated": 8,
+      "candidate_rows_before_recommendation": 15,
+      "candidate_rows_after_queue": 13,
+      "passed": true
+    },
+    {
+      "exercise": "03_pareto",
+      "model": "BoTorch ModelListGP + qLogNEHVI",
+      "recommended": 2,
+      "completed_after_simulated_refill": 8,
+      "loo_evaluated": 8,
+      "candidate_rows_before_recommendation": 22,
+      "candidate_rows_after_queue": 20,
+      "passed": true
+    },
+    {
+      "exercise": "04_classification",
+      "model": "GaussianProcessClassifier",
+      "recommended": 2,
+      "completed_after_simulated_refill": 8,
+      "loo_evaluated": 8,
+      "candidate_rows_before_recommendation": 22,
+      "candidate_rows_after_queue": 20,
+      "passed": true
+    }
+  ],
+  "source_regressions": {
+    "tests": 125,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fixture_formats": [
+    "CSV",
+    "XLS",
+    "XLSX"
+  ],
+  "tutorial_example_files": 49,
+  "tutorial_model_figures": 6,
+  "windows": {
+    "build_only": true,
+    "runtime_validation_performed": false,
+    "runtime_validation": "User will test on Windows"
+  }
+}

@@ -1,0 +1,130 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NaNoBO · NaNoBO</title><style>*{box-sizing:border-box}body{margin:0;background:#f7faf8;color:#243d33;font:16px/1.8 -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif}header{padding:20px 5%;background:#e8f2ec;border-bottom:1px solid #ccdcd1}header a{margin-right:24px}a{color:#176b50}a:hover{color:#104331}main{max-width:1280px;margin:28px auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:0 24px}nav{position:sticky;top:20px;max-height:90vh;overflow:auto;font-size:14px}nav a{display:block;text-decoration:none;padding:5px 10px;border-left:2px solid #d5e4db}nav .sub{padding-left:24px}article{min-width:0;background:white;border:1px solid #dce7df;border-radius:12px;padding:26px 36px}h1,h2,h3{line-height:1.35;scroll-margin-top:20px}h1{font-size:30px}h2{margin-top:2em;border-bottom:1px solid #dce7df;padding-bottom:10px}h3{margin-top:1.7em}table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;width:100%;margin:18px 0}th,td{border:1px solid #d5e1d9;padding:9px 12px;text-align:left}th{background:#edf5ef}pre{overflow:auto;background:#f1f5f2;padding:14px;border-radius:6px}code{font-family:ui-monospace,Consolas,monospace;font-size:.91em}img{max-width:100%;height:auto}blockquote{margin-left:0;border-left:4px solid #6c9d83;padding:8px 18px;background:#f3f8f4}footer{margin-top:32px;color:#64786b;font-size:13px;border-top:1px solid #dce7df;padding-top:14px}@media(max-width:850px){main{display:block;padding:0 12px}nav{position:static;max-height:270px;margin-bottom:20px}article{padding:20px}header a{display:inline-block;margin-right:16px}}</style><header><strong>NaNoBO</strong> &nbsp; <a href="TUTORIAL.zh-CN.html">简体中文</a><a href="TUTORIAL.en.html">English</a><a href="index.html">教程首页 / Help home</a></header><main><nav aria-label="Table of contents"><a class="" href="#your-first-ten-minutes">Your first ten minutes</a><a class="" href="#download-and-install">Download and install</a><a class="" href="#what-can-i-do-with-it">What can I do with it?</a><a class="" href="#which-engine-should-i-choose">Which engine should I choose?</a><a class="" href="#tutorials-practice-files-and-validation">Tutorials, practice files and validation</a><a class="" href="#scientific-acknowledgments-licenses-and-citation">Scientific acknowledgments, licenses and citation</a></nav><article><p><a href="README.zh-CN.html">简体中文</a> | <a href="README.en.html">English</a></p>
+<h1 id="nanobo">NaNoBO</h1>
+<p><strong>Turn the experiments you have already run into a useful next batch.</strong></p>
+<p>NaNoBO is a desktop experiment-planning tool for chemists. Describe what you can vary, enter the results you have measured, and ask for the next conditions to try. After running that batch, add the measurements and repeat.</p>
+<p>For example: which temperature and additive should you try next to improve yield? Which volume ratios are allowed when total volume is fixed? What are the trade-offs between yield and cost? If your result is a shape label such as “aggregated”, “spherical” or “rod-like”, which experiment would help clarify the boundary between classes?</p>
+<p><strong>The installer runs locally and includes its computing environment. You do not need Python, WSL, Docker or a model API account.</strong> The application interface is currently in Chinese. Both this page and the detailed tutorial are available in English; the tutorial includes the exact Chinese button labels so you can follow along.</p>
+<p><a href="https://github.com/wei-rui499/NaNoBO/releases">Download installers</a> · <a href="TUTORIAL.en.html">Start with the practice data</a> · <a href="TUTORIAL.zh-CN.html">中文教程</a></p>
+<p><img src="media/docs/screenshots/NaNoBO-preview.png" alt="NaNoBO desktop: experiment settings, completed experiments, next batch and model analysis"></img></p>
+<h2 id="your-first-ten-minutes">Your first ten minutes</h2>
+<p>Start with the supplied <strong>synthetic teaching data</strong>. You do not need to study the algorithm first.</p>
+<ol>
+<li>Download the appropriate installer and the tutorial data bundle from <a href="https://github.com/wei-rui499/NaNoBO/releases">Releases</a>. The Help menu in version 0.2.2 and later also provides the tutorials and practice data.</li>
+<li>Open <code>01_quickstart/project.chembo.json</code>. The project already defines temperature, cycle count and additive, and contains <strong>6 synthetic measurements</strong>.</li>
+<li>Click <strong>Generate next batch</strong> (<code>生成下一批实验 →</code>). You should see <strong>2 pending conditions</strong> in <code>下一批 / 待实验</code>.</li>
+<li>Choose <strong>Export CSV for results</strong> (<code>导出待回填 CSV</code>). Find those exact conditions in <code>all-simulated-results.csv</code>, copy the corresponding synthetic yield values into your exported sheet, and import it through <code>已完成实验 → 导入 Excel / CSV</code>.</li>
+<li>Save the project, then click <strong>Analysis and cross-validation</strong> (<code>分析与交叉验证</code>) to inspect predictions, measured-versus-predicted plots and errors before planning another batch.</li>
+</ol>
+<p><a href="TUTORIAL.en.html#3-ten-minute-exercise-temperature-additive-and-yield">Follow the detailed walkthrough and check the expected results at each step →</a></p>
+<p>These numbers teach the software workflow; they are not real chemistry recipes or experimental evidence. <code>all-simulated-results.csv</code> is a lookup table for this exercise. Do not import the entire file: doing so would mark every candidate as already measured.</p>
+<h2 id="download-and-install">Download and install</h2>
+<table>
+<thead>
+<tr>
+<th>Computer</th>
+<th>Installation and release status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Apple Silicon Mac, macOS 14+</td>
+<td>Download <code>macOS-arm64.dmg</code> from Releases, open it and drag NaNoBO into Applications. An installation build has completed synthetic workflow validation.</td>
+</tr>
+<tr>
+<td>Windows 10/11, x64</td>
+<td>Code, tutorials and packaging are synchronized with Mac. Use the <code>windows-x64-setup-unsigned.exe</code> actually provided in Releases. <strong>Windows runtime validation is pending</strong>; see the <a href="WINDOWS_BUILD.html">Windows build guide</a>.</td>
+</tr>
+<tr>
+<td>Intel Mac / Windows ARM64</td>
+<td>A corresponding validated installer is not currently available.</td>
+</tr>
+</tbody>
+</table>
+<p>The Mac research preview is not Apple-notarized. If macOS blocks the first launch, follow <a href="https://support.apple.com/en-us/102445">Apple's instructions</a> to review it in Privacy &amp; Security. An unsigned Windows preview may also trigger a reputation warning; do not disable system security protection. See the <a href="TUTORIAL.en.html#1-install-and-open-the-application">installation walkthrough</a>.</p>
+<p>The installed app includes its dependencies. The development guides below are for maintainers rebuilding the software; end users do not need to run those commands.</p>
+<h2 id="what-can-i-do-with-it">What can I do with it?</h2>
+<table>
+<thead>
+<tr>
+<th>Your experimental question</th>
+<th>What to do in NaNoBO</th>
+<th>Practice project</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Improve yield, selectivity or signal, or reduce a size error</td>
+<td>Define one numerical objective, choose maximize or minimize, and add measurements after each batch</td>
+<td><a href="../../examples/tutorial/01_quickstart">01: Temperature, additive and yield</a></td>
+</tr>
+<tr>
+<td>Work with dispensing increments, a fixed total volume or allowed ratios</td>
+<td>Set steps, total/linear rules and ratio limits, or import an explicit table of feasible recipes</td>
+<td><a href="../../examples/tutorial/02_recipe">02: Fixed-total recipes</a></td>
+</tr>
+<tr>
+<td>Balance yield against cost</td>
+<td>Use Pareto optimization to inspect trade-offs rather than collapsing everything into one score</td>
+<td><a href="../../examples/tutorial/03_pareto">03: Multiple objectives</a></td>
+</tr>
+<tr>
+<td>Learn success/failure or morphology labels</td>
+<td>Use classification active learning to inspect class probabilities and uncertain boundaries</td>
+<td><a href="../../examples/tutorial/04_classification">04: Morphology classes</a></td>
+</tr>
+<tr>
+<td>Reuse an existing Excel results sheet</td>
+<td>Import <code>.xls</code>, <code>.xlsx</code> or UTF-8 <code>.csv</code>; select the results worksheet when prompted</td>
+<td><a href="TUTORIAL.en.html#6-import-export-and-refill-experimental-results">Import and refill</a></td>
+</tr>
+<tr>
+<td>Understand a recommendation and check the model</td>
+<td>Inspect predicted values, model uncertainty and candidate scores, then run same-model leave-one-out validation</td>
+<td><a href="TUTORIAL.en.html#10-model-checks-and-every-chart">Predictions and plots</a></td>
+</tr>
+<tr>
+<td>Prepare a group-meeting or manuscript figure</td>
+<td>Export the current plot as PNG/PDF/SVG and export predictions or measurements as CSV</td>
+<td><a href="TUTORIAL.en.html#11-save-export-and-archive">Export and archive</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="which-engine-should-i-choose">Which engine should I choose?</h2>
+<p>For a first session, follow the tutorial with <strong>BoTorch · 优化与分类</strong>. This workflow includes recipe restrictions, Pareto analysis, classification and the current model-diagnostic panels.</p>
+<table>
+<thead>
+<tr>
+<th>Name in the app</th>
+<th>Current supported workflow</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>BoTorch · 优化与分类</strong></td>
+<td>Single-objective optimization, steps/candidate tables/joint constraints, Pareto, classification and model analysis. Model settings are fixed; follow the workflow.</td>
+</tr>
+<tr>
+<td><strong>Gryffin · 类别与连续变量</strong></td>
+<td>Native Gryffin recommendations. Multiple numerical objectives can be handled in table order as priorities using Chimera.</td>
+</tr>
+<tr>
+<td><strong>Atlas · 高斯过程</strong></td>
+<td>Native Atlas GPPlanner for single-objective and batch recommendations.</td>
+</tr>
+</tbody>
+</table>
+<p>Native Gryffin and Atlas recommendations are not accompanied by predictions or validation from a substitute model. A feature of an upstream framework is not automatically a feature exposed by this desktop app; see the <a href="TUTORIAL.en.html#7-engines-and-priority-objectives">engine guide</a>.</p>
+<p>A recommendation is a suggestion for an experiment. A prediction is a model estimate. Only an actual measurement becomes experimental evidence. Classification explores uncertain class boundaries; it does not necessarily prioritize the condition most likely to succeed.</p>
+<h2 id="tutorials-practice-files-and-validation">Tutorials, practice files and validation</h2>
+<ul>
+<li><a href="TUTORIAL.en.html">Full English tutorial</a> / <a href="TUTORIAL.zh-CN.html">中文完整教程</a>: installation, each control, plots and troubleshooting.</li>
+<li><a href="../../examples/tutorial">Practice files</a>: four complete projects, empty projects, refill exercises and equivalent CSV/XLS/XLSX result tables. All data are explicitly synthetic.</li>
+<li><a href="V0.2_FEATURES.html">Features and data format</a>: detailed limits and fields, currently in Chinese.</li>
+<li><a href="VALIDATION.html">Software validation</a>: completed checks and their scope. Synthetic experiments check software behavior; performance on a real system needs real experiments.</li>
+<li><a href="DEVELOPMENT.html">Development and rebuilding</a> / <a href="WINDOWS_BUILD.html">Windows builds</a>: for developers and maintainers, currently in Chinese.</li>
+</ul>
+<h2 id="scientific-acknowledgments-licenses-and-citation">Scientific acknowledgments, licenses and citation</h2>
+<p>NaNoBO provides the desktop interface, experiment records and result refill, feasible recipe domains, analysis plots and installer integration. <strong>Gryffin, Phoenics, Chimera, Atlas, Olympus, BoTorch, GPyTorch, scikit-learn and the underlying research methods belong to their respective authors and teams.</strong> Retained BO-MCP compatibility code also keeps its original attribution. NaNoBO is an independent project.</p>
+<p>When publishing research that uses this software, cite NaNoBO and <strong>the methods you actually used</strong>: <a href="ACKNOWLEDGMENTS.html">acknowledgments</a> · <a href="HOW_TO_CITE.html">citation guide</a> · <a href="https://github.com/wei-rui499/NaNoBO/blob/main/REFERENCES.bib">14 research and software references</a> · <a href="https://github.com/wei-rui499/NaNoBO/blob/main/CITATION.cff">CITATION.cff</a>.</p>
+<p>NaNoBO's own code uses <a href="https://github.com/wei-rui499/NaNoBO/blob/main/LICENSE">Apache-2.0</a>. Upstream code, Qt and other dependencies retain their own licenses. See <a href="THIRD_PARTY_NOTICES.html">third-party notices</a>, <a href="THIRD_PARTY.html">distribution details</a> and <a href="UPSTREAM_MODIFICATIONS.html">upstream modifications</a>.</p>
+<footer>NaNoBO · 离线教程 / Offline guide · 教学实验数据均为模拟 / Teaching data are synthetic.</footer></article></main></html>

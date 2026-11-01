@@ -1,0 +1,91 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NaNoBO v0.2：功能与数据格式 · NaNoBO</title><style>*{box-sizing:border-box}body{margin:0;background:#f7faf8;color:#243d33;font:16px/1.8 -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif}header{padding:20px 5%;background:#e8f2ec;border-bottom:1px solid #ccdcd1}header a{margin-right:24px}a{color:#176b50}a:hover{color:#104331}main{max-width:1280px;margin:28px auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:0 24px}nav{position:sticky;top:20px;max-height:90vh;overflow:auto;font-size:14px}nav a{display:block;text-decoration:none;padding:5px 10px;border-left:2px solid #d5e4db}nav .sub{padding-left:24px}article{min-width:0;background:white;border:1px solid #dce7df;border-radius:12px;padding:26px 36px}h1,h2,h3{line-height:1.35;scroll-margin-top:20px}h1{font-size:30px}h2{margin-top:2em;border-bottom:1px solid #dce7df;padding-bottom:10px}h3{margin-top:1.7em}table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;width:100%;margin:18px 0}th,td{border:1px solid #d5e1d9;padding:9px 12px;text-align:left}th{background:#edf5ef}pre{overflow:auto;background:#f1f5f2;padding:14px;border-radius:6px}code{font-family:ui-monospace,Consolas,monospace;font-size:.91em}img{max-width:100%;height:auto}blockquote{margin-left:0;border-left:4px solid #6c9d83;padding:8px 18px;background:#f3f8f4}footer{margin-top:32px;color:#64786b;font-size:13px;border-top:1px solid #dce7df;padding-top:14px}@media(max-width:850px){main{display:block;padding:0 12px}nav{position:static;max-height:270px;margin-bottom:20px}article{padding:20px}header a{display:inline-block;margin-right:16px}}</style><header><strong>NaNoBO</strong> &nbsp; <a href="TUTORIAL.zh-CN.html">简体中文</a><a href="TUTORIAL.en.html">English</a><a href="index.html">教程首页 / Help home</a></header><main><nav aria-label="Table of contents"><a class="" href="#本版可以做什么">本版可以做什么</a><a class="" href="#引擎范围与结果解释">引擎范围与结果解释</a><a class="" href="#明确的计算边界">明确的计算边界</a><a class="" href="#项目-json-格式示例">项目 JSON 格式示例</a></nav><article><h1 id="nanobo-v02功能与数据格式">NaNoBO v0.2：功能与数据格式</h1>
+<p>本版把实验空间、推荐结果和模型检查放在同一个本地桌面流程中：定义变量 → 导入实测结果 → 生成合法配方 → 做实验并回填 → 查看预测与验证。教学示例全部使用模拟数据。</p>
+<h2 id="本版可以做什么">本版可以做什么</h2>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>操作与含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原单位步长</td>
+<td>在变量表设置步长，例如体积每次增加 0.1 mL。档位从变量下限开始，推荐前生成合法档位，推荐后不再四舍五入或强制归一化。上限不在档位上时不会硬加上限。</td>
+</tr>
+<tr>
+<td>总量与线性约束</td>
+<td>“配方约束 / 候选表”中填写系数和等号／不等号，例如 A + B + C = 2.5。不同单位不会自动换算，需先统一单位或在系数中换算。</td>
+</tr>
+<tr>
+<td>配比约束</td>
+<td>例如 0.5 ≤ A/B ≤ 2。分母必须大于零；最小和最大配比相同时支持固定配比。</td>
+</tr>
+<tr>
+<td>合法候选表</td>
+<td>导入预先列好的可执行配方，下一批仅从表中选择。表中只放变量列，不能放尚未测量的目标值。</td>
+</tr>
+<tr>
+<td>Excel / CSV 导入</td>
+<td>支持 <code>.xls</code>、<code>.xlsx</code>、UTF-8 <code>.csv</code>；多工作表时选择要读的一张。结果表的列名必须恰好对应全部变量和全部目标。</td>
+</tr>
+<tr>
+<td>单目标数值优化</td>
+<td>BoTorch 工作流显示候选的预测均值、预测标准差和采集分值；没有足够数据时先做分散初始设计。</td>
+</tr>
+<tr>
+<td>Pareto 多目标</td>
+<td>每个目标单独指定最大化或最小化，查看实测 Pareto 前沿、二维／三维目标折衷和超体积历史。Pareto 点表示当前实测结果中的非支配点。</td>
+</tr>
+<tr>
+<td>分类主动学习</td>
+<td>为“成功／失败”或形貌类别等文字标签选下一批实验。预先设置至少两个标签；观察到两个类别后，按分类熵优先探索模型较不确定的候选。</td>
+</tr>
+<tr>
+<td>验证与导图</td>
+<td>“分析与交叉验证”使用与本工作流推荐相同的固定模型重新拟合，给出留出预测、误差及指标。可导出当前图为 PNG／PDF／SVG、候选预测为 CSV。</td>
+</tr>
+</tbody>
+</table>
+<p>图表包括候选预测与区间、均值与不确定性、采集分值排序、预测—实测、验证误差、观测分布、实测历史、Pareto、超体积历史，以及分类概率、分类熵、类别计数和混淆矩阵。图形面板支持缩放、平移和候选点查看。</p>
+<h2 id="引擎范围与结果解释">引擎范围与结果解释</h2>
+<p>新增的步长、候选表、联合约束、Pareto 和分类任务使用界面的 <strong>BoTorch</strong> 工作流。Gryffin 和 Atlas 保留原生推荐；Gryffin 的多目标优先级仍走 Chimera。选择不兼容的经典引擎会给出明确提示，不会静默换算法。</p>
+<p>数值单目标使用 BoTorch <code>SingleTaskGP</code>，多目标使用 <code>ModelListGP</code>；采集函数分别为 <code>qLogEI</code> 和 <code>qLogNEHVI</code>。分类使用固定的高斯过程分类器和熵排序。界面没有新增 GP／随机森林／SVM 或 EI／UCB 的算法菜单。不同任务和数据需要验证，不能由这些模型名称推断本软件在所有体系中都更好。</p>
+<p>预测标准差表示模型给出的不确定性，预测区间不等于实验一定落入的范围。采集分值用于比较本次候选中的实验价值，不等同于性能预测。分类概率也不等同于产率等化学性能；尚未出现的类别不补零，其概率不会被伪装成已知结果。</p>
+<h2 id="明确的计算边界">明确的计算边界</h2>
+<ul>
+<li>有限档位组合最多遍历 <strong>200000</strong> 组源组合，再筛选约束和已测／待实验。超过此范围时需增大步长、缩小范围或导入预先筛选的候选表；不会静默截断网格。</li>
+<li>一次模型排序最多使用 <strong>4096</strong> 个合法未做条件。若有限域更多，按固定随机种子取子集；连续域使用固定种子的有界可行采样。候选排序代表本次候选池，不构成整个连续实验空间的全局最优保证。</li>
+<li>连续线性等式先解连续变量，再检查边界与其他规则；与步长一起使用时保留原始档位。未找到可行样本会报告错误并提示检查规则或导入合法候选表。</li>
+<li>已测和已排队条件不会再次推荐。连续变量在参数跨度的 <code>1e-6</code> 内按近重复处理；候选表中此类条件会明确拒绝导入。实测重复实验允许保留。</li>
+<li>历史实测条件可以不在当前候选表内，但仍需符合项目的变量边界、步长及约束。待实验条件必须来自当前候选表。</li>
+<li>留一验证至少需要 <strong>3</strong> 条实测记录。超过 <strong>30</strong> 条时，均匀选择最多 30 条分别留出，每折仍用其他全部记录训练，并报告实际验证数量。分类留一后若训练集只剩一个类别，该折跳过。</li>
+<li>数值验证报告 RMSE、MAE、R²；实测值完全相同时 R² 留空。分类验证报告准确率和混淆矩阵。它们用于检查当前数据，不是独立外部实验验证。</li>
+<li>导入时不把缺失值填成 0；重复表头、缺失单元格、非法档位和未知分类标签会报错。全空白行跳过。Excel 公式读取已有缓存结果；无缓存的公式单元格按缺失处理，不在应用中执行公式。</li>
+</ul>
+<h2 id="项目-json-格式示例">项目 JSON 格式示例</h2>
+<p>已有项目可继续打开；新增字段省略时默认 <code>task: &quot;optimization&quot;</code>、<code>objective_mode: &quot;hierarchical&quot;</code>、无约束及无候选表。项目备注、历史、单位和额外顶层元数据会保留。</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;总量固定的配方优化&quot;,
+  &quot;engine&quot;: &quot;bo-mcp&quot;,
+  &quot;task&quot;: &quot;optimization&quot;,
+  &quot;objective_mode&quot;: &quot;hierarchical&quot;,
+  &quot;seed&quot;: 42,
+  &quot;batch_size&quot;: 2,
+  &quot;parameters&quot;: [
+    {&quot;name&quot;: &quot;A&quot;, &quot;type&quot;: &quot;continuous&quot;, &quot;low&quot;: 0, &quot;high&quot;: 1, &quot;step&quot;: 0.1, &quot;unit&quot;: &quot;mL&quot;},
+    {&quot;name&quot;: &quot;B&quot;, &quot;type&quot;: &quot;continuous&quot;, &quot;low&quot;: 0, &quot;high&quot;: 1, &quot;step&quot;: 0.1, &quot;unit&quot;: &quot;mL&quot;}
+  ],
+  &quot;objectives&quot;: [{&quot;name&quot;: &quot;yield&quot;, &quot;goal&quot;: &quot;max&quot;, &quot;tolerance&quot;: 0.2}],
+  &quot;constraints&quot;: [
+    {&quot;kind&quot;: &quot;linear&quot;, &quot;coefficients&quot;: {&quot;A&quot;: 1, &quot;B&quot;: 1}, &quot;relation&quot;: &quot;eq&quot;, &quot;rhs&quot;: 1, &quot;tolerance&quot;: 1e-8},
+    {&quot;kind&quot;: &quot;ratio&quot;, &quot;numerator&quot;: &quot;A&quot;, &quot;denominator&quot;: &quot;B&quot;, &quot;low&quot;: 0.2, &quot;high&quot;: 5}
+  ],
+  &quot;candidates&quot;: [],
+  &quot;observations&quot;: [{&quot;A&quot;: 0.3, &quot;B&quot;: 0.7, &quot;yield&quot;: 0.8}],
+  &quot;pending&quot;: [],
+  &quot;notes&quot;: &quot;模拟格式示例，不是实验建议。&quot;
+}
+</code></pre>
+<p><code>candidates: []</code> 表示由范围、步长和约束构建候选域；也可以改为参数字典列表，如 <code>[{&quot;A&quot;: 0.4, &quot;B&quot;: 0.6}, {&quot;A&quot;: 0.6, &quot;B&quot;: 0.4}]</code>。分类任务改为 <code>task: &quot;classification&quot;</code> 并增加 <code>classification: {&quot;labels&quot;: [&quot;成功&quot;, &quot;失败&quot;]}</code>；目标只保留一个标签列，实测值填写相应文字标签。Pareto 则设为 <code>objective_mode: &quot;pareto&quot;</code>，并提供至少两个有各自 <code>goal</code> 的数值目标。</p>
+<footer>NaNoBO · 离线教程 / Offline guide · 教学实验数据均为模拟 / Teaching data are synthetic.</footer></article></main></html>

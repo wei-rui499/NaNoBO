@@ -1,0 +1,105 @@
+{
+  "data_status": "SYNTHETIC",
+  "notice": "SYNTHETIC / 模拟教学数据：由明确的数学规则生成，不来自真实化学实验，不是可执行的化学合成建议，也不能作为优化算法优越性的证据。",
+  "seed": 42,
+  "batch_size": 2,
+  "exercises": [
+    {
+      "folder": "01_quickstart",
+      "title": "练习 1 · 认识完整实验循环",
+      "columns": [
+        "temperature_C",
+        "cycles",
+        "additive",
+        "yield_pct"
+      ],
+      "candidate_rows": 20,
+      "seed_rows": 6,
+      "followup_rows": 2,
+      "predictions_before_recommend": 14,
+      "predictions_after_two_pending": 12,
+      "pending_practice_before": {
+        "completed": 6,
+        "pending": 2
+      },
+      "pending_practice_after_followup": {
+        "completed": 8,
+        "pending": 0
+      },
+      "best_seed_yield_pct": 73.5
+    },
+    {
+      "folder": "02_recipe",
+      "title": "练习 2 · 固定总量的配方",
+      "columns": [
+        "A_mL",
+        "B_mL",
+        "aging_min",
+        "yield_pct"
+      ],
+      "candidate_rows": 21,
+      "seed_rows": 6,
+      "followup_rows": 2,
+      "predictions_before_recommend": 15,
+      "predictions_after_two_pending": 13,
+      "pending_practice_before": {
+        "completed": 6,
+        "pending": 2
+      },
+      "pending_practice_after_followup": {
+        "completed": 8,
+        "pending": 0
+      }
+    },
+    {
+      "folder": "03_pareto",
+      "title": "练习 3 · 性能与成本折衷",
+      "columns": [
+        "temperature_C",
+        "ligand_mM",
+        "yield_pct",
+        "cost_index"
+      ],
+      "candidate_rows": 28,
+      "seed_rows": 6,
+      "followup_rows": 2,
+      "predictions_before_recommend": 22,
+      "predictions_after_two_pending": 20,
+      "pending_practice_before": {
+        "completed": 6,
+        "pending": 2
+      },
+      "pending_practice_after_followup": {
+        "completed": 8,
+        "pending": 0
+      }
+    },
+    {
+      "folder": "04_classification",
+      "title": "练习 4 · 探索形貌类别",
+      "columns": [
+        "temperature_C",
+        "ligand_mM",
+        "morphology"
+      ],
+      "candidate_rows": 28,
+      "seed_rows": 6,
+      "followup_rows": 2,
+      "predictions_before_recommend": 22,
+      "predictions_after_two_pending": 20,
+      "pending_practice_before": {
+        "completed": 6,
+        "pending": 2
+      },
+      "pending_practice_after_followup": {
+        "completed": 8,
+        "pending": 0
+      },
+      "seed_class_counts": {
+        "团聚": 2,
+        "球形": 2,
+        "棒状": 2
+      }
+    }
+  ]
+}

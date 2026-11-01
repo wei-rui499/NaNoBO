@@ -1,0 +1,56 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Atlas 与 Gryffin：给实验化学家的比较 · NaNoBO</title><style>*{box-sizing:border-box}body{margin:0;background:#f7faf8;color:#243d33;font:16px/1.8 -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif}header{padding:20px 5%;background:#e8f2ec;border-bottom:1px solid #ccdcd1}header a{margin-right:24px}a{color:#176b50}a:hover{color:#104331}main{max-width:1280px;margin:28px auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:0 24px}nav{position:sticky;top:20px;max-height:90vh;overflow:auto;font-size:14px}nav a{display:block;text-decoration:none;padding:5px 10px;border-left:2px solid #d5e4db}nav .sub{padding-left:24px}article{min-width:0;background:white;border:1px solid #dce7df;border-radius:12px;padding:26px 36px}h1,h2,h3{line-height:1.35;scroll-margin-top:20px}h1{font-size:30px}h2{margin-top:2em;border-bottom:1px solid #dce7df;padding-bottom:10px}h3{margin-top:1.7em}table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;width:100%;margin:18px 0}th,td{border:1px solid #d5e1d9;padding:9px 12px;text-align:left}th{background:#edf5ef}pre{overflow:auto;background:#f1f5f2;padding:14px;border-radius:6px}code{font-family:ui-monospace,Consolas,monospace;font-size:.91em}img{max-width:100%;height:auto}blockquote{margin-left:0;border-left:4px solid #6c9d83;padding:8px 18px;background:#f3f8f4}footer{margin-top:32px;color:#64786b;font-size:13px;border-top:1px solid #dce7df;padding-top:14px}@media(max-width:850px){main{display:block;padding:0 12px}nav{position:static;max-height:270px;margin-bottom:20px}article{padding:20px}header a{display:inline-block;margin-right:16px}}</style><header><strong>NaNoBO</strong> &nbsp; <a href="TUTORIAL.zh-CN.html">简体中文</a><a href="TUTORIAL.en.html">English</a><a href="index.html">教程首页 / Help home</a></header><main><nav aria-label="Table of contents"></nav><article><h1 id="atlas-与-gryffin给实验化学家的比较">Atlas 与 Gryffin：给实验化学家的比较</h1>
+<p>核查日期：2026-10-31。</p>
+<p>Atlas 是面向实验科学的贝叶斯优化框架：读入已经完成的实验，拟合响应模型，再平衡“寻找高性能条件”和“探索不确定区域”，推荐下一批实验。它不是预测所有化学体系的预训练大模型，也不包含可直接套用到任何纳米颗粒体系的生长规律。</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>Gryffin</th>
+<th>Atlas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>核心路线</td>
+<td>基于 Phoenics 思路的贝叶斯核密度／核回归，扩展到类别和混合参数</td>
+<td>以高斯过程为核心，使用 BoTorch、GPyTorch</td>
+</tr>
+<tr>
+<td>特别突出的设计</td>
+<td>利用物理化学描述符组织类别选择；static/dynamic 方式利用或细化描述符</td>
+<td>在统一框架里处理多类实验优化任务</td>
+</tr>
+<tr>
+<td>连续、整数、类别与混合参数</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>批量推荐</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>多目标、已知／未知可行性约束</td>
+<td>Gryffin 当前源码已有相关支持，多目标使用 Chimera；不是 Atlas 才有</td>
+<td>提供相应模块及不同优化策略</td>
+</tr>
+<tr>
+<td>多保真、借用历史任务、误差稳健性</td>
+<td>相关生态另有 Gemini、Golem 等工具，不能把这些都算成基础 Gryffin 自动具备的能力</td>
+<td>官方框架明确列出多保真、元学习、输入／测量噪声及搜索空间调整等能力</td>
+</tr>
+</tbody>
+</table>
+<p>来源：<a href="https://github.com/the-matter-lab/gryffin">Gryffin 官方说明</a>、<a href="https://github.com/the-matter-lab/atlas">Atlas 官方说明</a>、<a href="https://matter-atlas.readthedocs.io/en/latest/">Atlas 官方文档</a>。具体模块仍应按实际数据和使用条件核对。</p>
+<p>Atlas 的扩展能力可以用几种实验需求理解：</p>
+<ul>
+<li><strong>多保真</strong>：将较便宜的模拟或简化测量与昂贵的正式实验结合，而不是把不同精度数据直接混成等价结果。</li>
+<li><strong>元学习／历史任务信息</strong>：利用相关任务的已有数据；前提是任务间存在可利用的关系，并非任意旧数据都有帮助。</li>
+<li><strong>稳健优化</strong>：关注加液、温控等输入误差下仍表现良好的条件；需要提供误差模型，不能从普通结果表自动推断真实操作误差。</li>
+</ul>
+<p>对于“Alán 团队目前最好的是不是 Atlas”，可支持的判断是：**Atlas 是团队较新、功能较全面的通用实验 BO 框架之一，值得作为 NaNoBO 的主力候选；没有依据称其为所有实验问题上的最好模型。**功能更丰富、发表更晚和实际优化更有效，是三个不同问题。</p>
+<p>相关研究生态在 2026 年还有 <a href="https://github.com/AccelerationConsortium/bo-mcp">BO-MCP</a> 等工程。BO-MCP 将 BoTorch/BayBE 后端、MCP/REST 和实验记录编排结合；它不是已经被证明全面击败 Atlas 的单一新模型，BayBE 也不应归称为该课题组原创算法。<a href="https://github.com/wei-rui499/NaNoBO/blob/main/research/related_tools.md">相关工具核查</a>保留了来源关系与角色区别。</p>
+<p>对连续配方加类别选择的化学问题，合理做法是用相同的变量空间、历史实验和评价预算比较 Gryffin 与 Atlas；再看新条件的实际效果、重复实验波动及模型计算成本。在完成这种比较前，不能仅凭名称或年代判定哪一种更适合具体材料体系。</p>
+<p><strong>NaNoBO 当前接入范围</strong>：Gryffin 支持单目标及 Chimera 层级多目标；Atlas 提供单目标推荐。增强 BoTorch 工作流支持单目标、Pareto、分类、步长、候选表和联合配方约束。描述符输入、多保真、元学习尚未开放；上游完整能力不等于当前界面已经全部实现。</p>
+<footer>NaNoBO · 离线教程 / Offline guide · 教学实验数据均为模拟 / Teaching data are synthetic.</footer></article></main></html>

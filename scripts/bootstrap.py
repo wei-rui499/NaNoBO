@@ -53,7 +53,7 @@ def fetch(package):
     repository, commit = PINS[package]
     target = ROOT / "upstream" / package
     marker = target / "UPSTREAM_REVISION"
-    if marker.exists() and commit in marker.read_text().splitlines():
+    if marker.exists() and commit in marker.read_text(encoding="utf-8").splitlines():
         return target
     tree = json.loads(retrieve(f"https://api.github.com/repos/{repository}/git/trees/{commit}?recursive=1"))
     if tree.get("truncated"):
@@ -73,7 +73,7 @@ def fetch(package):
         destination.write_bytes(data)
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as pool:
         list(pool.map(download, entries))
-    marker.write_text(commit + "\n")
+    marker.write_text(commit + "\n", encoding="utf-8")
     return target
 
 
@@ -99,32 +99,32 @@ def main():
         source = gryffin / "src" / "gryffin" / "bayesian_network" / (stem + ".pyx")
         run(sys.executable, "-m", "cython", "-3", source)
         generated = source.with_suffix(".c")
-        content = generated.read_text()
-        generated.write_text("/* NaNoBO modification: regenerated from unchanged upstream .pyx with Cython 3.3.0 for native Python 3.10 compatibility. */\n" + content)
+        content = generated.read_text(encoding="utf-8")
+        generated.write_text("/* NaNoBO modification: regenerated from unchanged upstream .pyx with Cython 3.3.0 for native Python 3.10 compatibility. */\n" + content, encoding="utf-8")
     for package in ("gryffin", "olympus-runtime", "atlas"):
         if package == "olympus-runtime":
             for module in ("noises", "models", "planners", "surfaces", "scalarizers"):
                 source = ROOT / "upstream" / package / "src" / "olympus" / module / "__init__.py"
-                text = source.read_text()
+                text = source.read_text(encoding="utf-8")
                 original = "    def __getattr__(self, attr):\n"
                 replacement = original + "        # NaNoBO fix: missing Python metadata is not an optimizer/plugin name.\n        if attr.startswith('__'):\n            raise AttributeError(attr)\n"
                 if "# NaNoBO fix:" not in text:
-                    source.write_text(text.replace(original, replacement))
+                    source.write_text(text.replace(original, replacement), encoding="utf-8")
         if package == "atlas":
             source = ROOT / "upstream" / package / "src" / "atlas" / "acquisition_optimizers" / "pymoo_optimizer.py"
-            text = source.read_text()
+            text = source.read_text(encoding="utf-8")
             old = "            X_arr = list(X_.values())"
             new = "            # NaNoBO fix: evaluate constraints in original parameter units, not Pymoo indices.\n            X_arr = list(self._pymoo_to_olympus([X_])[0].values())"
             if old not in text and new not in text:
                 raise RuntimeError("Unexpected Atlas constraint wrapper source")
-            source.write_text(text.replace(old, new))
+            source.write_text(text.replace(old, new), encoding="utf-8")
         setup = ROOT / "upstream" / package / "setup.py"
-        text = setup.read_text()
+        text = setup.read_text(encoding="utf-8")
         snapshot = "0+chembo." + PINS[package][1][:7]
         text = text.replace("version=versioneer.get_version()", f"version='{snapshot}'")
         if not text.startswith("# ChemBO"):
             text = "# NaNoBO modification: fixed source-snapshot version; no VCS metadata is bundled.\n" + text
-        setup.write_text(text)
+        setup.write_text(text, encoding="utf-8")
         run(sys.executable, "-m", "pip", "install", "--no-deps", "--no-build-isolation", ROOT / "upstream" / package)
     run(sys.executable, "-m", "pip", "install", "--no-deps", "--no-build-isolation", "-e", ROOT)
 

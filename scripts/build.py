@@ -7,6 +7,7 @@ import plistlib
 import shutil
 import subprocess
 import sys
+from build_support import app_version
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -18,6 +19,7 @@ def main():
     if not modern.is_file():
         raise SystemExit("Build the Python 3.13 modern worker first: scripts/build_modern.py")
     os.environ["PYINSTALLER_CONFIG_DIR"] = str(ROOT / "build" / "cache")
+    subprocess.run([sys.executable, str(ROOT / "scripts" / "render_guides.py")], check=True)
     subprocess.run([sys.executable, str(ROOT / "scripts" / "make_icon.py")], check=True)
     subprocess.run([sys.executable, str(ROOT / "scripts" / "collect_licenses.py"), "classic"], check=True)
     arguments = [sys.executable, "-m", "PyInstaller", "--clean", "--noconfirm", "--windowed", "--onedir", "--name", "NaNoBO", "--paths", str(ROOT / "src"), "--distpath", str(ROOT / "dist"), "--workpath", str(ROOT / "build" / "pyinstaller"), "--specpath", str(ROOT / "build"), "--add-data", f"{ROOT / 'licenses'}{os.pathsep}licenses", "--add-data", f"{modern_folder}{os.pathsep}engines/modern", "--collect-all", "gryffin", "--collect-all", "atlas", "--collect-all", "olympus", "--collect-all", "golem", "--collect-all", "chimera", "--hidden-import", "PySide6.QtSvg", "--hidden-import", "pymoo.algorithms.soo.nonconvex.ga", "--hidden-import", "pymoo.operators.sampling.rnd", "--hidden-import", "pymoo.operators.crossover.sbx", "--hidden-import", "pymoo.operators.mutation.pm", "--hidden-import", "pymoo.termination.default", "--exclude-module", "tkinter", "--exclude-module", "pytest", "--exclude-module", "IPython", "--exclude-module", "jupyterlab", "--exclude-module", "PySide6.QtWebEngineCore", "--exclude-module", "PySide6.QtWebEngineWidgets", "--exclude-module", "PySide6.QtWebEngineQuick", "--exclude-module", "tensorflow", "--exclude-module", "tensorflow_probability"]
@@ -30,6 +32,12 @@ def main():
         if arguments[index:index + 2] == ["--collect-all", "olympus"]:
             del arguments[index:index + 2]
     arguments += ["--additional-hooks-dir", str(ROOT / "scripts" / "hooks")]
+    for source, destination in ((ROOT / "docs/html", "docs/html"), (ROOT / "examples/tutorial", "examples/tutorial")):
+        if not source.is_dir():
+            raise SystemExit(f"Required offline teaching material is missing: {source}")
+        arguments += ["--add-data", f"{source}{os.pathsep}{destination}"]
+    for name in ("LICENSE", "ACKNOWLEDGMENTS.md", "THIRD_PARTY_NOTICES.md", "CITATION.cff", "REFERENCES.bib"):
+        arguments += ["--add-data", f"{ROOT / name}{os.pathsep}."]
     arguments += ["--runtime-hook", str(ROOT / "scripts" / "runtime_init.py")]
     arguments += ["--copy-metadata", "moocore", "--exclude-module", "Cython"]
     arguments += ["--hidden-import", "matplotlib.backends.backend_qtagg", "--hidden-import", "matplotlib.backends.backend_pdf", "--hidden-import", "matplotlib.backends.backend_svg", "--hidden-import", "mpl_toolkits.mplot3d", "--collect-all", "openpyxl", "--collect-all", "xlrd", "--collect-all", "pymoo", "--collect-all", "autograd"]
@@ -58,7 +66,8 @@ def main():
         plist_path = app / "Contents" / "Info.plist"
         with plist_path.open("rb") as stream:
             info = plistlib.load(stream)
-        info.update(CFBundleName="NaNoBO", CFBundleDisplayName="NaNoBO", CFBundleShortVersionString="0.2.1", CFBundleVersion="0.2.1", LSMinimumSystemVersion="14.0", NSHighResolutionCapable=True)
+        version = app_version(ROOT)
+        info.update(CFBundleName="NaNoBO", CFBundleDisplayName="NaNoBO", CFBundleShortVersionString=version, CFBundleVersion=version, LSMinimumSystemVersion="14.0", NSHighResolutionCapable=True)
         with plist_path.open("wb") as stream:
             plistlib.dump(info, stream)
         destination = app / "Contents" / "Resources" / "engines" / "modern"

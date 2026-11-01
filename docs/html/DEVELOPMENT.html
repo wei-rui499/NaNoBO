@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>开发与重建 · NaNoBO</title><style>*{box-sizing:border-box}body{margin:0;background:#f7faf8;color:#243d33;font:16px/1.8 -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif}header{padding:20px 5%;background:#e8f2ec;border-bottom:1px solid #ccdcd1}header a{margin-right:24px}a{color:#176b50}a:hover{color:#104331}main{max-width:1280px;margin:28px auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:0 24px}nav{position:sticky;top:20px;max-height:90vh;overflow:auto;font-size:14px}nav a{display:block;text-decoration:none;padding:5px 10px;border-left:2px solid #d5e4db}nav .sub{padding-left:24px}article{min-width:0;background:white;border:1px solid #dce7df;border-radius:12px;padding:26px 36px}h1,h2,h3{line-height:1.35;scroll-margin-top:20px}h1{font-size:30px}h2{margin-top:2em;border-bottom:1px solid #dce7df;padding-bottom:10px}h3{margin-top:1.7em}table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;width:100%;margin:18px 0}th,td{border:1px solid #d5e1d9;padding:9px 12px;text-align:left}th{background:#edf5ef}pre{overflow:auto;background:#f1f5f2;padding:14px;border-radius:6px}code{font-family:ui-monospace,Consolas,monospace;font-size:.91em}img{max-width:100%;height:auto}blockquote{margin-left:0;border-left:4px solid #6c9d83;padding:8px 18px;background:#f3f8f4}footer{margin-top:32px;color:#64786b;font-size:13px;border-top:1px solid #dce7df;padding-top:14px}@media(max-width:850px){main{display:block;padding:0 12px}nav{position:static;max-height:270px;margin-bottom:20px}article{padding:20px}header a{display:inline-block;margin-right:16px}}</style><header><strong>NaNoBO</strong> &nbsp; <a href="TUTORIAL.zh-CN.html">简体中文</a><a href="TUTORIAL.en.html">English</a><a href="index.html">教程首页 / Help home</a></header><main><nav aria-label="Table of contents"><a class="" href="#两套隔离环境">两套隔离环境</a><a class="" href="#运行及回归">运行及回归</a><a class="" href="#构建应用目录">构建应用目录</a><a class="" href="#模拟实验与-dmg-发布">模拟实验与 DMG 发布</a><a class="" href="#更新教程与练习">更新教程与练习</a></nav><article><h1 id="开发与重建">开发与重建</h1>
+<p>最终用户下载适合自己电脑的安装包；这些命令给开发者和发布维护者。各平台必须使用相应原生构建机。Mac 本机验证；Windows 仅同步原生构建，由使用者在 Windows 电脑验证运行效果。</p>
+<h2 id="两套隔离环境">两套隔离环境</h2>
+<p>Gryffin/Atlas 的兼容运行时使用 Python 3.10；现代 BoTorch 工作流使用 Python 3.13。先在仓库根目录准备两个相应解释器，创建 <code>.venv</code> 和 <code>.venv-modern</code>。安装命令会联网获取固定版本；不需要把本地虚拟环境提交 Git。</p>
+<pre><code class="language-sh">python3.10 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python scripts/bootstrap.py
+python3.13 -m venv .venv-modern
+.venv-modern/bin/python -m pip install --upgrade pip
+.venv-modern/bin/python -m pip install -r requirements-modern.in
+</code></pre>
+<p><code>bootstrap.py</code> 固定上游提交、保留来源和许可、从 Gryffin 未修改的 <code>.pyx</code> 重生成兼容 C 扩展，并应用已标记的兼容补丁。BoTorch 和经典运行时不应混用 Torch/Python 动态库。</p>
+<h2 id="运行及回归">运行及回归</h2>
+<pre><code class="language-sh">PYTHONPATH=src .venv/bin/python -m chembo
+CHEMBO_INTEGRATION=1 QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest tests/test_app.py tests/test_app_v2.py tests/test_workflow_regressions.py tests/test_engine.py tests/test_space.py tests/test_io.py tests/test_analysis_view.py tests/test_publication.py tests/test_tutorial_help.py tests/test_tutorial_examples.py tests/test_windows_packaging.py -q --junitxml=validation/regression-0.2.2.xml
+PYTHONPATH=src .venv-modern/bin/python -m unittest discover -s tests -p 'test_mod*.py' -v
+</code></pre>
+<p>模型测试使用合成数据，不调用真实仪器。</p>
+<h2 id="构建应用目录">构建应用目录</h2>
+<pre><code class="language-sh">.venv-modern/bin/python scripts/collect_licenses.py modern
+.venv-modern/bin/python scripts/build_modern.py
+.venv/bin/python scripts/build.py --bundle-only
+</code></pre>
+<p>现代 worker 必须在主程序构建完成后整体复制，保留自己的 <code>_internal</code> 和库搜索路径。构建脚本处理这一点。<code>dist/NaNoBO.app</code> 是待最终封装的本地应用目录；这里只承诺构建目录流程，不将历史测试报告冒认为新机器的验证结果。</p>
+<h2 id="模拟实验与-dmg-发布">模拟实验与 DMG 发布</h2>
+<p><code>scripts/run_simulated_lab.py</code> 支持在指定输出目录生成可复现的模拟实验、图表和项目：</p>
+<pre><code class="language-sh">QT_QPA_PLATFORM=offscreen .venv/bin/python scripts/run_simulated_lab.py --output validation/repeated-run --bundle dist/NaNoBO.app
+</code></pre>
+<p><code>scripts/package_macos.py</code> 从 <code>chembo.__version__</code> 读取当前版本（本次为 0.2.2），作为发布者封装脚本，会再次签名并验证原生模型、界面和导图。它需要当前机器重新生成的验收资料，按本次目录约定包括：</p>
+<ul>
+<li><code>validation/regression-0.2.2.xml</code>：JUnit 回归结果，不能含失败。</li>
+<li><code>docs/VALIDATION_V0.2.2.json</code>：本次运行生成的证据。仓库内保留的是经脱敏的历史参考，重发布前应重新生成。</li>
+<li><code>release/NaNoBO-0.2.2-tutorial-examples.zip</code>：配套合成教学文件。</li>
+<li><code>release/library-sources/</code>：与实际二进制一致的 LGPL 等对应库源码和校验表；可用 <code>scripts/fetch_library_sources.py</code> 准备。</li>
+</ul>
+<p>新的克隆不会自动具有这些发布资料。先执行 <code>--bundle-only</code>、完成当前版本验证并准备这些附件，再调用封装脚本。修改版本号时同步更新 pyproject、chembo.<strong>version</strong>、构建/封装和源归档版本；旧版本证据保留为历史记录。</p>
+<p>安装包、应用源码包、第三方声明、对应库源码与验证附件在同一 GitHub Release 提供。未公证测试版应如实标注；公证不等于上架 App Store，也不是发布本开源源码的前提。</p>
+<h2 id="更新教程与练习">更新教程与练习</h2>
+<p>修改 README.md / README.en.md 和 docs/TUTORIAL.zh-CN.md / docs/TUTORIAL.en.md 后运行 <code>scripts/render_guides.py</code>。构建脚本会自动渲染带目录、语言选择和本地图表的离线教程。练习数据随包保留；用户从“帮助 → 导出教程练习数据…”得到可写副本，再次导出不会覆盖已有文件。</p>
+<p>重新生成 Excel 教学文件时，开发环境额外安装 <code>xlwt==1.3.0</code> 后运行 <code>scripts/generate_tutorial_examples.py</code>；xlwt 仅用于生成旧版 XLS，不属于应用运行依赖。<code>PYTHONPATH=src .venv-modern/bin/python scripts/validate_tutorial_models.py</code> 使用实际模型重放四条练习。Windows 工作流只构建、检查封装文件与压缩包完整性，不启动程序或测试。</p>
+<footer>NaNoBO · 离线教程 / Offline guide · 教学实验数据均为模拟 / Teaching data are synthetic.</footer></article></main></html>

@@ -1,0 +1,210 @@
+{
+  "name": "练习 3 · 性能与成本折衷 · SYNTHETIC",
+  "engine": "bo-mcp",
+  "task": "optimization",
+  "objective_mode": "pareto",
+  "seed": 42,
+  "batch_size": 2,
+  "parameters": [
+    {
+      "name": "temperature_C",
+      "type": "continuous",
+      "low": 20,
+      "high": 80,
+      "step": 10,
+      "unit": "°C"
+    },
+    {
+      "name": "ligand_mM",
+      "type": "continuous",
+      "low": 0.5,
+      "high": 2,
+      "step": 0.5,
+      "unit": "mM"
+    }
+  ],
+  "objectives": [
+    {
+      "name": "yield_pct",
+      "goal": "max",
+      "tolerance": 0.2
+    },
+    {
+      "name": "cost_index",
+      "goal": "min",
+      "tolerance": 0.2
+    }
+  ],
+  "constraints": [],
+  "candidates": [
+    {
+      "temperature_C": 20,
+      "ligand_mM": 0.5
+    },
+    {
+      "temperature_C": 20,
+      "ligand_mM": 1
+    },
+    {
+      "temperature_C": 20,
+      "ligand_mM": 1.5
+    },
+    {
+      "temperature_C": 20,
+      "ligand_mM": 2
+    },
+    {
+      "temperature_C": 30,
+      "ligand_mM": 0.5
+    },
+    {
+      "temperature_C": 30,
+      "ligand_mM": 1
+    },
+    {
+      "temperature_C": 30,
+      "ligand_mM": 1.5
+    },
+    {
+      "temperature_C": 30,
+      "ligand_mM": 2
+    },
+    {
+      "temperature_C": 40,
+      "ligand_mM": 0.5
+    },
+    {
+      "temperature_C": 40,
+      "ligand_mM": 1
+    },
+    {
+      "temperature_C": 40,
+      "ligand_mM": 1.5
+    },
+    {
+      "temperature_C": 40,
+      "ligand_mM": 2
+    },
+    {
+      "temperature_C": 50,
+      "ligand_mM": 0.5
+    },
+    {
+      "temperature_C": 50,
+      "ligand_mM": 1
+    },
+    {
+      "temperature_C": 50,
+      "ligand_mM": 1.5
+    },
+    {
+      "temperature_C": 50,
+      "ligand_mM": 2
+    },
+    {
+      "temperature_C": 60,
+      "ligand_mM": 0.5
+    },
+    {
+      "temperature_C": 60,
+      "ligand_mM": 1
+    },
+    {
+      "temperature_C": 60,
+      "ligand_mM": 1.5
+    },
+    {
+      "temperature_C": 60,
+      "ligand_mM": 2
+    },
+    {
+      "temperature_C": 70,
+      "ligand_mM": 0.5
+    },
+    {
+      "temperature_C": 70,
+      "ligand_mM": 1
+    },
+    {
+      "temperature_C": 70,
+      "ligand_mM": 1.5
+    },
+    {
+      "temperature_C": 70,
+      "ligand_mM": 2
+    },
+    {
+      "temperature_C": 80,
+      "ligand_mM": 0.5
+    },
+    {
+      "temperature_C": 80,
+      "ligand_mM": 1
+    },
+    {
+      "temperature_C": 80,
+      "ligand_mM": 1.5
+    },
+    {
+      "temperature_C": 80,
+      "ligand_mM": 2
+    }
+  ],
+  "observations": [
+    {
+      "temperature_C": 20,
+      "ligand_mM": 0.5,
+      "yield_pct": 30.925,
+      "cost_index": 1.45
+    },
+    {
+      "temperature_C": 30,
+      "ligand_mM": 1,
+      "yield_pct": 41.825,
+      "cost_index": 2.35
+    },
+    {
+      "temperature_C": 40,
+      "ligand_mM": 1.5,
+      "yield_pct": 52.125,
+      "cost_index": 3.25
+    },
+    {
+      "temperature_C": 60,
+      "ligand_mM": 1,
+      "yield_pct": 64.925,
+      "cost_index": 3.78
+    },
+    {
+      "temperature_C": 70,
+      "ligand_mM": 1.5,
+      "yield_pct": 73.425,
+      "cost_index": 4.68
+    },
+    {
+      "temperature_C": 80,
+      "ligand_mM": 2,
+      "yield_pct": 81.325,
+      "cost_index": 5.58
+    }
+  ],
+  "pending": [
+    {
+      "temperature_C": 20,
+      "ligand_mM": 2
+    },
+    {
+      "temperature_C": 80,
+      "ligand_mM": 0.5
+    }
+  ],
+  "notes": "SYNTHETIC / 模拟教学数据：由明确的数学规则生成，不来自真实化学实验，不是可执行的化学合成建议，也不能作为优化算法优越性的证据。",
+  "teaching": {
+    "data_status": "SYNTHETIC",
+    "purpose": "software learning only"
+  },
+  "reference_point": {
+    "yield_pct": 0,
+    "cost_index": 10
+  }
+}

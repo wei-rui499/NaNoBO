@@ -25,6 +25,7 @@ matter-golem==1.0
 deap==1.4.4
 torchbnn==1.2
 pymoo==0.6.0.1
+moocore==0.3.2
 sobol-seq==0.2.0
 pyDOE==0.3.8
 pytest==9.2.0

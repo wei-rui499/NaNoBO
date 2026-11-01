@@ -1,6 +1,6 @@
 ; Build on native Windows with Inno Setup 6. No WSL or user Python is required.
 #ifndef AppVersion
-  #define AppVersion "0.1.0"
+  #define AppVersion "0.2.2"
 #endif
 #ifndef DistDir
   #define DistDir "..\dist\NaNoBO"
@@ -11,6 +11,8 @@ AppId={{B04C2468-D93F-4641-8D6F-CB7A78600EB1}
 AppName=NaNoBO
 AppVersion={#AppVersion}
 AppPublisher=NaNoBO contributors
+AppPublisherURL=https://github.com/wei-rui499/NaNoBO
+AppSupportURL=https://github.com/wei-rui499/NaNoBO/issues
 AppComments=Independent desktop interface for local chemical experiment planning
 DefaultDirName={localappdata}\Programs\NaNoBO
 DefaultGroupName=NaNoBO
@@ -31,6 +33,7 @@ RestartApplications=no
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: "chinesesimp"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Shortcuts:"; Flags: unchecked
@@ -40,6 +43,7 @@ Source: "{#DistDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs cr
 
 [Icons]
 Name: "{group}\NaNoBO"; Filename: "{app}\NaNoBO.exe"; WorkingDir: "{localappdata}"
+Name: "{group}\NaNoBO Tutorials"; Filename: "{app}\_internal\docs\html\index.html"
 Name: "{autodesktop}\NaNoBO"; Filename: "{app}\NaNoBO.exe"; WorkingDir: "{localappdata}"; Tasks: desktopicon
 Name: "{group}\Uninstall NaNoBO"; Filename: "{uninstallexe}"
 

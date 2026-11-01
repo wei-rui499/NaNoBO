@@ -1,0 +1,83 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Acknowledgments / 公开致谢 · NaNoBO</title><style>*{box-sizing:border-box}body{margin:0;background:#f7faf8;color:#243d33;font:16px/1.8 -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif}header{padding:20px 5%;background:#e8f2ec;border-bottom:1px solid #ccdcd1}header a{margin-right:24px}a{color:#176b50}a:hover{color:#104331}main{max-width:1280px;margin:28px auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:0 24px}nav{position:sticky;top:20px;max-height:90vh;overflow:auto;font-size:14px}nav a{display:block;text-decoration:none;padding:5px 10px;border-left:2px solid #d5e4db}nav .sub{padding-left:24px}article{min-width:0;background:white;border:1px solid #dce7df;border-radius:12px;padding:26px 36px}h1,h2,h3{line-height:1.35;scroll-margin-top:20px}h1{font-size:30px}h2{margin-top:2em;border-bottom:1px solid #dce7df;padding-bottom:10px}h3{margin-top:1.7em}table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;width:100%;margin:18px 0}th,td{border:1px solid #d5e1d9;padding:9px 12px;text-align:left}th{background:#edf5ef}pre{overflow:auto;background:#f1f5f2;padding:14px;border-radius:6px}code{font-family:ui-monospace,Consolas,monospace;font-size:.91em}img{max-width:100%;height:auto}blockquote{margin-left:0;border-left:4px solid #6c9d83;padding:8px 18px;background:#f3f8f4}footer{margin-top:32px;color:#64786b;font-size:13px;border-top:1px solid #dce7df;padding-top:14px}@media(max-width:850px){main{display:block;padding:0 12px}nav{position:static;max-height:270px;margin-bottom:20px}article{padding:20px}header a{display:inline-block;margin-right:16px}}</style><header><strong>NaNoBO</strong> &nbsp; <a href="TUTORIAL.zh-CN.html">简体中文</a><a href="TUTORIAL.en.html">English</a><a href="index.html">教程首页 / Help home</a></header><main><nav aria-label="Table of contents"><a class="" href="#实际贡献与使用范围">实际贡献与使用范围</a><a class="" href="#nanobo-自身的贡献">NaNoBO 自身的贡献</a></nav><article><h1 id="acknowledgments--公开致谢">Acknowledgments / 公开致谢</h1>
+<p>NaNoBO 是一个面向化学研究者的独立桌面实验规划界面。我们感谢下列科研软件、算法论文及其原作者和维护者；NaNoBO 的界面和安装包不改变这些成果的学术归属。</p>
+<p>特别感谢 <strong>Florian Häse、Loïc M. Roch、Matteo Aldeghi、Riley J. Hickman、Alán Aspuru-Guzik 及其合作者</strong>为 Phoenics、Gryffin、Chimera、Atlas 与 Olympus 作出的贡献。感谢 <strong>BoTorch、GPyTorch、PyTorch 与 scikit-learn</strong> 的作者和维护者提供现代优化与概率建模基础；感谢 <strong>Willi Gottstein / BO-MCP</strong> 项目提供保留在本软件中的兼容后端。完整作者列表见 <a href="https://github.com/wei-rui499/NaNoBO/blob/main/REFERENCES.bib">REFERENCES.bib</a>。</p>
+<h2 id="实际贡献与使用范围">实际贡献与使用范围</h2>
+<table>
+<thead>
+<tr>
+<th>上游成果</th>
+<th>NaNoBO 中的实际角色</th>
+<th>原始来源与论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gryffin</td>
+<td>经典优化引擎；连续、整数与类别变量</td>
+<td><a href="https://github.com/the-matter-lab/gryffin">代码</a> · <a href="https://doi.org/10.1063/5.0048164">Häse et al., 2021</a></td>
+</tr>
+<tr>
+<td>Phoenics</td>
+<td>Gryffin 连续变量方法的基础；按 Gryffin 官方引用指引致谢，并非另设一个独立桌面引擎</td>
+<td><a href="https://doi.org/10.1021/acscentsci.8b00307">Häse et al., 2018</a></td>
+</tr>
+<tr>
+<td>Chimera</td>
+<td>Gryffin 工作流的优先级多目标标量化</td>
+<td><a href="https://github.com/the-matter-lab/chimera">代码</a> · <a href="https://doi.org/10.1039/C8SC02239A">Häse et al., 2018</a></td>
+</tr>
+<tr>
+<td>Gryffin 已知约束接口</td>
+<td>Gryffin adapter 使用其 known_constraints 接口排除已测／待实验点；NaNoBO 新版联合配方域另由 BoTorch 路径执行</td>
+<td><a href="https://doi.org/10.1039/D2DD00028H">Hickman et al., 2022</a></td>
+</tr>
+<tr>
+<td>Atlas</td>
+<td>原生 GPPlanner 单目标／批量推荐工作流</td>
+<td><a href="https://github.com/the-matter-lab/atlas">代码</a> · <a href="https://doi.org/10.1039/D4DD00115J">Hickman et al., 2025</a></td>
+</tr>
+<tr>
+<td>Olympus</td>
+<td>Atlas 的参数、观测、实验规划接口及运行支持</td>
+<td><a href="https://github.com/the-matter-lab/olympus">代码</a> · <a href="https://doi.org/10.1088/2632-2153/abedc8">Häse et al., 2021</a> · <a href="https://doi.org/10.26434/chemrxiv-2023-74w8d">增强版预印本</a></td>
+</tr>
+<tr>
+<td>BoTorch</td>
+<td>新版数值优化、后验预测、qLogEI 和 qLogNEHVI 的实际实现</td>
+<td><a href="https://github.com/pytorch/botorch">代码</a> · <a href="https://papers.neurips.cc/paper_files/paper/2020/hash/f5b1b89d98b7286673128a5fb112cb9a-Abstract.html">Balandat et al., 2020</a></td>
+</tr>
+<tr>
+<td>LogEI 方法</td>
+<td>单目标 qLogEI 及多目标采集函数的对数稳定化</td>
+<td><a href="https://papers.neurips.cc/paper_files/paper/2023/hash/419f72cbd568ad62183f8132a3605a2a-Abstract-Conference.html">Ament et al., 2023</a></td>
+</tr>
+<tr>
+<td>NEHVI 方法</td>
+<td>噪声多目标超体积改进，是 qLogNEHVI 的方法基础</td>
+<td><a href="https://papers.neurips.cc/paper_files/paper/2021/hash/11704817e347269b7254e744b5e22dac-Abstract.html">Daulton et al., 2021</a></td>
+</tr>
+<tr>
+<td>GPyTorch</td>
+<td>Atlas／BoTorch 工作流的高斯过程基础设施</td>
+<td><a href="https://github.com/cornellius-gp/gpytorch">代码</a> · <a href="https://proceedings.neurips.cc/paper_files/paper/2018/file/27e8e17134dd7083b050476733207ea1-Paper.pdf">Gardner et al., 2018</a></td>
+</tr>
+<tr>
+<td>scikit-learn / GPML</td>
+<td>分类主动学习中的 GaussianProcessClassifier 实现与高斯过程分类理论</td>
+<td><a href="https://www.jmlr.org/papers/v12/pedregosa11a.html">Pedregosa et al., 2011</a> · <a href="https://gaussianprocess.org/gpml/">Rasmussen &amp; Williams, 2006</a></td>
+</tr>
+<tr>
+<td>BO-MCP / bo-engine</td>
+<td>独立 Python 3.13 兼容后端；其固定源代码仍受 MIT 许可覆盖</td>
+<td><a href="https://github.com/AccelerationConsortium/bo-mcp/tree/56d590b91ac120d0f22a3e41e770843d271808cd">固定源码</a></td>
+</tr>
+</tbody>
+</table>
+<p>新版增强工作流 <code>nanobo-botorch-v2</code> 在 NaNoBO 的 <code>modeling.py</code> 中直接组合 BoTorch／scikit-learn 的原生模型。它不等同于 BO-MCP 的完整服务产品，也不把 BoTorch、scikit-learn 或 BayBE 归为 Aspuru-Guzik 课题组原创算法。BayBE 不是本版本运行引擎。</p>
+<p>感谢 Python、NumPy、SciPy、pandas、Matplotlib、Qt/PySide6、openpyxl、xlrd、PyInstaller、Cython、Pymoo、DEAP 以及其他依赖的开发者。Golem 作为上游依赖随包保留，但其鲁棒优化功能尚未作为 NaNoBO 的独立用户功能开放。依赖不全部是“科研模型”，其法律归属和许可仍全部保留，见 <a href="THIRD_PARTY_NOTICES.html">THIRD_PARTY_NOTICES.md</a> 与 <a href="../../licenses">licenses/</a>。</p>
+<p>BgoFace / BgoLearn 的公开功能曾用于产品需求对照，相关过程记录在 <code>research/</code>。它们不作为 NaNoBO 的优化后端；本项目没有将其模型或界面源码并入应用，也不声称存在同条件性能优越性结论。</p>
+<h2 id="nanobo-自身的贡献">NaNoBO 自身的贡献</h2>
+<p>NaNoBO 提供独立的桌面交互、严格表格输入、可执行配方域、实验回填与项目保存、引擎进程集成、实际模型诊断、结果可视化、模拟功能验收和安装包构建。科学优化方法、论文及原始软件的作者署名按各自来源保留。</p>
+<p>NaNoBO 不是上述作者、课题组、机构或项目的官方桌面产品，以上致谢不表示他们参与、审核或背书 NaNoBO。引用论文与履行开源许可证是两件分别需要处理的事；致谢页不能替代许可证、版权声明、对应源码或修改记录。</p>
+<p>发表使用本软件的研究时，请按<a href="HOW_TO_CITE.html">如何引用</a>引用实际使用的模型，不只引用 NaNoBO。</p>
+<footer>NaNoBO · 离线教程 / Offline guide · 教学实验数据均为模拟 / Teaching data are synthetic.</footer></article></main></html>

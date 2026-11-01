@@ -1,0 +1,162 @@
+{
+  "name": "练习 4 · 探索形貌类别 · SYNTHETIC",
+  "engine": "bo-mcp",
+  "task": "classification",
+  "objective_mode": "hierarchical",
+  "seed": 42,
+  "batch_size": 2,
+  "parameters": [
+    {
+      "name": "temperature_C",
+      "type": "continuous",
+      "low": 20,
+      "high": 80,
+      "step": 10,
+      "unit": "°C"
+    },
+    {
+      "name": "ligand_mM",
+      "type": "continuous",
+      "low": 0.5,
+      "high": 2,
+      "step": 0.5,
+      "unit": "mM"
+    }
+  ],
+  "objectives": [
+    {
+      "name": "morphology",
+      "goal": "max",
+      "tolerance": 0.2
+    }
+  ],
+  "constraints": [],
+  "candidates": [
+    {
+      "temperature_C": 20,
+      "ligand_mM": 0.5
+    },
+    {
+      "temperature_C": 20,
+      "ligand_mM": 1
+    },
+    {
+      "temperature_C": 20,
+      "ligand_mM": 1.5
+    },
+    {
+      "temperature_C": 20,
+      "ligand_mM": 2
+    },
+    {
+      "temperature_C": 30,
+      "ligand_mM": 0.5
+    },
+    {
+      "temperature_C": 30,
+      "ligand_mM": 1
+    },
+    {
+      "temperature_C": 30,
+      "ligand_mM": 1.5
+    },
+    {
+      "temperature_C": 30,
+      "ligand_mM": 2
+    },
+    {
+      "temperature_C": 40,
+      "ligand_mM": 0.5
+    },
+    {
+      "temperature_C": 40,
+      "ligand_mM": 1
+    },
+    {
+      "temperature_C": 40,
+      "ligand_mM": 1.5
+    },
+    {
+      "temperature_C": 40,
+      "ligand_mM": 2
+    },
+    {
+      "temperature_C": 50,
+      "ligand_mM": 0.5
+    },
+    {
+      "temperature_C": 50,
+      "ligand_mM": 1
+    },
+    {
+      "temperature_C": 50,
+      "ligand_mM": 1.5
+    },
+    {
+      "temperature_C": 50,
+      "ligand_mM": 2
+    },
+    {
+      "temperature_C": 60,
+      "ligand_mM": 0.5
+    },
+    {
+      "temperature_C": 60,
+      "ligand_mM": 1
+    },
+    {
+      "temperature_C": 60,
+      "ligand_mM": 1.5
+    },
+    {
+      "temperature_C": 60,
+      "ligand_mM": 2
+    },
+    {
+      "temperature_C": 70,
+      "ligand_mM": 0.5
+    },
+    {
+      "temperature_C": 70,
+      "ligand_mM": 1
+    },
+    {
+      "temperature_C": 70,
+      "ligand_mM": 1.5
+    },
+    {
+      "temperature_C": 70,
+      "ligand_mM": 2
+    },
+    {
+      "temperature_C": 80,
+      "ligand_mM": 0.5
+    },
+    {
+      "temperature_C": 80,
+      "ligand_mM": 1
+    },
+    {
+      "temperature_C": 80,
+      "ligand_mM": 1.5
+    },
+    {
+      "temperature_C": 80,
+      "ligand_mM": 2
+    }
+  ],
+  "observations": [],
+  "pending": [],
+  "notes": "SYNTHETIC / 模拟教学数据：由明确的数学规则生成，不来自真实化学实验，不是可执行的化学合成建议，也不能作为优化算法优越性的证据。",
+  "teaching": {
+    "data_status": "SYNTHETIC",
+    "purpose": "software learning only"
+  },
+  "classification": {
+    "labels": [
+      "团聚",
+      "球形",
+      "棒状"
+    ]
+  }
+}

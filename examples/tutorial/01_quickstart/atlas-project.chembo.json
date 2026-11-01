@@ -1,0 +1,86 @@
+{
+  "name": "练习 1 · 认识完整实验循环 · SYNTHETIC",
+  "engine": "atlas",
+  "task": "optimization",
+  "objective_mode": "hierarchical",
+  "seed": 42,
+  "batch_size": 2,
+  "parameters": [
+    {
+      "name": "temperature_C",
+      "type": "continuous",
+      "low": 20,
+      "high": 60,
+      "unit": "°C"
+    },
+    {
+      "name": "cycles",
+      "type": "discrete",
+      "low": 1,
+      "high": 2,
+      "unit": "count"
+    },
+    {
+      "name": "additive",
+      "type": "categorical",
+      "options": [
+        "A",
+        "B"
+      ],
+      "unit": ""
+    }
+  ],
+  "objectives": [
+    {
+      "name": "yield_pct",
+      "goal": "max",
+      "tolerance": 0.2
+    }
+  ],
+  "constraints": [],
+  "candidates": [],
+  "observations": [
+    {
+      "temperature_C": 20,
+      "cycles": 1,
+      "additive": "A",
+      "yield_pct": 44.5
+    },
+    {
+      "temperature_C": 30,
+      "cycles": 1,
+      "additive": "A",
+      "yield_pct": 57.0
+    },
+    {
+      "temperature_C": 30,
+      "cycles": 2,
+      "additive": "B",
+      "yield_pct": 66.0
+    },
+    {
+      "temperature_C": 40,
+      "cycles": 2,
+      "additive": "A",
+      "yield_pct": 67.5
+    },
+    {
+      "temperature_C": 50,
+      "cycles": 1,
+      "additive": "B",
+      "yield_pct": 73.0
+    },
+    {
+      "temperature_C": 60,
+      "cycles": 2,
+      "additive": "B",
+      "yield_pct": 73.5
+    }
+  ],
+  "pending": [],
+  "notes": "SYNTHETIC / 模拟教学数据：由明确的数学规则生成，不来自真实化学实验，不是可执行的化学合成建议，也不能作为优化算法优越性的证据。",
+  "teaching": {
+    "data_status": "SYNTHETIC",
+    "purpose": "software learning only"
+  }
+}

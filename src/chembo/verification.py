@@ -21,6 +21,15 @@ def verify_files_and_exports(window):
     from chembo.storage import write_csv
     project = {"name": "SYNTHETIC reader check", "engine": "bo-mcp", "parameters": [{"name": "A", "type": "continuous", "low": 0, "high": 1, "step": .1}], "objectives": [{"name": "yield", "goal": "max"}], "observations": [], "pending": []}
     checks = []
+    from chembo.app import resources
+    asset_root = resources()
+    for language in ("zh-CN", "en"):
+        if not (asset_root / "docs/html" / f"TUTORIAL.{language}.html").is_file():
+            raise RuntimeError("Missing offline tutorial: " + language)
+    for exercise in ("01_quickstart", "02_recipe", "03_pareto", "04_classification"):
+        if not (asset_root / "examples/tutorial" / exercise / "project.chembo.json").is_file():
+            raise RuntimeError("Missing tutorial exercise: " + exercise)
+    checks.append({"case": "frozen-tutorial-resources", "languages": ["zh-CN", "en"], "exercise_folders": 4})
     with tempfile.TemporaryDirectory(prefix="nanobo-frozen-export-") as directory:
         folder = Path(directory)
         expected = [{"A": .2, "yield": 0.0}, {"A": .5, "yield": 1.0}]

@@ -1,0 +1,89 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>验证记录 · NaNoBO</title><style>*{box-sizing:border-box}body{margin:0;background:#f7faf8;color:#243d33;font:16px/1.8 -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif}header{padding:20px 5%;background:#e8f2ec;border-bottom:1px solid #ccdcd1}header a{margin-right:24px}a{color:#176b50}a:hover{color:#104331}main{max-width:1280px;margin:28px auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:0 24px}nav{position:sticky;top:20px;max-height:90vh;overflow:auto;font-size:14px}nav a{display:block;text-decoration:none;padding:5px 10px;border-left:2px solid #d5e4db}nav .sub{padding-left:24px}article{min-width:0;background:white;border:1px solid #dce7df;border-radius:12px;padding:26px 36px}h1,h2,h3{line-height:1.35;scroll-margin-top:20px}h1{font-size:30px}h2{margin-top:2em;border-bottom:1px solid #dce7df;padding-bottom:10px}h3{margin-top:1.7em}table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;width:100%;margin:18px 0}th,td{border:1px solid #d5e1d9;padding:9px 12px;text-align:left}th{background:#edf5ef}pre{overflow:auto;background:#f1f5f2;padding:14px;border-radius:6px}code{font-family:ui-monospace,Consolas,monospace;font-size:.91em}img{max-width:100%;height:auto}blockquote{margin-left:0;border-left:4px solid #6c9d83;padding:8px 18px;background:#f3f8f4}footer{margin-top:32px;color:#64786b;font-size:13px;border-top:1px solid #dce7df;padding-top:14px}@media(max-width:850px){main{display:block;padding:0 12px}nav{position:static;max-height:270px;margin-bottom:20px}article{padding:20px}header a{display:inline-block;margin-right:16px}}</style><header><strong>NaNoBO</strong> &nbsp; <a href="TUTORIAL.zh-CN.html">简体中文</a><a href="TUTORIAL.en.html">English</a><a href="index.html">教程首页 / Help home</a></header><main><nav aria-label="Table of contents"><a class="" href="#022-双语教程与功能同步">0.2.2 双语教程与功能同步</a><a class="" href="#021-完整模拟实验验收">0.2.1 完整模拟实验验收</a><a class="" href="#02-新增验证">0.2 新增验证</a><a class="" href="#01-已完成的基础检查">0.1 已完成的基础检查</a><a class="" href="#最终封装的强制检查">最终封装的强制检查</a><a class="" href="#尚未覆盖">尚未覆盖</a></nav><article><h1 id="验证记录">验证记录</h1>
+<h2 id="022-双语教程与功能同步">0.2.2 双语教程与功能同步</h2>
+<p>日期：2026-11-01。新增中英文完整教程、安装包内离线帮助和练习数据导出，科学模型保持原有实现。Mac 端源码回归 125 项通过；四套教学文件的 CSV/XLS/XLSX、合法候选与固定回填检查通过。使用实际 BoTorch／分类模型完成四条练习的推荐、待实验排除、模拟回填和 8 条观测的留一验证；教程中的 6 张图来自这些实际输出。</p>
+<p><a href="https://github.com/wei-rui499/NaNoBO/blob/main/docs/VALIDATION_V0.2.2.json">0.2.2 检查摘要</a>记录具体范围。Mac 安装包的冻结模型、界面、读写、导图与离线教程检查由封装脚本独立记录在 Release 的 MAC_VALIDATION-0.2.2.json 中，成功后才生成 Mac 安装包。</p>
+<p><strong>Windows 按使用者要求仅进行原生构建与封装</strong>：同步相同源码、教程和数据，检查文件与 ZIP 完整性；不启动 EXE、引擎或安装器，不做模型、GUI、安装运行验收。Windows 使用效果由用户实机验证。下文为 0.2.1 及更早的历史证据，不代表 Windows 通过了这些检查。</p>
+<p>日期：2026-10-31。产品：NaNoBO 0.2.1。平台：Apple Silicon arm64、macOS 27.2；发布目标 macOS 14 及以上。界面库为 PySide6-Essentials / Shiboken 6.12.0。</p>
+<h2 id="021-完整模拟实验验收">0.2.1 完整模拟实验验收</h2>
+<p>本次以带噪声的合成产率、成本、选择性和分类标签完成 9 个工作流、41 轮、82 条模拟观测。每轮实际生成条件、导出、回填、保存重开并继续推荐；487 项闭环断言通过。另有 108 项经典运行时完整回归、17 项现代真实模型／冻结入口测试和 6 项模型边界检查通过。</p>
+<p>本次修复了导入结果／撤回待实验后过期分析仍可保存、计算结束时控件启用状态，以及冻结安装包缺失 PDF 导出模块的问题。最终冻结程序额外读取真实 XLS、XLSX、CSV 并导出 15 个 PNG/PDF/SVG 文件和预测 CSV；最终结果见版本化的 release 验证报告。</p>
+<ul>
+<li><a href="https://github.com/wei-rui499/NaNoBO/releases/tag/v0.2.1">模拟验收资料</a></li>
+<li><a href="https://github.com/wei-rui499/NaNoBO/releases/tag/v0.2.1">功能覆盖矩阵（验收资料内）</a></li>
+<li><a href="https://github.com/wei-rui499/NaNoBO/releases/tag/v0.2.1">模拟实验协议（验收资料内）</a></li>
+<li><a href="https://github.com/wei-rui499/NaNoBO/blob/main/docs/VALIDATION_V0.2.1.json">0.2.1 机器可读证据</a></li>
+</ul>
+<p>模拟实验仅验证指定功能及数学／数据流的一致性，不作为真实化学优化收益证据。下文保留先前版本的历史检查记录。</p>
+<h2 id="02-新增验证">0.2 新增验证</h2>
+<ul>
+<li>经典运行时：<code>test_app / test_app_v2 / test_engine / test_space / test_io / test_analysis_view</code>：77 passed，18 既有科学后端集成用例默认跳过；这些引擎另做冻结实际计算。</li>
+<li>XLS、XLSX、工作表选择、缺失值、公式缓存、步长、线性／配比约束、候选表近重复、有限域耗尽、分类标签、同模型验证以及 PNG/PDF/SVG/CSV 导出均有覆盖。</li>
+<li>源码完整 Qt→QProcess→模型→表格流程 8 项通过：三引擎基本推荐、受约束配方、Pareto、分类，以及 Pareto/分类只分析并保留原待实验。</li>
+<li>现代运行时的真实 GP、qLogNEHVI、分类概率、LOOCV 和隔离 PATH 的冻结程序检查见 <a href="https://github.com/wei-rui499/NaNoBO/blob/main/docs/VALIDATION_V0.2.1.json">当前验证摘要</a>。</li>
+<li>最终 DMG 的签名、六项传统冻结模型和八项冻结 GUI 流程由打包脚本强制验收；实际本次结果见 DMG 内的 <code>MAC_VALIDATION.json</code>。</li>
+</ul>
+<h2 id="01-已完成的基础检查">0.1 已完成的基础检查</h2>
+<table>
+<thead>
+<tr>
+<th>检查</th>
+<th>结果</th>
+<th>覆盖范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CHEMBO_INTEGRATION=1 python -m pytest tests/test_engine.py tests/test_app.py -q</code></td>
+<td>52 passed</td>
+<td>输入／CSV 校验、有限域耗尽、防重复、Gryffin 真训练、Chimera 多目标、Atlas GP、混合变量、原始单位约束、保存／另存为、手动回填协调，以及界面通过 QProcess 调用三引擎并把结果写回待实验表</td>
+</tr>
+<tr>
+<td><code>PYTHONPATH=src python -m unittest discover -s tests -p test_modern.py -v</code></td>
+<td>5 passed，1 项冻结入口默认跳过</td>
+<td>BO-MCP 原生初始设计、状态续接、已有观测的 GP、混合变量、待实验点和非法输入；冻结入口另做下述检查</td>
+</tr>
+<tr>
+<td><code>scripts/smoke_frozen.py</code>，清洁复制的 <code>.app</code></td>
+<td>六项通过</td>
+<td>三个引擎各自的连续参数真训练，以及中文类别＋整数＋连续混合域的 batch=2；Gryffin 混合域同时启用 Chimera 双目标</td>
+</tr>
+<tr>
+<td>实际原生窗口</td>
+<td>通过启动和 Gryffin 按钮操作</td>
+<td>可访问性树看到“模型计算中”，随后看到“已生成 2 个待实验条件”，待实验表有两行，原观测五行保留</td>
+</tr>
+<tr>
+<td>Qt 与 Torch 兼容</td>
+<td>已修复并验证</td>
+<td><code>typing_extensions</code> 先于 Qt 初始化；Olympus 元数据查询遵循标准 AttributeError；新版 Qt 取代旧版 native Cocoa 崩溃路径</td>
+</tr>
+<tr>
+<td>独立现代运行时</td>
+<td>已验证</td>
+<td>构建完成后整体复制，保留原始 LC_RPATH；避免经典 Torch/Python 被错误链接进现代引擎</td>
+</tr>
+<tr>
+<td>现代独立目录库依赖</td>
+<td>已检查</td>
+<td>252 个 Mach-O 的 <code>otool -L</code> 未发现开发环境的非系统绝对路径依赖</td>
+</tr>
+<tr>
+<td>平台与图片插件</td>
+<td>显式收集</td>
+<td>保留 Cocoa、offscreen 等实际需要的插件；排除 <code>qpdf</code>，未引入 QtPdf、Charts、DataVisualization、WebEngine</td>
+</tr>
+</tbody>
+</table>
+<p>测试数据均为明确标注的合成／教学数据；通过软件测试不表示已经验证某一种化学体系的优化收益。上游数值库会产生部分弃用或数值警告，测试检查了返回条件的范围、有限值、数量和防重复行为，没有将失败训练回退为随机优化。</p>
+<h2 id="最终封装的强制检查">最终封装的强制检查</h2>
+<p><code>scripts/package_macos.py</code> 在干净临时目录中复制最终应用、替换许可目录、设置版本与最低系统版本后，依次执行：</p>
+<ol>
+<li>ad-hoc 代码签名和 <code>codesign --verify --deep --strict</code>。</li>
+<li>六项冻结模型检查，移除 Python/虚拟环境路径变量。</li>
+<li><code>NaNoBO --verify-ui</code>：真实创建 Qt 窗口，执行八个推荐／分析流程，确认三引擎及新任务结果进入表格，留一验证有真实留出行，只分析不会增加待实验。该入口只供维护者验收，不向普通用户展示配置步骤。</li>
+<li>以上全部成功后才生成 DMG，附应用源码、第三方许可和精确版本库源码。</li>
+</ol>
+<p>这一步是打包脚本的实际验收逻辑，DMG 内的机器可读验证报告记录本次封装的结果。DMG 生成后还应挂载并复制到源码目录以外，确认签名与启动。</p>
+<h2 id="尚未覆盖">尚未覆盖</h2>
+<p>尚未完成 Apple Developer ID 签名和公证，本机没有可用的开发者签名身份。Windows 0.2.2 仅同步构建，实机运行待用户验证；Intel Mac 没有完整版。当前没有跨多台 Mac 的系统版本矩阵，也没有对真实化学实验做模型优劣基准。Atlas 界面限单目标；多保真、元学习和描述符输入尚未开放。联合配方约束、Pareto 和分类由 BoTorch 工作流提供。</p>
+<footer>NaNoBO · 离线教程 / Offline guide · 教学实验数据均为模拟 / Teaching data are synthetic.</footer></article></main></html>

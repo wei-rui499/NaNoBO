@@ -1,6 +1,6 @@
 # 开发与重建
 
-最终用户直接下载 DMG；这些命令给开发者和发布维护者。各平台必须使用相应原生构建机；本次已经验证 macOS arm64，Windows 暂缓。
+最终用户下载适合自己电脑的安装包；这些命令给开发者和发布维护者。各平台必须使用相应原生构建机。Mac 本机验证；Windows 仅同步原生构建，由使用者在 Windows 电脑验证运行效果。
 
 ## 两套隔离环境
 
@@ -21,7 +21,7 @@ python3.13 -m venv .venv-modern
 
 ```sh
 PYTHONPATH=src .venv/bin/python -m chembo
-CHEMBO_INTEGRATION=1 QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest tests/test_app.py tests/test_app_v2.py tests/test_workflow_regressions.py tests/test_engine.py tests/test_space.py tests/test_io.py tests/test_analysis_view.py -q --junitxml=validation/simulated-lab-20261031/regression-classic.xml
+CHEMBO_INTEGRATION=1 QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest tests/test_app.py tests/test_app_v2.py tests/test_workflow_regressions.py tests/test_engine.py tests/test_space.py tests/test_io.py tests/test_analysis_view.py tests/test_publication.py tests/test_tutorial_help.py tests/test_tutorial_examples.py tests/test_windows_packaging.py -q --junitxml=validation/regression-0.2.2.xml
 PYTHONPATH=src .venv-modern/bin/python -m unittest discover -s tests -p 'test_mod*.py' -v
 ```
 
@@ -45,13 +45,19 @@ PYTHONPATH=src .venv-modern/bin/python -m unittest discover -s tests -p 'test_mo
 QT_QPA_PLATFORM=offscreen .venv/bin/python scripts/run_simulated_lab.py --output validation/repeated-run --bundle dist/NaNoBO.app
 ```
 
-当前 `scripts/package_macos.py` 是 0.2.1 发布者封装脚本，会再次签名并验证原生模型、界面和导图。它需要当前机器重新生成的验收资料，按本次目录约定包括：
+`scripts/package_macos.py` 从 `chembo.__version__` 读取当前版本（本次为 0.2.2），作为发布者封装脚本，会再次签名并验证原生模型、界面和导图。它需要当前机器重新生成的验收资料，按本次目录约定包括：
 
-- `validation/simulated-lab-20261031/regression-classic.xml`：JUnit 回归结果，不能含失败。
-- `docs/VALIDATION_V0.2.1.json`：本次运行生成的证据。仓库内保留的是经脱敏的历史参考，重发布前应重新生成。
-- `release/NaNoBO-0.2.1-simulated-validation.zip`：带合成来源声明的完整模拟资料。
+- `validation/regression-0.2.2.xml`：JUnit 回归结果，不能含失败。
+- `docs/VALIDATION_V0.2.2.json`：本次运行生成的证据。仓库内保留的是经脱敏的历史参考，重发布前应重新生成。
+- `release/NaNoBO-0.2.2-tutorial-examples.zip`：配套合成教学文件。
 - `release/library-sources/`：与实际二进制一致的 LGPL 等对应库源码和校验表；可用 `scripts/fetch_library_sources.py` 准备。
 
 新的克隆不会自动具有这些发布资料。先执行 `--bundle-only`、完成当前版本验证并准备这些附件，再调用封装脚本。修改版本号时同步更新 pyproject、chembo.__version__、构建/封装和源归档版本；旧版本证据保留为历史记录。
 
 安装包、应用源码包、第三方声明、对应库源码与验证附件在同一 GitHub Release 提供。未公证测试版应如实标注；公证不等于上架 App Store，也不是发布本开源源码的前提。
+
+## 更新教程与练习
+
+修改 README.md / README.en.md 和 docs/TUTORIAL.zh-CN.md / docs/TUTORIAL.en.md 后运行 `scripts/render_guides.py`。构建脚本会自动渲染带目录、语言选择和本地图表的离线教程。练习数据随包保留；用户从“帮助 → 导出教程练习数据…”得到可写副本，再次导出不会覆盖已有文件。
+
+重新生成 Excel 教学文件时，开发环境额外安装 `xlwt==1.3.0` 后运行 `scripts/generate_tutorial_examples.py`；xlwt 仅用于生成旧版 XLS，不属于应用运行依赖。`PYTHONPATH=src .venv-modern/bin/python scripts/validate_tutorial_models.py` 使用实际模型重放四条练习。Windows 工作流只构建、检查封装文件与压缩包完整性，不启动程序或测试。

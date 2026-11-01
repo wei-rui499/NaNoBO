@@ -1,0 +1,784 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NaNoBO: a practical guide for chemists · NaNoBO</title><style>*{box-sizing:border-box}body{margin:0;background:#f7faf8;color:#243d33;font:16px/1.8 -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif}header{padding:20px 5%;background:#e8f2ec;border-bottom:1px solid #ccdcd1}header a{margin-right:24px}a{color:#176b50}a:hover{color:#104331}main{max-width:1280px;margin:28px auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:0 24px}nav{position:sticky;top:20px;max-height:90vh;overflow:auto;font-size:14px}nav a{display:block;text-decoration:none;padding:5px 10px;border-left:2px solid #d5e4db}nav .sub{padding-left:24px}article{min-width:0;background:white;border:1px solid #dce7df;border-radius:12px;padding:26px 36px}h1,h2,h3{line-height:1.35;scroll-margin-top:20px}h1{font-size:30px}h2{margin-top:2em;border-bottom:1px solid #dce7df;padding-bottom:10px}h3{margin-top:1.7em}table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;width:100%;margin:18px 0}th,td{border:1px solid #d5e1d9;padding:9px 12px;text-align:left}th{background:#edf5ef}pre{overflow:auto;background:#f1f5f2;padding:14px;border-radius:6px}code{font-family:ui-monospace,Consolas,monospace;font-size:.91em}img{max-width:100%;height:auto}blockquote{margin-left:0;border-left:4px solid #6c9d83;padding:8px 18px;background:#f3f8f4}footer{margin-top:32px;color:#64786b;font-size:13px;border-top:1px solid #dce7df;padding-top:14px}@media(max-width:850px){main{display:block;padding:0 12px}nav{position:static;max-height:270px;margin-bottom:20px}article{padding:20px}header a{display:inline-block;margin-right:16px}}</style><header><strong>NaNoBO</strong> &nbsp; <a href="TUTORIAL.zh-CN.html">简体中文</a><a href="TUTORIAL.en.html">English</a><a href="index.html">教程首页 / Help home</a></header><main><nav aria-label="Table of contents"><a class="" href="#contents">Contents</a><a class="" href="#1-install-and-open-the-application">1. Install and open the application</a><a class="sub" href="#apple-silicon-mac">Apple Silicon Mac</a><a class="sub" href="#windows">Windows</a><a class="sub" href="#open-the-guide-and-obtain-the-exercises">Open the guide and obtain the exercises</a><a class="" href="#2-find-your-way-around">2. Find your way around</a><a class="" href="#3-ten-minute-exercise-temperature-additive-and-yield">3. Ten-minute exercise: temperature, additive and yield</a><a class="sub" href="#a-inspect-the-existing-measurements">A. Inspect the existing measurements</a><a class="sub" href="#b-view-predictions-before-adding-a-batch">B. View predictions before adding a batch</a><a class="sub" href="#c-ask-for-the-next-two-experiments">C. Ask for the next two experiments</a><a class="sub" href="#d-complete-a-simulated-batch">D. Complete a simulated batch</a><a class="sub" href="#e-a-guaranteed-refill-only-exercise">E. A guaranteed refill-only exercise</a><a class="" href="#4-know-which-practice-file-to-open">4. Know which practice file to open</a><a class="" href="#5-create-your-own-project">5. Create your own project</a><a class="sub" href="#set-the-basic-fields">Set the basic fields</a><a class="sub" href="#define-every-variable-you-are-allowed-to-change">Define every variable you are allowed to change</a><a class="sub" href="#define-the-result-you-want">Define the result you want</a><a class="" href="#6-import-export-and-refill-experimental-results">6. Import, export and refill experimental results</a><a class="sub" href="#import-a-complete-results-table">Import a complete results table</a><a class="sub" href="#add-or-correct-rows-by-hand">Add or correct rows by hand</a><a class="sub" href="#keep-pending-conditions-separate-from-results">Keep pending conditions separate from results</a><a class="sub" href="#export-measurements">Export measurements</a><a class="" href="#7-engines-and-priority-objectives">7. Engines and priority objectives</a><a class="sub" href="#try-native-gryffin-and-atlas-with-the-same-starting-measurements">Try native Gryffin and Atlas with the same starting measurements</a><a class="sub" href="#gryffin--chimera-priorities">Gryffin / Chimera priorities</a><a class="" href="#8-executable-recipes-steps-total-volume-ratios-and-candidate-tables">8. Executable recipes: steps, total volume, ratios and candidate tables</a><a class="sub" href="#set-a-dispensing-or-operating-step">Set a dispensing or operating step</a><a class="sub" href="#add-a-total-volume-or-linear-rule">Add a total-volume or linear rule</a><a class="sub" href="#add-a-ratio-limit">Add a ratio limit</a><a class="sub" href="#import-a-permitted-recipe-table">Import a permitted recipe table</a><a class="sub" href="#remove-a-restriction-deliberately">Remove a restriction deliberately</a><a class="" href="#9-pareto-and-classification-exercises">9. Pareto and classification exercises</a><a class="sub" href="#a-yield-versus-cost-pareto">A. Yield versus cost: Pareto</a><a class="sub" href="#b-morphology-labels-classification">B. Morphology labels: classification</a><a class="" href="#10-model-checks-and-every-chart">10. Model checks and every chart</a><a class="sub" href="#predictions-and-recommendations-are-different">Predictions and recommendations are different</a><a class="sub" href="#candidate-prediction-table-候选预测表">Candidate prediction table (`候选预测表`)</a><a class="sub" href="#all-plot-selectors">All plot selectors</a><a class="sub" href="#what-leave-one-out-validation-does">What leave-one-out validation does</a><a class="" href="#11-save-export-and-archive">11. Save, export and archive</a><a class="sub" href="#save-a-resumable-project">Save a resumable project</a><a class="sub" href="#export-a-plot-or-a-prediction-table">Export a plot or a prediction table</a><a class="sub" href="#cancel-and-inspect-a-calculation">Cancel and inspect a calculation</a><a class="sub" href="#find-licenses-and-citation-information">Find licenses and citation information</a><a class="" href="#12-troubleshooting-and-limits">12. Troubleshooting and limits</a><a class="" href="#13-complete-control-index">13. Complete control index</a></nav><article><p><a href="TUTORIAL.zh-CN.html">简体中文</a> | <a href="TUTORIAL.en.html">English</a> · <a href="README.en.html">Back to README</a></p>
+<h1 id="nanobo-a-practical-guide-for-chemists">NaNoBO: a practical guide for chemists</h1>
+<p>This guide describes the <strong>0.2.2</strong> desktop workflow. If an older installer does not have the tutorial Help entries or numbered practice files, update from <a href="https://github.com/wei-rui499/NaNoBO/releases">Releases</a>.</p>
+<p>This guide follows a familiar laboratory loop: <strong>define the experiment → enter measurements → choose the next batch → run the experiment → add the results</strong>. The supplied practice files let you complete that loop without doing a wet experiment.</p>
+<p>The current application interface is Chinese. English explanations below include the exact Chinese labels that appear on screen. The documentation language switch does not change the application's interface language.</p>
+<p><strong>All practice projects and result tables contain synthetic data.</strong> They demonstrate software behavior; their numerical values are not recommended chemistry recipes. Use your own measured results in a research project.</p>
+<h2 id="contents">Contents</h2>
+<ol>
+<li><a href="#1-install-and-open-the-application">Install and open the application</a></li>
+<li><a href="#2-find-your-way-around">Find your way around</a></li>
+<li><a href="#3-ten-minute-exercise-temperature-additive-and-yield">Ten-minute exercise: temperature, additive and yield</a></li>
+<li><a href="#4-know-which-practice-file-to-open">Know which practice file to open</a></li>
+<li><a href="#5-create-your-own-project">Create your own project</a></li>
+<li><a href="#6-import-export-and-refill-experimental-results">Import, export and refill experimental results</a></li>
+<li><a href="#7-engines-and-priority-objectives">Engines and priority objectives</a></li>
+<li><a href="#8-executable-recipes-steps-total-volume-ratios-and-candidate-tables">Executable recipes: steps, total volume, ratios and candidate tables</a></li>
+<li><a href="#9-pareto-and-classification-exercises">Pareto and classification exercises</a></li>
+<li><a href="#10-model-checks-and-every-chart">Model checks and every chart</a></li>
+<li><a href="#11-save-export-and-archive">Save, export and archive</a></li>
+<li><a href="#12-troubleshooting-and-limits">Troubleshooting and limits</a></li>
+<li><a href="#13-complete-control-index">Complete control index</a></li>
+</ol>
+<h2 id="1-install-and-open-the-application">1. Install and open the application</h2>
+<p>Download the installer and tutorial data from <a href="https://github.com/wei-rui499/NaNoBO/releases">GitHub Releases</a>. Choose the installer for your operating system, not the developer source archive.</p>
+<h3 id="apple-silicon-mac">Apple Silicon Mac</h3>
+<ol>
+<li>Use an M-series Mac with macOS 14 or later. The arm64 installer is not an Intel Mac installer.</li>
+<li>Open the downloaded <code>macOS-arm64.dmg</code> and drag <strong>NaNoBO.app</strong> into <strong>Applications</strong>.</li>
+<li>Open NaNoBO from Applications. The research preview is not Apple-notarized. If macOS blocks the first launch, review the app using <a href="https://support.apple.com/en-us/102445">Apple's Privacy &amp; Security instructions</a>.</li>
+<li>Create a normal document folder for your projects and exported tables; do not store your only copy inside the DMG.</li>
+</ol>
+<h3 id="windows">Windows</h3>
+<p>The Windows code, tutorials and packaging are updated together with the Mac version. Use the x64 installer actually listed in Releases; native Windows runtime validation is a separate, pending step unless that release explicitly includes a completed record.</p>
+<ol>
+<li>On Windows 10/11 x64, download the <code>windows-x64-setup-unsigned.exe</code> installer when available.</li>
+<li>Run the installer, choose the installation options, then open NaNoBO from the Start menu or its shortcut. You do not need WSL, Python or a terminal to use the installed application.</li>
+<li>The unsigned preview may trigger Windows reputation checks. Review the source and release information; do not disable Defender or other system protection.</li>
+<li>Save experiment projects in your own Documents folder so they remain separate from installation files. Windows ARM64 is not part of the validated target described here.</li>
+</ol>
+<h3 id="open-the-guide-and-obtain-the-exercises">Open the guide and obtain the exercises</h3>
+<p>In the installed app, use <strong>Help</strong> (<code>帮助</code>) → <strong>English tutorial</strong> for this guide, or <code>中文使用教程</code> for Chinese. Choose <strong>Export tutorial practice data</strong> (<code>导出教程练习数据…</code>) and select a writable folder. Open the exported <code>01_quickstart</code>, <code>02_recipe</code>, <code>03_pareto</code> and <code>04_classification</code> folders.</p>
+<p>The same files are in <a href="../../examples/tutorial"><code>examples/tutorial/</code></a> in the source package. The application's older <strong>Teaching examples</strong> (<code>教学示例</code>) button offers four small built-in demonstrations; these are separate from the numbered file-based exercises below. Use the numbered files when following the row-count checkpoints in this guide.</p>
+<h2 id="2-find-your-way-around">2. Find your way around</h2>
+<p><img src="media/docs/screenshots/NaNoBO-preview.png" alt="NaNoBO desktop interface"></img></p>
+<table>
+<thead>
+<tr>
+<th>Part of the window</th>
+<th>What it is for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Top buttons</td>
+<td>New project (<code>新项目</code>), small built-in teaching examples (<code>教学示例</code>), open (<code>打开</code>), save (<code>保存</code>), about and licenses (<code>关于 / 许可</code>).</td>
+</tr>
+<tr>
+<td>Upper left</td>
+<td>Project name, task, recommendation engine, class labels, batch size and random seed.</td>
+</tr>
+<tr>
+<td>Variable table</td>
+<td>The experimental conditions you are allowed to change: names, types, ranges, units and steps.</td>
+</tr>
+<tr>
+<td>Objective table</td>
+<td>The result you want to improve, or the class label you want to learn.</td>
+</tr>
+<tr>
+<td>Completed experiments (<code>已完成实验</code>)</td>
+<td>Measurements already available for training. Each row contains every variable and objective.</td>
+</tr>
+<tr>
+<td>Next batch / pending (<code>下一批 / 待实验</code>)</td>
+<td>Conditions planned but not yet measured. They are kept separate to prevent duplicate recommendations.</td>
+</tr>
+<tr>
+<td>Run log (<code>运行日志</code>)</td>
+<td>Progress, warnings and error details.</td>
+</tr>
+<tr>
+<td>Models and visualization (<code>模型与可视化</code>)</td>
+<td>Predictions, model checks, distributions, Pareto and classification plots.</td>
+</tr>
+<tr>
+<td>Bottom controls</td>
+<td>Generate next batch (<code>生成下一批实验 →</code>), analysis without adding experiments (<code>分析与交叉验证</code>), and cancel while computing (<code>取消计算</code>).</td>
+</tr>
+</tbody>
+</table>
+<p>The status line reports the number of completed and pending experiments. A dot in the window title means the project has unsaved changes. <strong>Save explicitly</strong> after importing or computing; the app does not automatically save the project to disk.</p>
+<p>“Bayesian optimization” here means updating a model as measurements arrive and using that model to help choose the next experiments. You do not need to write code or set a model formula to follow this workflow.</p>
+<h2 id="3-ten-minute-exercise-temperature-additive-and-yield">3. Ten-minute exercise: temperature, additive and yield</h2>
+<p>Open <a href="../../examples/tutorial/01_quickstart/project.chembo.json"><code>01_quickstart/project.chembo.json</code></a> with the app's <strong>Open</strong> (<code>打开</code>) button. Do not import the seed table into this already populated project.</p>
+<p>The project has the following deliberately small, finite space:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Setting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>temperature_C</code></td>
+<td>20–60 °C, in steps of 10</td>
+</tr>
+<tr>
+<td><code>cycles</code></td>
+<td>Integer, 1–2</td>
+</tr>
+<tr>
+<td><code>additive</code></td>
+<td>Category <code>A</code> or <code>B</code></td>
+</tr>
+<tr>
+<td><code>yield_pct</code></td>
+<td>Numerical objective, maximize</td>
+</tr>
+<tr>
+<td>Engine / batch / seed</td>
+<td>BoTorch / 2 experiments / 42</td>
+</tr>
+<tr>
+<td>Candidate recipes / completed results</td>
+<td>20 recipes / 6 results</td>
+</tr>
+</tbody>
+</table>
+<h3 id="a-inspect-the-existing-measurements">A. Inspect the existing measurements</h3>
+<ol>
+<li>Select <strong>Completed experiments</strong> (<code>已完成实验</code>). You should see <strong>6 rows</strong>, no pending conditions and a best measured synthetic yield of <strong>73.5</strong>.</li>
+<li>Read the conditions and <code>yield_pct</code> columns. These are the inputs to the optimizer, not values predicted by it.</li>
+<li>Choose <strong>File → Save as</strong> (<code>文件 → 项目另存为…</code>) and save a working copy with a new name.</li>
+</ol>
+<h3 id="b-view-predictions-before-adding-a-batch">B. View predictions before adding a batch</h3>
+<ol>
+<li>Click <strong>Analysis and cross-validation</strong> (<code>分析与交叉验证</code>) and wait for the completion message. The first calculation can take longer while libraries start.</li>
+<li>Open <strong>Models and visualization → Candidate predictions</strong> (<code>模型与可视化 → 候选预测表</code>). The starting project has <strong>14 unmeasured candidates</strong>: 20 possible conditions minus 6 completed ones.</li>
+<li>Open <strong>Model validation → Predicted and measured</strong> (<code>模型验证 → 预测与实测</code>). Six completed measurements allow leave-one-out checks; see <a href="#10-model-checks-and-every-chart">Section 10</a> for interpretation.</li>
+<li>The completed and pending counts remain <strong>6 and 0</strong>. Analysis does not schedule experiments.</li>
+</ol>
+<h3 id="c-ask-for-the-next-two-experiments">C. Ask for the next two experiments</h3>
+<ol>
+<li>Click <strong>Generate next batch</strong> (<code>生成下一批实验 →</code>).</li>
+<li>The app switches to <strong>Next batch / pending</strong> (<code>下一批 / 待实验</code>). Check that <strong>2 rows</strong> have been added. Each temperature is on a permitted step, <code>cycles</code> is an integer and the additive is an allowed category.</li>
+<li>Do not expect the two highest entries in a previously sorted table to always equal a batch. After selecting the first condition, the numerical optimizer accounts for that newly pending point when selecting the next one.</li>
+<li>The prediction table produced by this recommendation describes the pool at the time of that request. If you click <strong>Analysis and cross-validation</strong> again now, the <strong>2 pending conditions are excluded</strong>, leaving <strong>12</strong> candidates to analyze. The status still shows <strong>6 completed / 2 pending</strong>.</li>
+</ol>
+<p>Exact recommendations and floating-point metrics can differ across platforms or numerical library versions. The practical checkpoints are the row counts, allowed conditions, complete results and clear model status.</p>
+<h3 id="d-complete-a-simulated-batch">D. Complete a simulated batch</h3>
+<ol>
+<li>In the pending tab, click <strong>Export CSV for results</strong> (<code>导出待回填 CSV</code>). The exported file includes the variables and an empty <code>yield_pct</code> column.</li>
+<li>Open <code>all-simulated-results.csv</code> in the same exercise folder. Find the rows with <strong>all three variables matching</strong> the exported conditions. Copy their synthetic <code>yield_pct</code> values into the exported file. Change only the result column.</li>
+<li>Save as UTF-8 CSV. In NaNoBO, use <strong>Completed experiments → Import Excel / CSV</strong> (<code>已完成实验 → 导入 Excel / CSV</code>) to import that completed file.</li>
+<li>You should now have <strong>8 completed / 0 pending</strong>. The imported rows are appended, and matching pending conditions are removed automatically.</li>
+<li>Save the project, then analyze or generate the next batch. Adding measurements invalidates the older analysis, so it must be recomputed.</li>
+</ol>
+<p>In your real research, fill the CSV with actual measured values. The lookup table exists only because this is a synthetic exercise.</p>
+<p><img src="media/docs/screenshots/tutorial-quickstart.png" alt="Quickstart model predictions after eight synthetic results"></img></p>
+<p><em>Example output after 8 completed synthetic results: dots show predicted yield and the shaded band shows model uncertainty. The horizontal axis is candidate number, not temperature. The six example charts in this guide were exported from the actual NaNoBO analysis view; they are model-output charts, not full-window screenshots or wet-lab results. Numerical values and recommended conditions can vary between runs and platforms.</em></p>
+<h3 id="e-a-guaranteed-refill-only-exercise">E. A guaranteed refill-only exercise</h3>
+<p>If you want to learn import and reconciliation before running any model, open <code>pending-practice.chembo.json</code> in <code>01_quickstart</code>. It begins with <strong>6 completed / 2 pending</strong>. Import <code>followup-results.csv</code>; it contains exactly the results for those two fixed pending rows. The result must be <strong>8 completed / 0 pending</strong>.</p>
+<p>Use this snapshot when importing <code>followup-results.csv</code>. That file is not a promise about the two conditions selected by a new optimization run.</p>
+<h2 id="4-know-which-practice-file-to-open">4. Know which practice file to open</h2>
+<p>Every numbered exercise has the following files:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>project.chembo.json</code></td>
+<td>Ready project with <strong>6 seed results</strong>, definitions and feasible candidates. Open it directly to recommend or analyze.</td>
+</tr>
+<tr>
+<td><code>empty-project.chembo.json</code></td>
+<td>Same definitions with <strong>0 results</strong>. Use it to practice importing a seed table.</td>
+</tr>
+<tr>
+<td><code>pending-practice.chembo.json</code></td>
+<td><strong>6 completed / 2 fixed pending</strong>. Import <code>followup-results.csv</code> to finish at <strong>8 / 0</strong>.</td>
+</tr>
+<tr>
+<td><code>seed-observations.csv</code>, <code>.xlsx</code>, <code>.xls</code></td>
+<td>The <strong>same 6 seed results</strong> in three formats. Import one format into an empty project, not all three.</td>
+</tr>
+<tr>
+<td><code>followup-results.csv</code></td>
+<td>Two additional synthetic results matching the fixed pending-practice snapshot.</td>
+</tr>
+<tr>
+<td><code>candidates.csv</code></td>
+<td>Variable columns only. Lists all feasible conditions from which future batches may be chosen.</td>
+</tr>
+<tr>
+<td><code>all-simulated-results.csv</code></td>
+<td>Synthetic lookup values for every candidate, used to fill whatever conditions your run recommends. Do not import this whole table for the optimization exercise.</td>
+</tr>
+</tbody>
+</table>
+<p>The Excel workbooks include <code>Results</code> and <code>ReadMe</code> worksheets. Select <strong>Results</strong> in the worksheet-selection dialog (<code>选择工作表</code>); the <code>ReadMe</code> worksheet is explanatory text.</p>
+<table>
+<thead>
+<tr>
+<th>Exercise</th>
+<th style="text-align:right">Completed seed rows</th>
+<th style="text-align:right">Explicit candidates</th>
+<th style="text-align:right">Predictions in the first analysis, before scheduling a batch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>01_quickstart</code></td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">14</td>
+</tr>
+<tr>
+<td><code>02_recipe</code></td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">21</td>
+<td style="text-align:right">15</td>
+</tr>
+<tr>
+<td><code>03_pareto</code></td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">28</td>
+<td style="text-align:right">22</td>
+</tr>
+<tr>
+<td><code>04_classification</code></td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">28</td>
+<td style="text-align:right">22</td>
+</tr>
+</tbody>
+</table>
+<p>Each main project uses BoTorch, batch size 2 and seed 42. These numbers apply to an unchanged starting project. Importing more rows, adding pending conditions or changing the domain changes the available pool.</p>
+<p>Additional projects let you explore native Gryffin and Atlas recommendations, a third Pareto objective and binary labels; instructions follow below.</p>
+<h2 id="5-create-your-own-project">5. Create your own project</h2>
+<p>Start with <strong>New project</strong> (<code>新项目</code>). If you already have unsaved work, save it or choose the appropriate option in the confirmation dialog before proceeding.</p>
+<h3 id="set-the-basic-fields">Set the basic fields</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>What to enter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Project name (<code>项目名称</code>)</td>
+<td>A recognizable study or campaign name.</td>
+</tr>
+<tr>
+<td>Task (<code>任务类型</code>)</td>
+<td>Numerical / priority (<code>数值优化 / 优先级</code>), Pareto (<code>Pareto 多目标</code>) or classification (<code>分类主动学习</code>).</td>
+</tr>
+<tr>
+<td>Engine (<code>推荐引擎</code>)</td>
+<td>Start with BoTorch; see Section 7 for native Gryffin and Atlas.</td>
+</tr>
+<tr>
+<td>Class labels (<code>分类标签</code>)</td>
+<td>Used only for classification. Separate labels using `</td>
+</tr>
+<tr>
+<td>Batch size (<code>本批实验数</code>)</td>
+<td>How many experiments you can run before obtaining the next measurements; 1–24.</td>
+</tr>
+<tr>
+<td>Random seed (<code>随机种子</code>)</td>
+<td>Keep a recorded integer, such as 42, for reproducible sampling and model settings.</td>
+</tr>
+<tr>
+<td>Notes</td>
+<td>Record units, measurement conventions, data source, instrument conditions and important decisions.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="define-every-variable-you-are-allowed-to-change">Define every variable you are allowed to change</h3>
+<p>Use <strong>Add variable</strong> (<code>＋ 变量</code>) and <strong>Delete selected variables</strong> (<code>删除选中变量</code>). Select a row using its row header before deleting it.</p>
+<table>
+<thead>
+<tr>
+<th>Type in the app</th>
+<th>Suitable for</th>
+<th>Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Continuous (<code>连续</code>)</td>
+<td>Temperature, volume, concentration</td>
+<td>Lower/upper bound; optionally a positive step.</td>
+</tr>
+<tr>
+<td>Integer (<code>整数</code>)</td>
+<td>Cycle count or another whole-number setting</td>
+<td>Integer lower/upper bounds; optional integer step.</td>
+</tr>
+<tr>
+<td>Category (<code>类别</code>)</td>
+<td>Additive identity, solvent or catalyst choice</td>
+<td>At least two distinct options separated by `</td>
+</tr>
+</tbody>
+</table>
+<p>Names must be nonempty and distinct across both variables and objectives. A unit is a label for your records; the app does not convert mL to μL or °C to another scale. Use the same units in every imported row.</p>
+<p>A step begins at the <strong>lower bound</strong>. For example, lower bound 20 with step 10 permits 20, 30, 40 and so on within the upper bound. A continuous variable with a blank step can vary continuously; an integer variable still requires whole numbers. See Section 8 before mixing steps with joint recipe rules.</p>
+<p>Existing observations retain their original column names when you edit definitions. Renaming a variable does not relabel old experimental records. Prefer a new project for a new schema, or prepare an explicitly converted copy of the data.</p>
+<h3 id="define-the-result-you-want">Define the result you want</h3>
+<p>Use <strong>Add objective</strong> (<code>＋ 目标</code>) and <strong>Delete selected objectives</strong> (<code>删除选中目标</code>).</p>
+<ul>
+<li><strong>One numerical objective:</strong> choose <strong>Maximize</strong> (<code>最大化</code>) for higher yield or signal, or <strong>Minimize</strong> (<code>最小化</code>) for lower cost or error. Write down whether a yield is stored as 75 or 0.75; keep that convention throughout.</li>
+<li><strong>Competing numerical objectives:</strong> choose Pareto and define at least two goals, each with its own direction.</li>
+<li><strong>Class labels:</strong> choose classification, keep exactly one result column and declare at least two labels. A text label is not a numerical yield.</li>
+<li><strong>Gryffin priorities:</strong> the objective rows define the priority order. The visible relative-tolerance field belongs to this workflow; see Section 7.</li>
+</ul>
+<p>Save once after completing definitions, then import measurements. A new project starts with default variables and an objective; edit or remove the defaults rather than accidentally retaining them as extra columns.</p>
+<h2 id="6-import-export-and-refill-experimental-results">6. Import, export and refill experimental results</h2>
+<h3 id="import-a-complete-results-table">Import a complete results table</h3>
+<ol>
+<li>For a clean practice import, open <code>empty-project.chembo.json</code> in any exercise folder.</li>
+<li>Select <strong>Completed experiments → Import Excel / CSV</strong> (<code>已完成实验 → 导入 Excel / CSV</code>). Choose one <code>seed-observations</code> file.</li>
+<li>For Excel, choose <strong>Results</strong> when prompted. CSV has no worksheet prompt.</li>
+<li>Check that there are <strong>6 completed rows</strong>. Save a working copy.</li>
+</ol>
+<p>A results file must contain <strong>exactly all variable and objective column names</strong>; column order may differ. For the quickstart, these are <code>temperature_C</code>, <code>cycles</code>, <code>additive</code> and <code>yield_pct</code>. Do not add units, comments or a second header row inside the table. Put context in project notes or a separate worksheet.</p>
+<p>The reader supports UTF-8 CSV, legacy XLS and XLSX. It rejects missing values, duplicate headers, invalid numbers, unknown categories, off-step values and rows outside the permitted domain. Entirely blank rows are skipped. It reads saved Excel formula results without evaluating formulas; a formula without a cached value is treated as missing. Saving a copy with values only is often the clearest exchange format.</p>
+<p><strong>Import appends rows; it does not replace existing measurements.</strong> Importing the same seed table again creates repeated measurements, which the app allows. When practicing the six-row checkpoint, open the empty project each time you compare CSV, XLS and XLSX.</p>
+<h3 id="add-or-correct-rows-by-hand">Add or correct rows by hand</h3>
+<p>Use <strong>Add a row</strong> (<code>＋ 录入一行</code>) and fill every variable and target cell. Existing completed cells are editable. To delete a row, select its row header and click <strong>Delete selected rows</strong> (<code>删除选中行</code>). A partially completed row must be completed or removed before the project can be validated and saved.</p>
+<p>Repeated measured experiments may be kept as separate rows. They are not automatically averaged; data-distribution counts include them. Keep enough notes to distinguish a deliberate replicate from an accidental repeated import.</p>
+<h3 id="keep-pending-conditions-separate-from-results">Keep pending conditions separate from results</h3>
+<p>The pending table is read-only and contains no measured target values. It prevents the same or a nearly identical condition from being scheduled again while you wait for results.</p>
+<p>You have two refill routes:</p>
+<ul>
+<li><strong>Spreadsheet route:</strong> export pending CSV, fill every objective column with measurements, then import the completed file. Matching pending rows disappear; unrelated pending rows remain.</li>
+<li><strong>Manual route:</strong> select pending rows and click <strong>Move selected conditions to results table</strong> (<code>将选中条件转入结果表</code>). Complete the blank target cells in the completed table. Save after all values are entered; matching pending entries are reconciled when the data are collected and validated.</li>
+</ul>
+<p>Do not replace unknown targets with 0 or with model predictions. A scheduled experiment becomes a measurement only after its result is available.</p>
+<p>If a condition will not be run, select it and click <strong>Withdraw selected conditions</strong> (<code>撤回选中条件</code>). It is removed from the queue and can become eligible for recommendation again. Withdrawal does not create a measurement.</p>
+<h3 id="export-measurements">Export measurements</h3>
+<p>Choose <strong>Export results</strong> (<code>导出结果</code>) in the completed tab to save a CSV of variables and measured objectives. This is different from <strong>Export prediction table CSV</strong> in the model view. Use clear filenames such as <code>measured-results.csv</code>, <code>next-batch-to-measure.csv</code> and <code>model-predictions.csv</code>.</p>
+<h2 id="7-engines-and-priority-objectives">7. Engines and priority objectives</h2>
+<p>The main four practice projects use <strong>BoTorch · 优化与分类</strong>, because it supports the recipe and analysis features demonstrated here.</p>
+<table>
+<thead>
+<tr>
+<th>Workflow</th>
+<th>BoTorch</th>
+<th>Native Gryffin</th>
+<th>Native Atlas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One numerical objective, continuous/integer/category variables</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Multiple priorities using Chimera</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Explicit steps, joint constraints or candidate table</td>
+<td>Yes</td>
+<td>Not exposed by these native adapters</td>
+<td>Not exposed by these native adapters</td>
+</tr>
+<tr>
+<td>Pareto or classification</td>
+<td>Yes</td>
+<td>Not this GUI workflow</td>
+<td>Not this GUI workflow</td>
+</tr>
+<tr>
+<td>Current posterior plots and same-model cross-validation</td>
+<td>Yes</td>
+<td>Not exposed</td>
+<td>Not exposed</td>
+</tr>
+</tbody>
+</table>
+<p>The app validates the selected combination. Choosing an incompatible engine produces a message; it does not silently run a different algorithm.</p>
+<h3 id="try-native-gryffin-and-atlas-with-the-same-starting-measurements">Try native Gryffin and Atlas with the same starting measurements</h3>
+<p>In <code>01_quickstart</code>, open <code>gryffin-project.chembo.json</code> or <code>atlas-project.chembo.json</code>. Each keeps the six seed observations but removes the explicit candidate table and numerical steps, allowing its native adapter to operate over the configured ranges. Generate a batch, inspect the pending rows and save the result.</p>
+<p>Do not use the finite lookup table to invent a value for a native recommendation that is not present there. The continuous native domain may recommend other temperatures. This exercise checks the native ask/tell interface; use actual measurements to continue a real study.</p>
+<p>For native Gryffin and Atlas, a blank model-diagnostic panel is not a fitted-model prediction. Their native recommendations have not been replaced by a separate surrogate solely to populate the plots. To practice the current diagnostics, reopen the BoTorch teaching project.</p>
+<h3 id="gryffin--chimera-priorities">Gryffin / Chimera priorities</h3>
+<p>Select numerical / priority mode and Gryffin. Put the most important objective first, followed by lower priorities. Set a direction for each target. The <strong>Relative tolerance</strong> (<code>容忍比例 (0–1)</code>) controls how Chimera handles its priority objectives relative to the observed objective ranges. It is not an experimental error bar, a percent yield loss or a recipe acceptance limit.</p>
+<p>Start with the provided/default value unless you have a reason to change it and understand the method. Record the order and tolerances used. If you want to inspect simultaneous trade-offs rather than enforce an order of priorities, use Pareto mode instead.</p>
+<p>The interface does not expose a menu of GP, random forest, SVM, EI or UCB variants. BoTorch numerical workflows and the classifier use fixed methods, described in the <a href="V0.2_FEATURES.html">feature guide</a> and <a href="HOW_TO_CITE.html">citation guide</a>.</p>
+<h2 id="8-executable-recipes-steps-total-volume-ratios-and-candidate-tables">8. Executable recipes: steps, total volume, ratios and candidate tables</h2>
+<p>Open <a href="../../examples/tutorial/02_recipe/project.chembo.json"><code>02_recipe/project.chembo.json</code></a>. It defines <code>A_mL</code>, <code>B_mL</code> and <code>aging_min</code>, with <code>yield_pct</code> to maximize. Both volumes have bounds 0.1–0.9 mL and step 0.1; aging is an integer from 10–30 minutes with step 10.</p>
+<p>The joint requirements are:</p>
+<ul>
+<li><code>A_mL + B_mL = 1</code>;</li>
+<li><code>0.25 ≤ A_mL / B_mL ≤ 4</code>;</li>
+<li>only conditions listed in <code>candidates.csv</code> may be recommended.</li>
+</ul>
+<p>The candidate table contains <strong>21 feasible recipes</strong>. With six measured rows, the first analysis has <strong>15</strong> unmeasured candidates. A two-condition recommendation must obey all limits simultaneously.</p>
+<p><img src="media/docs/screenshots/tutorial-recipe.png" alt="Predictions for constrained recipes after eight synthetic results"></img></p>
+<p><em>Example output after 8 completed synthetic results: predicted yield and model uncertainty for the remaining feasible recipe candidates. Check the corresponding table to read the actual volumes and aging times; the horizontal axis is a candidate identifier.</em></p>
+<h3 id="set-a-dispensing-or-operating-step">Set a dispensing or operating step</h3>
+<p>Enter the step in the variable table's <strong>Step</strong> (<code>步长</code>) column. A 0.1 mL step beginning at 0.1 mL permits 0.1, 0.2, …, 0.9. Steps are part of candidate construction, not rounding applied after the model recommends a condition.</p>
+<h3 id="add-a-total-volume-or-linear-rule">Add a total-volume or linear rule</h3>
+<ol>
+<li>Click <strong>Recipe constraints / candidate table</strong> (<code>配方约束 / 候选表…</code>).</li>
+<li>Click <strong>Add total / linear</strong> (<code>＋ 总量／线性</code>).</li>
+<li>For this exercise, set coefficients: <code>A_mL = 1</code>, <code>B_mL = 1</code>, <strong><code>aging_min = 0</code></strong>. Time must not be added to volume.</li>
+<li>Choose relation <code>=</code> and right-hand value <code>1</code>, then confirm. Other supported relations are <code>≤</code> and <code>≥</code>.</li>
+<li>Finish with <strong>Apply using BoTorch</strong> (<code>应用（使用 BoTorch）</code>). The complete project, including observations and pending conditions, must remain valid.</li>
+</ol>
+<p>If you are recreating a rule, delete its existing row first rather than adding a duplicate. All enabled rules apply together. Use consistent units or supply appropriate coefficients yourself; units are not converted automatically.</p>
+<h3 id="add-a-ratio-limit">Add a ratio limit</h3>
+<p>In the same dialog, choose <strong>Add ratio</strong> (<code>＋ 配比</code>). Set numerator <code>A_mL</code>, denominator <code>B_mL</code>, minimum 0.25 and maximum 4. The denominator must be positive. Equal minimum and maximum values can specify a fixed ratio.</p>
+<h3 id="import-a-permitted-recipe-table">Import a permitted recipe table</h3>
+<p>Click <strong>Import feasible candidate table</strong> (<code>导入合法候选表（Excel / CSV）</code>) and choose <code>candidates.csv</code>. It contains <strong>only the three variable columns</strong> and no <code>yield_pct</code>. Select the intended worksheet if using Excel. The dialog displays the candidate count and previews up to 30 rows.</p>
+<p>The next batch is chosen only from that table while also obeying steps and joint rules. Historical measurements may come from outside the current candidate table, but still have to satisfy variable bounds, steps and joint constraints. Pending conditions must be in the candidate table. Duplicate or nearly identical candidate rows are rejected.</p>
+<h3 id="remove-a-restriction-deliberately">Remove a restriction deliberately</h3>
+<ul>
+<li><strong>Delete selected rule</strong> (<code>删除选中规则</code>) removes only the selected linear/ratio rule.</li>
+<li><strong>Clear candidate table</strong> (<code>清除候选表</code>) removes only the explicit table. Ranges, steps and other rules remain.</li>
+<li>The main-window <strong>Clear joint restrictions</strong> (<code>清除联合限制</code>) removes both joint rules and the candidate table. Variable steps remain until you clear their cells separately.</li>
+</ul>
+<p>For a useful exercise, open the provided project, clear only its candidate table, then analyze again. Its finite step grid and joint rules still generate the same 21 feasible recipe combinations. Avoid changing a variable referenced by a rule until you have deliberately updated or removed that rule.</p>
+<h2 id="9-pareto-and-classification-exercises">9. Pareto and classification exercises</h2>
+<h3 id="a-yield-versus-cost-pareto">A. Yield versus cost: Pareto</h3>
+<p>Open <a href="../../examples/tutorial/03_pareto/project.chembo.json"><code>03_pareto/project.chembo.json</code></a>. It uses <code>temperature_C</code> from 20–80 in steps of 10 and <code>ligand_mM</code> from 0.5–2 in steps of 0.5. There are 28 candidate conditions and six completed results. The objectives are <strong>maximize <code>yield_pct</code></strong> and <strong>minimize <code>cost_index</code></strong>; the index is synthetic, not a currency price.</p>
+<ol>
+<li>Confirm <strong>Pareto multi-objective</strong> (<code>Pareto 多目标</code>) is selected and inspect each objective's direction.</li>
+<li>Click <strong>Analysis and cross-validation</strong>. The first prediction table has <strong>22</strong> candidates.</li>
+<li>In <strong>Pareto multi-objective → 2D Pareto</strong> (<code>Pareto 多目标 → 二维 Pareto</code>), choose <code>yield_pct</code> and <code>cost_index</code> for the two axes.</li>
+<li>The emphasized points are measured <strong>non-dominated</strong> results: no other measured result is at least as good in every configured objective and better in one. They offer alternatives, not one universal winner.</li>
+<li>Generate two conditions, export and fill results from matching rows in <code>all-simulated-results.csv</code>, then import and repeat. Use <code>pending-practice.chembo.json</code> plus <code>followup-results.csv</code> for the fixed <strong>6/2 → 8/0</strong> import checkpoint.</li>
+</ol>
+<p><img src="media/docs/screenshots/tutorial-pareto.png" alt="Pareto trade-offs after eight synthetic results"></img></p>
+<p><em>Example output after 8 completed synthetic results: green points are non-dominated outcomes in the configured objectives. The plot shows the yield–cost trade-off among completed synthetic experiments, not predictions for unmeasured conditions.</em></p>
+<p>Open <code>three-objective-project.chembo.json</code> to add synthetic <code>waste_index</code> as a third objective to minimize. Its lookup file is <code>three-objective-all-simulated-results.csv</code>; its seed table is <code>three-objective-seed.csv</code>. Select <strong>3D Pareto</strong> (<code>三维 Pareto</code>) and choose three different X/Y/Z objectives. A project with only two objectives cannot produce a valid three-axis objective plot.</p>
+<p>The <strong>Hypervolume history</strong> (<code>超体积历史</code>) tracks the measured Pareto set relative to one reference point within that analysis. The automatic reference point can change when new measurements arrive. Do not compare absolute hypervolume values from separate analyses with changing reference points. A fixed reference can be supplied in project JSON, but the current GUI does not provide a reference-point editor.</p>
+<h3 id="b-morphology-labels-classification">B. Morphology labels: classification</h3>
+<p>Open <a href="../../examples/tutorial/04_classification/project.chembo.json"><code>04_classification/project.chembo.json</code></a>. It uses the same 28-condition temperature/ligand domain, with a single target column <strong><code>morphology</code></strong> and labels <strong><code>团聚 | 球形 | 棒状</code></strong> (aggregated / spherical / rod-like). The six seed results contain two of each class.</p>
+<ol>
+<li>Confirm <strong>Classification active learning</strong> (<code>分类主动学习</code>) and BoTorch are selected. The objective-direction control is inactive for a label task.</li>
+<li>Analyze the starting project. The table has <strong>22</strong> unmeasured candidates and class-probability columns for the observed classes.</li>
+<li>Open <strong>Classification analysis</strong> (<code>分类分析</code>). Compare <strong>Candidate class probabilities</strong> (<code>候选类别概率</code>) and <strong>Classification uncertainty</strong> (<code>分类不确定性</code>).</li>
+<li>Generate two conditions and fill their <code>morphology</code> values by matching conditions in this exercise's synthetic lookup table. Import the completed rows, save and reanalyze.</li>
+<li>Use <code>pending-practice.chembo.json</code> with <code>followup-results.csv</code> to practice the exact <strong>6/2 → 8/0</strong> transition.</li>
+</ol>
+<p><img src="media/docs/screenshots/tutorial-classification.png" alt="Morphology-class probabilities after eight synthetic results"></img></p>
+<p><em>Example output after 8 completed synthetic results: each stacked bar shows model probabilities for an unmeasured candidate. Colors correspond to the declared morphology labels; the bars are predictions, not observed particle images or measured class counts.</em></p>
+<p>A high entropy score means the classifier is uncertain about the class. This workflow explores class boundaries; it does not maximize the probability of any chosen “successful” class. At least two classes must have been observed before the classifier supplies probabilities. With fewer, the app performs an initial spread-out design. A declared but unobserved class is not assigned a fabricated zero probability.</p>
+<p><img src="media/docs/screenshots/tutorial-confusion.png" alt="Leave-one-out confusion matrix for eight synthetic morphology results"></img></p>
+<p><em>Example validation output for 8 completed synthetic results: rows are held-out actual labels and columns are predicted labels. Off-diagonal counts show classification errors; this illustrative run predicts 5 of 8 held-out labels correctly. These numbers are not a required score or evidence of real chemistry performance.</em></p>
+<p>For a two-label exercise, open <code>binary-project.chembo.json</code> and use <code>binary-all-simulated-results.csv</code> for lookup. It uses an <code>outcome</code> column with <code>成功</code> / <code>失败</code>. Do not import the morphology table into the binary project: the target names and label sets differ.</p>
+<h2 id="10-model-checks-and-every-chart">10. Model checks and every chart</h2>
+<h3 id="predictions-and-recommendations-are-different">Predictions and recommendations are different</h3>
+<p>In BoTorch numerical tasks, at least two completed measurements allow model fitting. With fewer, the app gives an initial spread-out design and does not invent posterior predictions. Classification requires observed data from at least two classes.</p>
+<p>Clicking <strong>Generate next batch</strong> updates pending conditions. Clicking <strong>Analysis and cross-validation</strong> recomputes the candidate predictions and diagnostics <strong>without adding pending experiments</strong>. Both use the project's current data. Editing measurements, settings, the queue or the domain invalidates old analysis; run analysis again when you need current plots.</p>
+<h3 id="candidate-prediction-table-候选预测表">Candidate prediction table (<code>候选预测表</code>)</h3>
+<ul>
+<li><code>候选编号</code>: the identifier used to match points and table rows in this analysis.</li>
+<li><code>本批推荐</code>: whether a candidate was selected by the recommendation request that produced the analysis.</li>
+<li>Variable columns: the actual proposed experimental conditions.</li>
+<li>Numerical objectives: predicted mean (<code>预测</code>) and model standard deviation (<code>标准差</code>) for each target, in the target's original scale.</li>
+<li>Classification: <code>P(label)</code> columns and entropy (<code>熵</code>).</li>
+<li>Acquisition score (<code>采集分值</code>): a criterion for selecting informative/useful experiments in this calculation, not a measured yield.</li>
+</ul>
+<p>Click column headers to sort. The saved numerical scores are the first single-point scores accounting for already pending experiments. Later selections within a batch are rescored with earlier selections treated as pending; batch order can therefore differ from that initial ranking. Scores labelled logEI/logNEHVI may be negative and are comparable within the same analysis, not across unrelated tasks or iterations.</p>
+<h3 id="all-plot-selectors">All plot selectors</h3>
+<table>
+<thead>
+<tr>
+<th>Tab and selector in the app</th>
+<th>What to look for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prediction and exploration (<code>预测与探索</code>) → Candidate prediction and interval (<code>候选预测与区间</code>)</td>
+<td>Candidate means with mean ± 1.96 × model standard deviation; stars identify selected candidates when available. This is model uncertainty, not an experimental error bar or a calibrated coverage guarantee.</td>
+</tr>
+<tr>
+<td><code>预测与探索</code> → Mean and uncertainty (<code>预测均值与不确定性</code>)</td>
+<td>The balance between predicted response and uncertainty. A high predicted mean and a highly uncertain condition answer different planning questions.</td>
+</tr>
+<tr>
+<td><code>预测与探索</code> → Acquisition-score ordering (<code>采集分值排序</code>)</td>
+<td>How the current candidate pool is ranked by the selection criterion.</td>
+</tr>
+<tr>
+<td>Model validation (<code>模型验证</code>) → Predicted and measured (<code>预测与实测</code>)</td>
+<td>Leave-one-out predictions against held-out measurements. Points closer to the identity line indicate smaller errors on those checks.</td>
+</tr>
+<tr>
+<td><code>模型验证</code> → Validation errors (<code>验证误差</code>)</td>
+<td>Predicted minus measured values by held-out record; inspect systematic shifts and unusually large errors.</td>
+</tr>
+<tr>
+<td>Data distribution (<code>数据分布</code>) → Observed distribution (<code>观测分布</code>)</td>
+<td>A numerical histogram or categorical count plot for the variable/result chosen in the adjacent dropdown. Only completed measurements are counted.</td>
+</tr>
+<tr>
+<td><code>数据分布</code> → Measurement history (<code>实测历史</code>)</td>
+<td>Results in stored row order; numerical objective plots include running best measured values. Row order is not elapsed time.</td>
+</tr>
+<tr>
+<td>Pareto (<code>Pareto 多目标</code>) → 2D Pareto (<code>二维 Pareto</code>)</td>
+<td>Two selected objective axes, emphasizing the measured points that are non-dominated over all configured objectives.</td>
+</tr>
+<tr>
+<td><code>Pareto 多目标</code> → 3D Pareto (<code>三维 Pareto</code>)</td>
+<td>Three distinct objective axes; use the supplied three-objective project.</td>
+</tr>
+<tr>
+<td><code>Pareto 多目标</code> → Hypervolume history (<code>超体积历史</code>)</td>
+<td>Measured trade-off-set progress within a common reference point.</td>
+</tr>
+<tr>
+<td>Classification (<code>分类分析</code>) → Candidate probabilities (<code>候选类别概率</code>)</td>
+<td>Probabilities for up to the first 40 candidates in the chart; export the table for all candidates.</td>
+</tr>
+<tr>
+<td><code>分类分析</code> → Classification uncertainty (<code>分类不确定性</code>)</td>
+<td>Entropy: larger means a more uncertain class prediction.</td>
+</tr>
+<tr>
+<td><code>分类分析</code> → Observed class distribution (<code>已测类别分布</code>)</td>
+<td>How many completed results belong to each declared class.</td>
+</tr>
+<tr>
+<td><code>分类分析</code> → Confusion matrix (<code>混淆矩阵</code>)</td>
+<td>Held-out measured classes versus predicted classes. Diagonal entries are correct predictions for the evaluated rows.</td>
+</tr>
+</tbody>
+</table>
+<p>Use <strong>View objective</strong> (<code>查看目标</code>) to switch numerical targets. The distribution page has its own variable selector; the Pareto page has X/Y/Z selectors. A two-axis projection of a higher-dimensional Pareto set need not form an ordered curve. Predicted and pending points are not included in the <strong>measured</strong> Pareto front.</p>
+<p>The Matplotlib toolbar supports home/reset, back/forward, pan and zoom. Click a pickable candidate point to see its conditions in the detail text below the plot. These interactions change the view, not the experimental data.</p>
+<h3 id="what-leave-one-out-validation-does">What leave-one-out validation does</h3>
+<p>For each selected completed row, the app removes that row from model training, refits the <strong>same model used by this workflow</strong>, and predicts the held-out result. The check needs at least <strong>3 completed rows</strong>. With more than 30 rows, it chooses up to 30 reproducible holdouts; each fold still trains on all other records. Read the displayed evaluated count.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Plain-language interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RMSE</td>
+<td>Typical prediction error with greater weight on large errors; uses the target's units.</td>
+</tr>
+<tr>
+<td>MAE</td>
+<td>Average absolute prediction error, also in target units.</td>
+</tr>
+<tr>
+<td>R²</td>
+<td>Agreement relative to predicting a constant mean; may be negative and is left blank when all actual values are identical.</td>
+</tr>
+<tr>
+<td>Classification accuracy</td>
+<td>Fraction of evaluated held-out labels predicted correctly. Read it together with the confusion matrix and class counts.</td>
+</tr>
+</tbody>
+</table>
+<p><img src="media/docs/screenshots/tutorial-validation.png" alt="Leave-one-out numerical predictions for eight synthetic yield results"></img></p>
+<p><em>Example validation output after 8 completed synthetic results: each value was predicted with that row held out of training. The dashed line marks perfect agreement; error bars show model uncertainty. Read the displayed evaluated-row count and error metrics for your own data rather than expecting this example's exact values.</em></p>
+<p>A classification fold that would leave only one training class is skipped; the displayed evaluated count may be smaller than the total. A small or unbalanced dataset can make accuracy unstable. These checks describe the current dataset, not an independent external validation of a chemical mechanism.</p>
+<p>If a plot is unavailable, read its explanation: the task may not apply, the model may still be in initial design, a native engine may not expose that diagnostic, or too few valid observations may be available. An empty panel does not supply an inferred performance result.</p>
+<h2 id="11-save-export-and-archive">11. Save, export and archive</h2>
+<h3 id="save-a-resumable-project">Save a resumable project</h3>
+<ul>
+<li><strong>Save</strong> (<code>保存</code>) or <strong>File → Save project</strong> (<code>文件 → 保存项目</code>): save the current project.</li>
+<li><strong>Save as</strong> (<code>文件 → 项目另存为…</code>): create a separate version.</li>
+<li><strong>Open</strong> (<code>打开</code>): resume a <code>.chembo.json</code> / <code>.json</code> project.</li>
+</ul>
+<p>The project records settings, measurements, pending conditions, notes, calculation history and the latest available analysis. Do not enter targets for experiments that have not been measured. Keep round-by-round project copies when documenting a campaign.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Mac shortcut</th>
+<th>Windows shortcut</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>New</td>
+<td>⌘N</td>
+<td>Ctrl+N</td>
+</tr>
+<tr>
+<td>Open</td>
+<td>⌘O</td>
+<td>Ctrl+O</td>
+</tr>
+<tr>
+<td>Save</td>
+<td>⌘S</td>
+<td>Ctrl+S</td>
+</tr>
+<tr>
+<td>Save as</td>
+<td>⌘⇧S</td>
+<td>Ctrl+Shift+S</td>
+</tr>
+</tbody>
+</table>
+<p>The app prompts about unsaved changes before replacing or closing a project. Data processing is local; exporting or saving a file does not upload it to GitHub.</p>
+<h3 id="export-a-plot-or-a-prediction-table">Export a plot or a prediction table</h3>
+<ol>
+<li>Select <strong>Models and visualization</strong>, the relevant subtab and the exact plot selector you want.</li>
+<li>Choose <strong>Export current plot</strong> (<code>导出当前图…</code>) and select PNG, PDF or SVG. The export includes model/status and explanatory text.</li>
+<li>Choose <strong>Export prediction table CSV</strong> (<code>导出预测表 CSV…</code>) for candidate conditions and model outputs. This file is not an experimental-results table.</li>
+<li>If the candidate-table subtab is active, plot export uses the appropriate prediction chart instead of taking a screenshot of the table.</li>
+</ol>
+<p>For a group meeting, archive the saved project, measured-results CSV, prediction CSV and selected figures together. Keep exported figures associated with their data snapshot; a later project update does not update previously exported files.</p>
+<h3 id="cancel-and-inspect-a-calculation">Cancel and inspect a calculation</h3>
+<p>During computation, <strong>Cancel calculation</strong> (<code>取消计算</code>) stops the current worker. Existing experimental records are preserved. Inspect <strong>Run log</strong> (<code>运行日志</code>) when a computation fails or takes longer than expected; a failed model is reported rather than silently substituted with a successful-looking result. Save the project before sending a bug report, and remove confidential experimental details from any material you choose to share.</p>
+<h3 id="find-licenses-and-citation-information">Find licenses and citation information</h3>
+<p>Use <strong>About / licenses</strong> (<code>关于 / 许可</code>) or <strong>Help → About NaNoBO</strong> (<code>帮助 → 关于 NaNoBO</code>). The dialog includes an <strong>Open bundled licenses folder</strong> (<code>打开随附许可证文件夹</code>) button. Cite the scientific methods you actually used, together with NaNoBO: <a href="HOW_TO_CITE.html">citation guide</a>, <a href="ACKNOWLEDGMENTS.html">acknowledgments</a>, <a href="https://github.com/wei-rui499/NaNoBO/blob/main/REFERENCES.bib">BibTeX references</a>.</p>
+<h2 id="12-troubleshooting-and-limits">12. Troubleshooting and limits</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>What to check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>An import reports incorrect column names</td>
+<td>Start from an exported template. Match every variable and target name exactly; remove extra comment/unit columns.</td>
+</tr>
+<tr>
+<td>The seed exercise has 12 rows instead of 6</td>
+<td>The seed table was imported twice. Reopen <code>empty-project.chembo.json</code> and import one format once, or deliberately remove accidental duplicates in a working copy.</td>
+</tr>
+<tr>
+<td>Excel asks for a worksheet</td>
+<td>Choose <code>Results</code> for the supplied workbooks.</td>
+</tr>
+<tr>
+<td>A formula cell is missing on import</td>
+<td>Save a values-only copy or ensure Excel has calculated and saved cached values. NaNoBO does not evaluate spreadsheet formulas.</td>
+</tr>
+<tr>
+<td>A category or class is rejected</td>
+<td>Match the declared spelling and label; spaces inside a name, Chinese versus English words and different labels are not interchangeable.</td>
+</tr>
+<tr>
+<td>A value is outside a step or recipe rule</td>
+<td>Check lower bound, step origin, units, total-volume coefficients and positive ratio denominator.</td>
+</tr>
+<tr>
+<td>No feasible candidates / too few candidates</td>
+<td>Check conflicting limits and whether measured/pending points exhaust the table. Reduce batch size or revise a scientifically justified domain.</td>
+</tr>
+<tr>
+<td>Pareto or classification selects BoTorch</td>
+<td>These task modes use the enhanced BoTorch workflow. Native Gryffin/Atlas adapters do not expose these GUI tasks.</td>
+</tr>
+<tr>
+<td>Analysis button is disabled</td>
+<td>Select BoTorch and wait for any current computation to finish.</td>
+</tr>
+<tr>
+<td>Predictions or class probabilities are absent</td>
+<td>Numerical fitting needs at least two measured rows; classification fitting needs at least two observed classes. Initial designs do not have fabricated predictions.</td>
+</tr>
+<tr>
+<td>Cross-validation is empty</td>
+<td>At least three completed rows are needed; some classification folds may leave too few classes. Read the panel note.</td>
+</tr>
+<tr>
+<td>3D Pareto has no plot</td>
+<td>Choose three different objectives in a project with at least three numerical targets.</td>
+</tr>
+<tr>
+<td>Old charts disappear after an edit/import</td>
+<td>They are tied to the previous data snapshot. Reanalyze the updated project.</td>
+</tr>
+<tr>
+<td>A new batch repeats an old measurement</td>
+<td>Check whether the historical results were actually imported into the current project and whether variable names/units changed. The same or nearly identical completed/pending condition is excluded by the normal workflow.</td>
+</tr>
+<tr>
+<td>A computation reports a model error</td>
+<td>Read the run log, confirm complete and finite inputs, preserve a project copy and report the actual error. Do not treat a failed request as a finished recommendation.</td>
+</tr>
+</tbody>
+</table>
+<p>Practical computation bounds:</p>
+<ul>
+<li>A finite source grid is limited to <strong>200,000 combinations before constraint filtering</strong>. For a larger space, increase steps, narrow ranges or provide a smaller explicit candidate table.</li>
+<li>One scoring request uses at most <strong>4,096 feasible unmeasured candidates</strong>. Larger tables and continuous domains use a reproducible generated/subsampled pool. The ranking describes that pool, not a guarantee of the global optimum over the entire continuous space.</li>
+<li>Completed replicates are allowed; pending duplicates are not. For continuous variables, points within the app's <code>1e-6</code> range-relative near-duplicate threshold are treated as nearly identical.</li>
+<li>Numerical validation uses up to <strong>30</strong> held-out rows. Read evaluated/total counts before interpreting metrics.</li>
+<li>The app does not validate chemical safety, solubility, physical plausibility or instrument limits unless you encode the relevant allowed domain. Choose experimental ranges and recipes using your laboratory knowledge.</li>
+</ul>
+<h2 id="13-complete-control-index">13. Complete control index</h2>
+<table>
+<thead>
+<tr>
+<th>Control / feature</th>
+<th>Where it is explained</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Install, offline guide and copy teaching files</td>
+<td>Section 1</td>
+</tr>
+<tr>
+<td>New/open/save/save as, unsaved-work prompt</td>
+<td>Sections 5 and 11</td>
+</tr>
+<tr>
+<td>Built-in teaching examples versus file-based exercises</td>
+<td>Sections 1 and 4</td>
+</tr>
+<tr>
+<td>Project name, task, engine, labels, batch, seed and notes</td>
+<td>Sections 5 and 7</td>
+</tr>
+<tr>
+<td>Add/delete variables; continuous/integer/category; units and steps</td>
+<td>Sections 5 and 8</td>
+</tr>
+<tr>
+<td>Add/delete objectives; maximize/minimize; Gryffin priority tolerance</td>
+<td>Sections 5 and 7</td>
+</tr>
+<tr>
+<td>Linear/total/ratio rules; import/clear candidates; clear joint restrictions</td>
+<td>Section 8</td>
+</tr>
+<tr>
+<td>Manual row entry/edit/delete; CSV/XLS/XLSX and worksheet import</td>
+<td>Section 6</td>
+</tr>
+<tr>
+<td>Export results/pending; refill; move pending to results; withdraw pending</td>
+<td>Section 6</td>
+</tr>
+<tr>
+<td>Generate batch, analysis-only, queue protection and duplicate prevention</td>
+<td>Sections 3, 6 and 10</td>
+</tr>
+<tr>
+<td>All prediction/validation/distribution/Pareto/classification chart selectors</td>
+<td>Section 10</td>
+</tr>
+<tr>
+<td>Objective/variable/axis selectors, sorting, point inspection, pan/zoom</td>
+<td>Section 10</td>
+</tr>
+<tr>
+<td>Figure and prediction exports; project archive</td>
+<td>Section 11</td>
+</tr>
+<tr>
+<td>Progress, cancel, run log and input errors</td>
+<td>Sections 11 and 12</td>
+</tr>
+<tr>
+<td>About, bundled licenses and original research citations</td>
+<td>Section 11</td>
+</tr>
+</tbody>
+</table>
+<p>For the exact scientific implementations and data fields, see <a href="V0.2_FEATURES.html">features</a>, <a href="VALIDATION.html">validation records</a>, <a href="UPSTREAM_MODIFICATIONS.html">upstream modification records</a> and <a href="HOW_TO_CITE.html">how to cite</a>.</p>
+<footer>NaNoBO · 离线教程 / Offline guide · 教学实验数据均为模拟 / Teaching data are synthetic.</footer></article></main></html>

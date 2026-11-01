@@ -8,8 +8,10 @@ import sys
 import tempfile
 import json
 from datetime import datetime, timezone
+from build_support import app_version
 
 ROOT = Path(__file__).resolve().parents[1]
+VERSION = app_version(ROOT)
 
 
 def run(*args):
@@ -32,7 +34,7 @@ def main():
     plist_path = packaged_app / "Contents" / "Info.plist"
     with plist_path.open("rb") as stream:
         info = plistlib.load(stream)
-    info.update(CFBundleName="NaNoBO", CFBundleDisplayName="NaNoBO", CFBundleShortVersionString="0.2.1", CFBundleVersion="0.2.1", LSMinimumSystemVersion="14.0", NSHighResolutionCapable=True)
+    info.update(CFBundleName="NaNoBO", CFBundleDisplayName="NaNoBO", CFBundleShortVersionString=VERSION, CFBundleVersion=VERSION, LSMinimumSystemVersion="14.0", NSHighResolutionCapable=True)
     with plist_path.open("wb") as stream:
         plistlib.dump(info, stream)
     license_destination = packaged_app / "Contents" / "Resources" / "licenses"
@@ -64,23 +66,27 @@ def main():
     source = staging / "Source-and-Licenses"
     source.mkdir()
     import xml.etree.ElementTree as ET
-    regression_file = ROOT / "validation/simulated-lab-20261031/regression-classic.xml"
+    regression_file = ROOT / "validation" / f"regression-{VERSION}.xml"
     suite = ET.parse(regression_file).getroot().find("testsuite")
     regression_report = {key: int(suite.attrib.get(key, 0)) for key in ("tests", "failures", "errors", "skipped")}
     if regression_report["failures"] or regression_report["errors"]:
         raise RuntimeError("Current regression report contains failures")
-    report = {"product": "NaNoBO", "version": "0.2.1", "time_utc": datetime.now(timezone.utc).isoformat(), "platform": platform.platform(), "architecture": platform.machine(), "signature": "ad-hoc verified, not Developer ID notarized", "frozen_model_cases_passed": 6, "gui_checks": ui_report["checks"], "frozen_code_matches_source": source_checks, "classic_tests": regression_report, "current_release_validation": json.loads((ROOT / "docs/VALIDATION_V0.2.1.json").read_text(encoding="utf-8"))}
+    report = {"product": "NaNoBO", "version": VERSION, "time_utc": datetime.now(timezone.utc).isoformat(), "platform": platform.platform(), "architecture": platform.machine(), "signature": "ad-hoc verified, not Developer ID notarized", "frozen_model_cases_passed": 6, "gui_checks": ui_report["checks"], "frozen_code_matches_source": source_checks, "classic_tests": regression_report, "current_release_validation": json.loads((ROOT / "docs" / f"VALIDATION_V{VERSION}.json").read_text(encoding="utf-8"))}
     (source / "MAC_VALIDATION.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    (ROOT / "release" / "MAC_VALIDATION-0.2.1.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    shutil.copy2(ROOT / "release" / "NaNoBO-0.2.1-source.zip", source)
+    (ROOT / "release" / f"MAC_VALIDATION-{VERSION}.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    shutil.copy2(ROOT / "release" / f"NaNoBO-{VERSION}-source.zip", source)
     shutil.copytree(ROOT / "licenses", source / "licenses")
-    shutil.copy2(ROOT / "release/NaNoBO-0.2.1-simulated-validation.zip", source)
+    for name in ("ACKNOWLEDGMENTS.md", "THIRD_PARTY_NOTICES.md", "CITATION.cff", "REFERENCES.bib"):
+        shutil.copy2(ROOT / name, source)
+    tutorial = ROOT / "release" / f"NaNoBO-{VERSION}-tutorial-examples.zip"
+    if tutorial.is_file():
+        shutil.copy2(tutorial, source)
     library_sources = ROOT / "release" / "library-sources"
     if library_sources.is_dir():
         shutil.copytree(library_sources, source / "library-sources")
     shutil.copy2(ROOT / "docs" / "THIRD_PARTY.md", source)
-    (staging / "安装说明.txt").write_text("将 NaNoBO.app 拖入 Applications。\n本地预览版采用 ad-hoc 签名，尚未经过 Apple Developer ID 公证。\n首次引擎冷启动可能需要约一分钟；无需安装 Python 或 WSL。\nSource-and-Licenses 包含应用源码、第三方许可证和可用的对应库源。\n", encoding="utf-8")
-    dmg = ROOT / "release" / f"NaNoBO-0.2.1-macOS-{platform.machine()}.dmg"
+    (staging / "安装说明-ReadMe.txt").write_text("将 NaNoBO.app 拖入 Applications。\n打开后点击“使用教程”，或从“帮助”选择 English tutorial。\n从“帮助 → 导出教程练习数据…”复制配套项目、CSV 和 Excel 到自己的文件夹。\n本地预览版采用 ad-hoc 签名，尚未经过 Apple Developer ID 公证。\n首次引擎冷启动可能需要约一分钟；无需安装 Python 或 WSL。\nSource-and-Licenses 包含应用源码、科研引用、第三方许可证和对应库源。\n\nDrag NaNoBO.app into Applications. Open Help → English tutorial.\nUse 帮助 → 导出教程练习数据… to copy the synthetic practice files to a writable folder.\nNo Python or WSL is needed. This preview has an ad-hoc signature and is not Apple-notarized.\n", encoding="utf-8")
+    dmg = ROOT / "release" / f"NaNoBO-{VERSION}-macOS-{platform.machine()}.dmg"
     run("hdiutil", "create", "-volname", "NaNoBO", "-srcfolder", staging, "-ov", "-format", "UDZO", dmg)
     print(dmg)
     temporary.cleanup()
