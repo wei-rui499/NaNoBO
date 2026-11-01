@@ -129,8 +129,8 @@ jobs:
               if [ "$type" = tag ]; then object="$(gh api "repos/${GH_REPO}/git/tags/${object}" --jq .object.sha)"; fi
               test "$object" = "$BUILD_SHA" || { echo 'Release tag is not the built commit'; exit 1; }
             elif [ "$target" != "$BUILD_SHA" ]; then
-              resolved="$(gh api "repos/${GH_REPO}/commits/${target}" --jq .sha)"
-              test "$resolved" = "$BUILD_SHA" || { echo 'Draft target is not the built commit'; exit 1; }
+              # Only an unpublished draft without a tag may follow a corrected build.
+              gh release edit "$tag" --target "$BUILD_SHA"
             fi
           else
             cat > notes.md <<'NOTES'

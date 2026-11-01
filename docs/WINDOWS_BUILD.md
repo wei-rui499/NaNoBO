@@ -30,7 +30,7 @@ Windows 版使用与 Mac 相同的应用源码、模型适配、双语教程和�
 3. 分别用 PyInstaller 封装现代工作进程与桌面应用；两套 Python 运行时保持隔离，避免 DLL 或模型依赖版本混用。随后把同一份离线教程和练习文件放入应用。
 4. 仅检查打包目录中所需的 EXE、DLL、C 扩展、Qt 插件、许可证、双语教程和至少四个练习项目是否存在；生成 Inno Setup 安装器和便携 ZIP，校验 ZIP CRC 与文件 SHA-256。**不执行应用或安装器。**
 5. 构建产物保存在 `NaNoBO-0.2.3-windows-x64-build-only` Artifact 中，保留 14 天。只有上一步成功才进入产物上传和 Release 附件步骤。
-6. 发布步骤只新建或复用对应源码提交的 **Draft / Pre-release**，附加 Windows 文件，绝不自动把草稿公开，也不覆盖已经公开的同版本 Release。维护者完成本次发布整理后统一公开。若已有标签，必须指向本次构建的提交。
+6. 发布步骤只新建或复用对应源码提交的 **Draft / Pre-release**，附加 Windows 文件，绝不自动把草稿公开，也不覆盖已经公开的同版本 Release。尚未创建标签的草稿可更新到本次修正构建的精确提交；已经存在的标签必须与构建提交一致。维护者完成本次发布整理后统一公开。若已有标签，必须指向本次构建的提交。
 
 工作流启动、排队或配置文件存在，都不代表 EXE 已经构建成功；以 Actions 的最终状态和实际下载附件为准。构建完成也不代表 Windows 应用功能已验证。
 
@@ -74,3 +74,5 @@ py -3.13 -m venv .venv-modern
 Gryffin、Atlas、BoTorch、scikit-learn 等原始方法的作者署名见 [公开致谢](../ACKNOWLEDGMENTS.md)；按实际使用的方法引用，见 [如何引用](HOW_TO_CITE.md)。完整许可证、修改说明及适用依赖的对应源码随应用或 Release 提供，见 [第三方说明](../THIRD_PARTY_NOTICES.md)。教程或安装包不会改变上游算法归属。
 
 技术依据：[PyInstaller 目标系统构建要求](https://pyinstaller.org/en/stable/operating-mode.html)、[Windows DLL 搜索路径](https://pyinstaller.org/en/stable/common-issues-and-pitfalls.html)、[Inno Setup 普通用户安装](https://jrsoftware.org/ishelp/topic_setup_privilegesrequired.htm)、[GitHub Windows runner 软件清单](https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md)。
+
+Gryffin 原有内存统计工具使用 Unix 专有的 `resource` 模块。本分发将该统计改为可选：系统没有此模块时明确显示不可用，不阻止 Windows 导入优化引擎，也不改模型计算公式。

@@ -4,7 +4,7 @@
 
 | 来源 | 固定提交 | 本地处理 |
 |---|---|---|
-| the-matter-lab/gryffin | fb149d18f9c81b96179cc682c46e05db60bc7229 | 用 Cython 3.3.0 从未修改的两个 `.pyx` 重生成 `.c`，解决旧生成代码与 Python 3.10 的兼容问题；重生成文件有显著修改标记 |
+| the-matter-lab/gryffin | fb149d18f9c81b96179cc682c46e05db60bc7229 | 用 Cython 3.3.0 从未修改的两个 `.pyx` 重生成 `.c`，解决旧生成代码与 Python 3.10 的兼容问题；重生成文件有显著修改标记；内存统计工具兼容 Windows 缺少 Unix resource 模块的情况，无法统计时明确显示 unavailable，不影响优化计算 |
 | the-matter-lab/atlas | ebb1f4f728107f759c48289c2faecfa3af19254f | 使用原生 GPPlanner；适配层显式选择 Pymoo 采集优化器处理非连续变量或批量。Pymoo known_constraints 包装器修复为先将内部索引/类别编码还原到实际变量，再评估约束，防止排除错条件；修改行有显著标记。未改变 GP 或采集函数公式 |
 | the-matter-lab/olympus，olympus-atlas 分支 | def3dda70c981c667aed40a3e8a7d8143b284887 | 只下载运行源码/元数据，不下载超过 1GB 的研究数据集和训练模型；setup.py 固定源码快照版本；插件加载器对不存在的 Python `__dunder__` 元数据抛出标准 AttributeError，避免 Qt 的源代码检查把它误认成插件名 |
 | AccelerationConsortium/bo-mcp | 56d590b91ac120d0f22a3e41e770843d271808cd | 兼容路径保留 bo-engine 的原生 BoTorchBackend；独立 Python 3.13 进程。v0.2 增强工作流在 NaNoBO modeling.py 中直接使用 BoTorch / scikit-learn；未把可选 BayBE/RDKit/MCP 服务一起装入 |

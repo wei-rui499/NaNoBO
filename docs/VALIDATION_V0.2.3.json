@@ -65,8 +65,9 @@
   "tutorial_model_evidence_version": "0.2.2; identical model code and identical synthetic exercise data",
   "native_build_fixes": [
     "Fresh Cython output is generated in a temporary C file before atomic replacement.",
-    "Native Windows uses NumPy-compatible moocore 0.1.10 and ships its exact corresponding source."
+    "Native Windows uses NumPy-compatible moocore 0.1.10 and ships its exact corresponding source.",
+    "Gryffin memory reporting tolerates the absence of the Unix-only resource module; optimization code is unchanged."
   ],
-  "targeted_publisher_checks_passed": 12,
+  "targeted_publisher_checks_passed": 13,
   "source_preparation": "Current vendored Gryffin/Atlas/Olympus prepared twice in temporary copies; handwritten sources and metadata preserved. Cython-generated trace identifiers may vary; unchanged .pyx and already-fixed scientific runtime code."
 }

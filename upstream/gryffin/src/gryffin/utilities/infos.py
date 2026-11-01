@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
-import resource
+# NaNoBO modification: resource is Unix-only; memory reporting is optional.
+try:
+    import resource
+except ImportError:
+    resource = None
 import sys
 
 
@@ -18,6 +22,8 @@ def parse_time(start, end):
 
 
 def memory_usage():
+    if resource is None:
+        return None, None, None
     if sys.platform == 'darwin':  # MacOS --> memory in bytes
         kB = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss // 1000.
     else:  # Linux --> memory in kilobytes
@@ -31,4 +37,7 @@ def memory_usage():
 
 def print_memory_usage():
     GB, MB, kB = memory_usage()
+    if GB is None:
+        print('==> MEMORY USAGE: unavailable on this platform')
+        return
     print(f'==> MEMORY USAGE: {GB:.0f} GB, {MB:.0f} MB, {kB:.0f} kB')

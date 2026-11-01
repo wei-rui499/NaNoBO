@@ -2,6 +2,7 @@
 import importlib.util
 import hashlib
 import json
+import builtins
 from pathlib import Path
 import shutil
 import zipfile
@@ -20,6 +21,29 @@ def test_installer_has_its_own_verified_chinese_messages():
     messages = (root / "scripts/localizations/ChineseSimplified.isl").read_text(encoding="utf-8-sig")
     for key in ("LanguageName=简体中文", "CreateDesktopIcon=", "AdditionalIcons=", "LaunchProgram="):
         assert key in messages
+
+
+def test_gryffin_memory_utility_imports_without_unix_resource(monkeypatch, capsys):
+    root = Path(__file__).resolve().parents[1]
+    path = root / "upstream/gryffin/src/gryffin/utilities/infos.py"
+    original_import = builtins.__import__
+    def without_resource(name, *args, **kwargs):
+        if name == "resource":
+            raise ImportError("Unix resource unavailable")
+        return original_import(name, *args, **kwargs)
+    monkeypatch.setattr(builtins, "__import__", without_resource)
+    namespace = {}
+    exec(compile(path.read_text(), str(path), "exec"), namespace)
+    assert namespace["parse_time"](0, 2) == "2.0 s"
+    assert namespace["memory_usage"]() == (None, None, None)
+    namespace["print_memory_usage"]()
+    assert "unavailable" in capsys.readouterr().out
+    monkeypatch.syspath_prepend(str(root / "scripts"))
+    from bootstrap import patch_gryffin_memory_info
+    fixed = path.read_text()
+    assert patch_gryffin_memory_info(fixed) == fixed
+    original = "import resource\ndef memory_usage():\n    pass\ndef print_memory_usage():\n    GB, MB, kB = memory_usage()\n"
+    assert "except ImportError" in patch_gryffin_memory_info(original)
 
 
 @pytest.fixture

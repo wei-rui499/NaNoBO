@@ -105,6 +105,21 @@ def patch_atlas_constraints(text):
     return text.replace(old, notice + fixed)
 
 
+def patch_gryffin_memory_info(text):
+    if "# NaNoBO modification: resource is Unix-only; memory reporting is optional." in text:
+        return text
+    replacements = {
+        "import resource\n": "# NaNoBO modification: resource is Unix-only; memory reporting is optional.\ntry:\n    import resource\nexcept ImportError:\n    resource = None\n",
+        "def memory_usage():\n": "def memory_usage():\n    if resource is None:\n        return None, None, None\n",
+        "    GB, MB, kB = memory_usage()\n": "    GB, MB, kB = memory_usage()\n    if GB is None:\n        print('==> MEMORY USAGE: unavailable on this platform')\n        return\n",
+    }
+    for old, new in replacements.items():
+        if old not in text:
+            raise RuntimeError("Unexpected Gryffin memory utility source")
+        text = text.replace(old, new)
+    return text
+
+
 def patch_olympus_metadata(text):
     original = "    def __getattr__(self, attr):\n"
     fixed = "        if attr.startswith('__'):\n            raise AttributeError(attr)\n"
@@ -129,6 +144,8 @@ def patch_snapshot_version(text, package):
 def prepare_classic_sources():
     """Prepare the complete pinned source snapshot without installing packages."""
     gryffin = ROOT / "upstream" / "gryffin"
+    memory_info = gryffin / "src/gryffin/utilities/infos.py"
+    memory_info.write_text(patch_gryffin_memory_info(memory_info.read_text(encoding="utf-8")), encoding="utf-8")
     for stem in ("kernel_evaluations", "kernel_prob_reshaping"):
         source = gryffin / "src" / "gryffin" / "bayesian_network" / (stem + ".pyx")
         regenerate_extension(source)
