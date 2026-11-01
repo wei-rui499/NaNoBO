@@ -6,7 +6,7 @@ message: >-
 title: "NaNoBO: local desktop experiment planning for chemists"
 authors:
   - name: "NaNoBO contributors"
-version: "0.2.2"
+version: "0.2.3"
 date-released: "2026-11-01"
 license: Apache-2.0
 repository-code: "https://github.com/wei-rui499/NaNoBO"

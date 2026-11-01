@@ -21,7 +21,7 @@ python3.13 -m venv .venv-modern
 
 ```sh
 PYTHONPATH=src .venv/bin/python -m chembo
-CHEMBO_INTEGRATION=1 QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest tests/test_app.py tests/test_app_v2.py tests/test_workflow_regressions.py tests/test_engine.py tests/test_space.py tests/test_io.py tests/test_analysis_view.py tests/test_publication.py tests/test_tutorial_help.py tests/test_tutorial_examples.py tests/test_windows_packaging.py -q --junitxml=validation/regression-0.2.2.xml
+CHEMBO_INTEGRATION=1 QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest tests/test_app.py tests/test_app_v2.py tests/test_workflow_regressions.py tests/test_engine.py tests/test_space.py tests/test_io.py tests/test_analysis_view.py tests/test_publication.py tests/test_tutorial_help.py tests/test_tutorial_examples.py tests/test_windows_packaging.py -q --junitxml=validation/regression-0.2.3.xml
 PYTHONPATH=src .venv-modern/bin/python -m unittest discover -s tests -p 'test_mod*.py' -v
 ```
 
@@ -45,11 +45,11 @@ PYTHONPATH=src .venv-modern/bin/python -m unittest discover -s tests -p 'test_mo
 QT_QPA_PLATFORM=offscreen .venv/bin/python scripts/run_simulated_lab.py --output validation/repeated-run --bundle dist/NaNoBO.app
 ```
 
-`scripts/package_macos.py` 从 `chembo.__version__` 读取当前版本（本次为 0.2.2），作为发布者封装脚本，会再次签名并验证原生模型、界面和导图。它需要当前机器重新生成的验收资料，按本次目录约定包括：
+`scripts/package_macos.py` 从 `chembo.__version__` 读取当前版本（本次为 0.2.3），作为发布者封装脚本，会再次签名并验证原生模型、界面和导图。它需要当前机器重新生成的验收资料，按本次目录约定包括：
 
-- `validation/regression-0.2.2.xml`：JUnit 回归结果，不能含失败。
-- `docs/VALIDATION_V0.2.2.json`：本次运行生成的证据。仓库内保留的是经脱敏的历史参考，重发布前应重新生成。
-- `release/NaNoBO-0.2.2-tutorial-examples.zip`：配套合成教学文件。
+- `validation/regression-0.2.3.xml`：JUnit 回归结果，不能含失败。
+- `docs/VALIDATION_V0.2.3.json`：本次运行生成的证据。仓库内保留的是经脱敏的历史参考，重发布前应重新生成。
+- `release/NaNoBO-0.2.3-tutorial-examples.zip`：配套合成教学文件。
 - `release/library-sources/`：与实际二进制一致的 LGPL 等对应库源码和校验表；可用 `scripts/fetch_library_sources.py` 准备。
 
 新的克隆不会自动具有这些发布资料。先执行 `--bundle-only`、完成当前版本验证并准备这些附件，再调用封装脚本。修改版本号时同步更新 pyproject、chembo.__version__、构建/封装和源归档版本；旧版本证据保留为历史记录。

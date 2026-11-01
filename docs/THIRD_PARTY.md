@@ -48,6 +48,8 @@ Qt 在线文档会随版本更新；本次原文从官方 6.12.0 精确版本源
 
 DEAP 1.4.4 的源码 `LICENSE.txt` 为 LGPLv3；moocore 0.3.2 的官方发行元数据标明 `LGPL-2.1-or-later`，其 `COPYRIGHTS` 说明 C 库大部分文件采用 MPLv2，因包含 AVL 树组件，组合库按 LGPLv2.1 或更高版本分发。它们的精确 PyPI 源码发行包随 `library-sources/deap/`、`library-sources/moocore/` 提供，并对照 [DEAP 1.4.4 官方发行元数据](https://pypi.org/pypi/deap/1.4.4/json)、[moocore 0.3.2 官方发行元数据](https://pypi.org/pypi/moocore/0.3.2/json) 中的 SHA-256。moocore 的完整 LGPLv2.1、MPLv2 规范文本另存于 `licenses/manual/moocore-0.3.2-*.txt`；其各文件作者和其他所含组件的归属继续由未修改源码及 `COPYRIGHTS` 保留。
 
+Windows 0.2.3 的经典环境为兼容 Gryffin 的 NumPy 1.23，固定使用 moocore **0.1.10**。该版本的 [官方发行元数据](https://pypi.org/pypi/moocore/0.1.10/json)、对应源码和 SHA-256 另记于 `docs/manifests/library-source-alternatives.json`。发布脚本按实际安装版本选择精确源码，并把实际清单写入 `library-sources/SOURCE-ARCHIVES.json`；不会用 Mac 环境的 0.3.2 源码代替 Windows 的 0.1.10。两种构建均保留实际版本源码中的原始版权和许可文件；版本依各自的依赖清单及构建记录区分。
+
 torchbnn 的正确作者仓库是 [Harry24k/bayesian-neural-network-pytorch](https://github.com/Harry24k/bayesian-neural-network-pytorch)，其 [1.2 发行页](https://pypi.org/project/torchbnn/1.2/) 的安装说明也指向此处；安装包元数据中省略 `-pytorch` 的旧主页链接已无法访问。手动补充的 MIT 文件使用 [2019 年固定历史源码](https://github.com/Harry24k/bayesian-neural-network-pytorch/blob/361dc428bbe5bbe9470293730808d66b031e79f1/LICENSE)。pyDOE 的旧项目链接现重定向到新组织；本次使用 [2014 年固定 LICENSE](https://github.com/pydoe/pydoe/blob/7a78bfa72fc59cd7cc6f58b8a910dcfad7f605bd/LICENSE)，并保留原 0.3.8 作者说明。
 
 Cython 3.3.0 仅在发布端从 Gryffin 原始 `.pyx` 重新生成 C 文件，许可为 Apache-2.0；构建脚本已显式排除 Cython 编译器。科学计算库中名称含 `cython` 的已编译扩展或随附 `.pyx` 不等同于分发 Cython 编译器，其许可由相应科学计算库保留。PyInstaller 的 bootloader 具有允许分发生成应用的许可例外；该例外不覆盖应用内其他库的独立义务。

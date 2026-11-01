@@ -1,0 +1,17 @@
+{
+  "note": "Exact corresponding source for the NumPy-1.23-compatible Windows DEAP dependency. Publisher source selection follows the installed distribution version.",
+  "items": [
+    {
+      "component": "moocore",
+      "version": "0.1.10",
+      "url": "https://files.pythonhosted.org/packages/95/e5/1feadb217604b77c3b41856dc6c63aae424256afe9ad1d69c4688669efde/moocore-0.1.10.tar.gz",
+      "checksum_source": "https://pypi.org/pypi/moocore/0.1.10/json",
+      "sha256": "e7236d01723ef30d68aa717c28d0b843b404cbd900d4d5ea58093b17e5bc9595",
+      "path": "moocore/moocore-0.1.10.tar.gz",
+      "bytes": 413312,
+      "license_files_in_archive": [
+        "moocore-0.1.10/COPYRIGHTS"
+      ]
+    }
+  ]
+}

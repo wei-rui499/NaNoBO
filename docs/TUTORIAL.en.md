@@ -2,7 +2,7 @@
 
 # NaNoBO: a practical guide for chemists
 
-This guide describes the **0.2.2** desktop workflow. If an older installer does not have the tutorial Help entries or numbered practice files, update from [Releases](https://github.com/wei-rui499/NaNoBO/releases).
+This guide describes the **0.2.3** desktop workflow. If an older installer does not have the tutorial Help entries or numbered practice files, update from [Releases](https://github.com/wei-rui499/NaNoBO/releases).
 
 This guide follows a familiar laboratory loop: **define the experiment → enter measurements → choose the next batch → run the experiment → add the results**. The supplied practice files let you complete that loop without doing a wet experiment.
 

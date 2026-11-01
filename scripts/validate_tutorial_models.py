@@ -1,7 +1,7 @@
 """Optional publisher check: run the synthetic tutorial through the actual models.
 
 Run with the modern Python environment and PYTHONPATH=src. This is a macOS/source
-check; Windows runtime validation is intentionally left to the user for 0.2.2.
+check; Windows runtime validation is intentionally left to the user for 0.2.3.
 """
 import copy
 import json

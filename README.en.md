@@ -18,7 +18,7 @@ For example: which temperature and additive should you try next to improve yield
 
 Start with the supplied **synthetic teaching data**. You do not need to study the algorithm first.
 
-1. Download the appropriate installer and the tutorial data bundle from [Releases](https://github.com/wei-rui499/NaNoBO/releases). The Help menu in version 0.2.2 and later also provides the tutorials and practice data.
+1. Download the appropriate installer and the tutorial data bundle from [Releases](https://github.com/wei-rui499/NaNoBO/releases). The Help menu in version 0.2.3 and later also provides the tutorials and practice data.
 2. Open `01_quickstart/project.chembo.json`. The project already defines temperature, cycle count and additive, and contains **6 synthetic measurements**.
 3. Click **Generate next batch** (`生成下一批实验 →`). You should see **2 pending conditions** in `下一批 / 待实验`.
 4. Choose **Export CSV for results** (`导出待回填 CSV`). Find those exact conditions in `all-simulated-results.csv`, copy the corresponding synthetic yield values into your exported sheet, and import it through `已完成实验 → 导入 Excel / CSV`.

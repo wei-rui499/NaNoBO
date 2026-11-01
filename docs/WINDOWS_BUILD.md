@@ -8,12 +8,12 @@ Windows 版使用与 Mac 相同的应用源码、模型适配、双语教程和�
 
 | 文件 | 用途 |
 | --- | --- |
-| `NaNoBO-0.2.2-windows-x64-setup-unsigned.exe` | 普通用户安装器；安装到自己的用户目录，可建立开始菜单和桌面快捷方式 |
-| `NaNoBO-0.2.2-windows-x64-portable-unsigned.zip` | 便携版；完整解压后打开 `NaNoBO/NaNoBO.exe`，保留旁边的 `_internal` 文件夹 |
-| `WINDOWS_BUILD-0.2.2.json` | 构建记录、文件清单、依赖版本及本次验证边界 |
-| `SHA256SUMS-windows-0.2.2.txt` | 下载文件的 SHA-256 校验值 |
-| `NaNoBO-0.2.2-windows-source.zip` | 该 Windows 构建对应的应用与适配源码 |
-| `NaNoBO-0.2.2-windows-library-sources.zip` | 适用第三方依赖的对应版本源码和校验记录 |
+| `NaNoBO-0.2.3-windows-x64-setup-unsigned.exe` | 普通用户安装器；安装到自己的用户目录，可建立开始菜单和桌面快捷方式 |
+| `NaNoBO-0.2.3-windows-x64-portable-unsigned.zip` | 便携版；完整解压后打开 `NaNoBO/NaNoBO.exe`，保留旁边的 `_internal` 文件夹 |
+| `WINDOWS_BUILD-0.2.3.json` | 构建记录、文件清单、依赖版本及本次验证边界 |
+| `SHA256SUMS-windows-0.2.3.txt` | 下载文件的 SHA-256 校验值 |
+| `NaNoBO-0.2.3-windows-source.zip` | 该 Windows 构建对应的应用与适配源码 |
+| `NaNoBO-0.2.3-windows-library-sources.zip` | 适用第三方依赖的对应版本源码和校验记录 |
 
 安装后，从帮助菜单打开“中文使用教程”或“English tutorial”，通过“导出教程练习数据…”把练习文件复制到自己的实验文件夹。教程、练习数据和计算引擎均随程序安装，日常使用不需网络或 API 账户。
 
@@ -29,7 +29,7 @@ Windows 版使用与 Mac 相同的应用源码、模型适配、双语教程和�
 2. 在原生 `windows-2022` x64 runner 上建立 Python 3.10 经典环境和 Python 3.13 现代环境。Gryffin 的两个 Cython 扩展由目标系统的 Microsoft C++ 工具链编译，PyTorch 从官方 CPU 轮子源安装。
 3. 分别用 PyInstaller 封装现代工作进程与桌面应用；两套 Python 运行时保持隔离，避免 DLL 或模型依赖版本混用。随后把同一份离线教程和练习文件放入应用。
 4. 仅检查打包目录中所需的 EXE、DLL、C 扩展、Qt 插件、许可证、双语教程和至少四个练习项目是否存在；生成 Inno Setup 安装器和便携 ZIP，校验 ZIP CRC 与文件 SHA-256。**不执行应用或安装器。**
-5. 构建产物保存在 `NaNoBO-0.2.2-windows-x64-build-only` Artifact 中，保留 14 天。只有上一步成功才进入产物上传和 Release 附件步骤。
+5. 构建产物保存在 `NaNoBO-0.2.3-windows-x64-build-only` Artifact 中，保留 14 天。只有上一步成功才进入产物上传和 Release 附件步骤。
 6. 发布步骤只新建或复用对应源码提交的 **Draft / Pre-release**，附加 Windows 文件，绝不自动把草稿公开，也不覆盖已经公开的同版本 Release。维护者完成本次发布整理后统一公开。若已有标签，必须指向本次构建的提交。
 
 工作流启动、排队或配置文件存在，都不代表 EXE 已经构建成功；以 Actions 的最终状态和实际下载附件为准。构建完成也不代表 Windows 应用功能已验证。
@@ -58,6 +58,8 @@ py -3.13 -m venv .venv-modern
 ```
 
 产物位于 `installers/`。`package_windows.py` 只编译、封装和检查文件完整性；不会启动应用、worker 或安装器。Mac 的锁文件包含 Mac 平台解析结果，不能直接作为 Windows 全量依赖锁使用；本次实际 Windows 依赖版本会写入 `WINDOWS_BUILD-*.json`。
+
+经典环境保留 Gryffin 所需的 NumPy 1.23.5。DEAP 的 moocore 依赖在 Windows 固定为支持该 NumPy 版本的 0.1.10，下载脚本按实际安装版本附带对应源码；不把 Mac 环境中已有的 0.3.2 对应源码冒充为 Windows 版本。Gryffin 的 Cython 代码在临时文件中重生成后原子替换，既保留修改声明，也允许从已带声明的源码快照再次构建。
 
 ## 使用者自行测试时如何反馈
 

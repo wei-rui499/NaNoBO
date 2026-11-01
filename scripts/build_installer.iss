@@ -1,6 +1,6 @@
 ; Build on native Windows with Inno Setup 6. No WSL or user Python is required.
 #ifndef AppVersion
-  #define AppVersion "0.2.2"
+  #define AppVersion "0.2.3"
 #endif
 #ifndef DistDir
   #define DistDir "..\dist\NaNoBO"

@@ -12,7 +12,7 @@ python3.13 -m venv .venv-modern
 <p><code>bootstrap.py</code> 固定上游提交、保留来源和许可、从 Gryffin 未修改的 <code>.pyx</code> 重生成兼容 C 扩展，并应用已标记的兼容补丁。BoTorch 和经典运行时不应混用 Torch/Python 动态库。</p>
 <h2 id="运行及回归">运行及回归</h2>
 <pre><code class="language-sh">PYTHONPATH=src .venv/bin/python -m chembo
-CHEMBO_INTEGRATION=1 QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest tests/test_app.py tests/test_app_v2.py tests/test_workflow_regressions.py tests/test_engine.py tests/test_space.py tests/test_io.py tests/test_analysis_view.py tests/test_publication.py tests/test_tutorial_help.py tests/test_tutorial_examples.py tests/test_windows_packaging.py -q --junitxml=validation/regression-0.2.2.xml
+CHEMBO_INTEGRATION=1 QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest tests/test_app.py tests/test_app_v2.py tests/test_workflow_regressions.py tests/test_engine.py tests/test_space.py tests/test_io.py tests/test_analysis_view.py tests/test_publication.py tests/test_tutorial_help.py tests/test_tutorial_examples.py tests/test_windows_packaging.py -q --junitxml=validation/regression-0.2.3.xml
 PYTHONPATH=src .venv-modern/bin/python -m unittest discover -s tests -p 'test_mod*.py' -v
 </code></pre>
 <p>模型测试使用合成数据，不调用真实仪器。</p>
@@ -26,11 +26,11 @@ PYTHONPATH=src .venv-modern/bin/python -m unittest discover -s tests -p 'test_mo
 <p><code>scripts/run_simulated_lab.py</code> 支持在指定输出目录生成可复现的模拟实验、图表和项目：</p>
 <pre><code class="language-sh">QT_QPA_PLATFORM=offscreen .venv/bin/python scripts/run_simulated_lab.py --output validation/repeated-run --bundle dist/NaNoBO.app
 </code></pre>
-<p><code>scripts/package_macos.py</code> 从 <code>chembo.__version__</code> 读取当前版本（本次为 0.2.2），作为发布者封装脚本，会再次签名并验证原生模型、界面和导图。它需要当前机器重新生成的验收资料，按本次目录约定包括：</p>
+<p><code>scripts/package_macos.py</code> 从 <code>chembo.__version__</code> 读取当前版本（本次为 0.2.3），作为发布者封装脚本，会再次签名并验证原生模型、界面和导图。它需要当前机器重新生成的验收资料，按本次目录约定包括：</p>
 <ul>
-<li><code>validation/regression-0.2.2.xml</code>：JUnit 回归结果，不能含失败。</li>
-<li><code>docs/VALIDATION_V0.2.2.json</code>：本次运行生成的证据。仓库内保留的是经脱敏的历史参考，重发布前应重新生成。</li>
-<li><code>release/NaNoBO-0.2.2-tutorial-examples.zip</code>：配套合成教学文件。</li>
+<li><code>validation/regression-0.2.3.xml</code>：JUnit 回归结果，不能含失败。</li>
+<li><code>docs/VALIDATION_V0.2.3.json</code>：本次运行生成的证据。仓库内保留的是经脱敏的历史参考，重发布前应重新生成。</li>
+<li><code>release/NaNoBO-0.2.3-tutorial-examples.zip</code>：配套合成教学文件。</li>
 <li><code>release/library-sources/</code>：与实际二进制一致的 LGPL 等对应库源码和校验表；可用 <code>scripts/fetch_library_sources.py</code> 准备。</li>
 </ul>
 <p>新的克隆不会自动具有这些发布资料。先执行 <code>--bundle-only</code>、完成当前版本验证并准备这些附件，再调用封装脚本。修改版本号时同步更新 pyproject、chembo.<strong>version</strong>、构建/封装和源归档版本；旧版本证据保留为历史记录。</p>

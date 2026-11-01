@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.request
 
@@ -81,6 +82,17 @@ def run(*args):
     subprocess.run([str(x) for x in args], check=True, cwd=ROOT)
 
 
+def regenerate_extension(source):
+    # Existing distributed C files carry our modification notice before Cython's
+    # header. Cython refuses to overwrite that header, so generate a new file.
+    with tempfile.TemporaryDirectory(prefix=".nanobo-cython-", dir=source.parent) as folder:
+        generated = Path(folder) / source.with_suffix(".c").name
+        run(sys.executable, "-m", "cython", "-3", "--output-file", generated, source)
+        notice = b"/* NaNoBO modification: regenerated from unchanged upstream .pyx with Cython 3.3.0 for native Python 3.10 compatibility. */\n"
+        generated.write_bytes(notice + generated.read_bytes())
+        generated.replace(source.with_suffix(".c"))
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--fetch-only", action="store_true")
@@ -97,10 +109,7 @@ def main():
     gryffin = ROOT / "upstream" / "gryffin"
     for stem in ("kernel_evaluations", "kernel_prob_reshaping"):
         source = gryffin / "src" / "gryffin" / "bayesian_network" / (stem + ".pyx")
-        run(sys.executable, "-m", "cython", "-3", source)
-        generated = source.with_suffix(".c")
-        content = generated.read_text(encoding="utf-8")
-        generated.write_text("/* NaNoBO modification: regenerated from unchanged upstream .pyx with Cython 3.3.0 for native Python 3.10 compatibility. */\n" + content, encoding="utf-8")
+        regenerate_extension(source)
     for package in ("gryffin", "olympus-runtime", "atlas"):
         if package == "olympus-runtime":
             for module in ("noises", "models", "planners", "surfaces", "scalarizers"):
