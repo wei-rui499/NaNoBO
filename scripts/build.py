@@ -39,7 +39,7 @@ def main():
     for name in ("LICENSE", "ACKNOWLEDGMENTS.md", "THIRD_PARTY_NOTICES.md", "CITATION.cff", "REFERENCES.bib"):
         arguments += ["--add-data", f"{ROOT / name}{os.pathsep}."]
     arguments += ["--runtime-hook", str(ROOT / "scripts" / "runtime_init.py")]
-    arguments += ["--copy-metadata", "moocore", "--exclude-module", "Cython"]
+    arguments += ["--exclude-module", "Cython"]
     arguments += ["--hidden-import", "matplotlib.backends.backend_qtagg", "--hidden-import", "matplotlib.backends.backend_pdf", "--hidden-import", "matplotlib.backends.backend_svg", "--hidden-import", "mpl_toolkits.mplot3d", "--collect-all", "openpyxl", "--collect-all", "xlrd", "--collect-all", "pymoo", "--collect-all", "autograd"]
     qt_package = Path(importlib.util.find_spec("PySide6").origin).parent
     qt_plugins = qt_package / ("plugins" if sys.platform == "win32" else "Qt/plugins")
