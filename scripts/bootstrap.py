@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -93,6 +94,60 @@ def regenerate_extension(source):
         generated.replace(source.with_suffix(".c"))
 
 
+def patch_atlas_constraints(text):
+    old = "            X_arr = list(X_.values())"
+    fixed = "            X_arr = list(self._pymoo_to_olympus([X_])[0].values())"
+    if fixed in text:
+        return text  # Older distributed snapshots use the ChemBO Studio notice.
+    if old not in text:
+        raise RuntimeError("Unexpected Atlas constraint wrapper source")
+    notice = "            # NaNoBO fix: evaluate constraints in original parameter units, not Pymoo indices.\n"
+    return text.replace(old, notice + fixed)
+
+
+def patch_olympus_metadata(text):
+    original = "    def __getattr__(self, attr):\n"
+    fixed = "        if attr.startswith('__'):\n            raise AttributeError(attr)\n"
+    if fixed in text:
+        return text
+    if original not in text:
+        raise RuntimeError("Unexpected Olympus metadata loader source")
+    notice = "        # NaNoBO fix: missing Python metadata is not an optimizer/plugin name.\n"
+    return text.replace(original, original + notice + fixed)
+
+
+def patch_snapshot_version(text, package):
+    snapshot = "0+chembo." + PINS[package][1][:7]
+    text = text.replace("version=versioneer.get_version()", f"version='{snapshot}'")
+    if not re.search(r"\bversion\s*=\s*['\"]" + re.escape(snapshot) + r"['\"]", text):
+        raise RuntimeError(f"Unexpected {package} snapshot version source")
+    if not text.startswith(("# ChemBO", "# NaNoBO")):
+        text = "# NaNoBO modification: fixed source-snapshot version; no VCS metadata is bundled.\n" + text
+    return text
+
+
+def prepare_classic_sources():
+    """Prepare the complete pinned source snapshot without installing packages."""
+    gryffin = ROOT / "upstream" / "gryffin"
+    for stem in ("kernel_evaluations", "kernel_prob_reshaping"):
+        source = gryffin / "src" / "gryffin" / "bayesian_network" / (stem + ".pyx")
+        regenerate_extension(source)
+    for package in ("gryffin", "olympus-runtime", "atlas"):
+        if package == "olympus-runtime":
+            for module in ("noises", "models", "planners", "surfaces", "scalarizers"):
+                source = ROOT / "upstream" / package / "src" / "olympus" / module / "__init__.py"
+                text = source.read_text(encoding="utf-8")
+                source.write_text(patch_olympus_metadata(text), encoding="utf-8")
+        if package == "atlas":
+            source = ROOT / "upstream" / package / "src" / "atlas" / "acquisition_optimizers" / "pymoo_optimizer.py"
+            text = source.read_text(encoding="utf-8")
+            source.write_text(patch_atlas_constraints(text), encoding="utf-8")
+        setup = ROOT / "upstream" / package / "setup.py"
+        text = setup.read_text(encoding="utf-8")
+        setup.write_text(patch_snapshot_version(text, package), encoding="utf-8")
+    return ("gryffin", "olympus-runtime", "atlas")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--fetch-only", action="store_true")
@@ -106,34 +161,7 @@ def main():
     if sys.version_info[:2] != (3, 10):
         raise SystemExit("Classic publishers must use native Python 3.10.")
     run(sys.executable, "-m", "pip", "install", "-r", "requirements-classic.txt")
-    gryffin = ROOT / "upstream" / "gryffin"
-    for stem in ("kernel_evaluations", "kernel_prob_reshaping"):
-        source = gryffin / "src" / "gryffin" / "bayesian_network" / (stem + ".pyx")
-        regenerate_extension(source)
-    for package in ("gryffin", "olympus-runtime", "atlas"):
-        if package == "olympus-runtime":
-            for module in ("noises", "models", "planners", "surfaces", "scalarizers"):
-                source = ROOT / "upstream" / package / "src" / "olympus" / module / "__init__.py"
-                text = source.read_text(encoding="utf-8")
-                original = "    def __getattr__(self, attr):\n"
-                replacement = original + "        # NaNoBO fix: missing Python metadata is not an optimizer/plugin name.\n        if attr.startswith('__'):\n            raise AttributeError(attr)\n"
-                if "# NaNoBO fix:" not in text:
-                    source.write_text(text.replace(original, replacement), encoding="utf-8")
-        if package == "atlas":
-            source = ROOT / "upstream" / package / "src" / "atlas" / "acquisition_optimizers" / "pymoo_optimizer.py"
-            text = source.read_text(encoding="utf-8")
-            old = "            X_arr = list(X_.values())"
-            new = "            # NaNoBO fix: evaluate constraints in original parameter units, not Pymoo indices.\n            X_arr = list(self._pymoo_to_olympus([X_])[0].values())"
-            if old not in text and new not in text:
-                raise RuntimeError("Unexpected Atlas constraint wrapper source")
-            source.write_text(text.replace(old, new), encoding="utf-8")
-        setup = ROOT / "upstream" / package / "setup.py"
-        text = setup.read_text(encoding="utf-8")
-        snapshot = "0+chembo." + PINS[package][1][:7]
-        text = text.replace("version=versioneer.get_version()", f"version='{snapshot}'")
-        if not text.startswith("# ChemBO"):
-            text = "# NaNoBO modification: fixed source-snapshot version; no VCS metadata is bundled.\n" + text
-        setup.write_text(text, encoding="utf-8")
+    for package in prepare_classic_sources():
         run(sys.executable, "-m", "pip", "install", "--no-deps", "--no-build-isolation", ROOT / "upstream" / package)
     run(sys.executable, "-m", "pip", "install", "--no-deps", "--no-build-isolation", "-e", ROOT)
 

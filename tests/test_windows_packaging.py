@@ -1,6 +1,8 @@
 """Publisher file checks only; these tests do not execute a Windows program."""
 import importlib.util
+import hashlib
 from pathlib import Path
+import shutil
 import zipfile
 
 import pytest
@@ -75,3 +77,62 @@ def test_corresponding_source_matches_the_installed_dependency(monkeypatch):
     monkeypatch.setattr(sources.metadata, "version", lambda name: "unrecorded-version")
     with pytest.raises(RuntimeError, match="No verified corresponding source"):
         sources.source_records()
+
+
+def test_bootstrap_accepts_the_already_patched_atlas_snapshot(monkeypatch):
+    root = Path(__file__).resolve().parents[1]
+    monkeypatch.syspath_prepend(str(root / "scripts"))
+    from bootstrap import patch_atlas_constraints
+    source = (root / "upstream/atlas/src/atlas/acquisition_optimizers/pymoo_optimizer.py").read_text(encoding="utf-8")
+    assert "ChemBO Studio fix:" in source
+    assert patch_atlas_constraints(source) == source
+    original = "            X_arr = list(X_.values())"
+    assert "self._pymoo_to_olympus" in patch_atlas_constraints(original)
+    with pytest.raises(RuntimeError, match="Unexpected Atlas"):
+        patch_atlas_constraints("unknown source")
+
+
+def test_complete_vendored_source_preparation_is_repeatable(monkeypatch, tmp_path):
+    """Dry-run every source patch and real Cython generation, with no pip/model execution."""
+    root = Path(__file__).resolve().parents[1]
+    monkeypatch.syspath_prepend(str(root / "scripts"))
+    import bootstrap
+    for name in ("gryffin", "atlas", "olympus-runtime"):
+        shutil.copytree(root / "upstream" / name, tmp_path / "upstream" / name,
+                        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".git", "build", "*.egg-info"))
+    def hashes():
+        return {p.relative_to(tmp_path).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in tmp_path.rglob("*") if p.is_file()}
+    original = hashes()
+    monkeypatch.setattr(bootstrap, "ROOT", tmp_path)
+    bootstrap.prepare_classic_sources()
+    first = hashes()
+    bootstrap.prepare_classic_sources()
+    assert hashes() == first
+    allowed = {"upstream/gryffin/setup.py", "upstream/atlas/setup.py", "upstream/olympus-runtime/setup.py",
+               "upstream/gryffin/src/gryffin/bayesian_network/kernel_evaluations.c",
+               "upstream/gryffin/src/gryffin/bayesian_network/kernel_prob_reshaping.c"}
+    # Current Atlas/Olympus are already fixed: no scientific source or .pyx changes.
+    assert {name for name in original if original[name] != first[name]} <= allowed
+    for name in ("gryffin", "atlas", "olympus-runtime"):
+        text = (tmp_path / "upstream" / name / "setup.py").read_text(encoding="utf-8")
+        assert text.count("fixed source-snapshot version") == 1
+        compile(text, "setup.py", "exec")
+    for stem in ("kernel_evaluations", "kernel_prob_reshaping"):
+        generated = (tmp_path / "upstream/gryffin/src/gryffin/bayesian_network" / (stem + ".c")).read_text(encoding="utf-8")
+        assert "PyInit_" + stem in generated
+
+
+@pytest.mark.parametrize("notice", ["# ChemBO Studio fix: legacy distributor notice", "# NaNoBO fix: current distributor notice"])
+def test_source_patches_accept_both_distributor_notices(monkeypatch, notice):
+    scripts = Path(__file__).resolve().parents[1] / "scripts"
+    monkeypatch.syspath_prepend(str(scripts))
+    import bootstrap
+    atlas = "            " + notice + "\n            X_arr = list(self._pymoo_to_olympus([X_])[0].values())"
+    olympus = "    def __getattr__(self, attr):\n        " + notice + "\n        if attr.startswith('__'):\n            raise AttributeError(attr)\n"
+    assert bootstrap.patch_atlas_constraints(atlas) == atlas
+    assert bootstrap.patch_olympus_metadata(olympus) == olympus
+    setup = notice + "\nsetup(version=versioneer.get_version())"
+    fixed = bootstrap.patch_snapshot_version(setup, "atlas")
+    assert bootstrap.patch_snapshot_version(fixed, "atlas") == fixed
+    assert fixed.count("0+chembo.") == 1
