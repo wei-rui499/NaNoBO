@@ -46,6 +46,8 @@ Qt 在线文档会随版本更新；本次原文从官方 6.12.0 精确版本源
 
 ## 其他运行库与构建工具
 
+Windows 安装器使用 Inno Setup。简体中文消息文件由 Zhenghan Yang (Kira) 维护，取自 [Inno Setup 官方翻译目录](https://jrsoftware.org/files/istrans/) 所链接的官方源码。固定文件、原始署名、Inno Setup 许可和来源散列保存在 `scripts/localizations/`。安装器保留 Inno Setup 自带的版权和网站声明；该工具不属于 NaNoBO 的科研算法。
+
 DEAP 1.4.4 的源码 `LICENSE.txt` 为 LGPLv3；moocore 0.3.2 的官方发行元数据标明 `LGPL-2.1-or-later`，其 `COPYRIGHTS` 说明 C 库大部分文件采用 MPLv2，因包含 AVL 树组件，组合库按 LGPLv2.1 或更高版本分发。它们的精确 PyPI 源码发行包随 `library-sources/deap/`、`library-sources/moocore/` 提供，并对照 [DEAP 1.4.4 官方发行元数据](https://pypi.org/pypi/deap/1.4.4/json)、[moocore 0.3.2 官方发行元数据](https://pypi.org/pypi/moocore/0.3.2/json) 中的 SHA-256。moocore 的完整 LGPLv2.1、MPLv2 规范文本另存于 `licenses/manual/moocore-0.3.2-*.txt`；其各文件作者和其他所含组件的归属继续由未修改源码及 `COPYRIGHTS` 保留。
 
 Windows 0.2.3 的经典环境为兼容 Gryffin 的 NumPy 1.23，固定使用 moocore **0.1.10**。该版本的 [官方发行元数据](https://pypi.org/pypi/moocore/0.1.10/json)、对应源码和 SHA-256 另记于 `docs/manifests/library-source-alternatives.json`。发布脚本按实际安装版本选择精确源码，并把实际清单写入 `library-sources/SOURCE-ARCHIVES.json`；不会用 Mac 环境的 0.3.2 源码代替 Windows 的 0.1.10。两种构建均保留实际版本源码中的原始版权和许可文件；版本依各自的依赖清单及构建记录区分。

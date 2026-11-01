@@ -1,11 +1,25 @@
 """Publisher file checks only; these tests do not execute a Windows program."""
 import importlib.util
 import hashlib
+import json
 from pathlib import Path
 import shutil
 import zipfile
 
 import pytest
+
+
+def test_installer_has_its_own_verified_chinese_messages():
+    root = Path(__file__).resolve().parents[1]
+    script = (root / "scripts/build_installer.iss").read_text(encoding="utf-8")
+    assert 'MessagesFile: "localizations\\ChineseSimplified.isl"' in script
+    assert 'compiler:Languages\\ChineseSimplified.isl' not in script
+    sources = json.loads((root / "scripts/localizations/SOURCES.json").read_text())
+    for item in sources["files"]:
+        assert hashlib.sha256((root / item["path"]).read_bytes()).hexdigest() == item["sha256"]
+    messages = (root / "scripts/localizations/ChineseSimplified.isl").read_text(encoding="utf-8-sig")
+    for key in ("LanguageName=简体中文", "CreateDesktopIcon=", "AdditionalIcons=", "LaunchProgram="):
+        assert key in messages
 
 
 @pytest.fixture
@@ -108,10 +122,15 @@ def test_complete_vendored_source_preparation_is_repeatable(monkeypatch, tmp_pat
     bootstrap.prepare_classic_sources()
     first = hashes()
     bootstrap.prepare_classic_sources()
-    assert hashes() == first
+    second = hashes()
     allowed = {"upstream/gryffin/setup.py", "upstream/atlas/setup.py", "upstream/olympus-runtime/setup.py",
                "upstream/gryffin/src/gryffin/bayesian_network/kernel_evaluations.c",
                "upstream/gryffin/src/gryffin/bayesian_network/kernel_prob_reshaping.c"}
+    # Cython 3.3 can vary trace identifiers; repeat preparation must preserve all
+    # handwritten sources and metadata, rather than promise identical generated C.
+    generated_c = {name for name in allowed if name.endswith(".c")}
+    assert set(first) == set(second)
+    assert {name for name in first if first[name] != second[name]} <= generated_c
     # Current Atlas/Olympus are already fixed: no scientific source or .pyx changes.
     assert {name for name in original if original[name] != first[name]} <= allowed
     for name in ("gryffin", "atlas", "olympus-runtime"):

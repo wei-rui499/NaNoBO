@@ -33,10 +33,10 @@ RestartApplications=no
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
-Name: "chinesesimp"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
+Name: "chinesesimp"; MessagesFile: "localizations\ChineseSimplified.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Shortcuts:"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
 Source: "{#DistDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -48,6 +48,6 @@ Name: "{autodesktop}\NaNoBO"; Filename: "{app}\NaNoBO.exe"; WorkingDir: "{locala
 Name: "{group}\Uninstall NaNoBO"; Filename: "{uninstallexe}"
 
 [Run]
-Filename: "{app}\NaNoBO.exe"; Description: "Launch NaNoBO"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\NaNoBO.exe"; Description: "{cm:LaunchProgram,NaNoBO}"; Flags: nowait postinstall skipifsilent
 
 ; Project files are user-owned. The uninstaller removes only the installed app.

@@ -1,0 +1,16 @@
+{
+  "upstream": "jrsoftware/issrc",
+  "revision": "5bcadfcd05e9857a47a6880a2ac0694c9ab60122",
+  "files": [
+    {
+      "path": "scripts/localizations/ChineseSimplified.isl",
+      "source": "https://raw.githubusercontent.com/jrsoftware/issrc/5bcadfcd05e9857a47a6880a2ac0694c9ab60122/Files/Languages/ChineseSimplified.isl",
+      "sha256": "e0b0b350e2245f3c5e65586dfe43d574f6e7f06f2261149aba284954b3fc9a8d"
+    },
+    {
+      "path": "scripts/localizations/INNO-LICENSE.txt",
+      "source": "https://raw.githubusercontent.com/jrsoftware/issrc/5bcadfcd05e9857a47a6880a2ac0694c9ab60122/license.txt",
+      "sha256": "2e5346868c2a18434489824e11d65c3031620f792fefc415d05f19cd441abf5c"
+    }
+  ]
+}

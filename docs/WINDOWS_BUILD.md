@@ -59,6 +59,8 @@ py -3.13 -m venv .venv-modern
 
 产物位于 `installers/`。`package_windows.py` 只编译、封装和检查文件完整性；不会启动应用、worker 或安装器。Mac 的锁文件包含 Mac 平台解析结果，不能直接作为 Windows 全量依赖锁使用；本次实际 Windows 依赖版本会写入 `WINDOWS_BUILD-*.json`。
 
+安装器可选择简体中文或英文。官方简体中文消息文件固定保存在 `scripts/localizations/`，不依赖构建机器是否预装中文语言包；原作者署名、Inno Setup 许可、固定上游提交及 SHA-256 一并保留在该目录。
+
 经典环境保留 Gryffin 所需的 NumPy 1.23.5。DEAP 的 moocore 依赖在 Windows 固定为支持该 NumPy 版本的 0.1.10，下载脚本按实际安装版本附带对应源码；不把 Mac 环境中已有的 0.3.2 对应源码冒充为 Windows 版本。Gryffin 的 Cython 代码在临时文件中重生成后原子替换，既保留修改声明，也允许从已带声明的源码快照再次构建。
 
 ## 使用者自行测试时如何反馈

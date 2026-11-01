@@ -1,2 +1,5 @@
 # Teaching CSV uses RFC 4180 CRLF so it opens consistently in Excel on Windows.
 examples/tutorial/**/*.csv whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Preserve the verified upstream bytes, including Windows line endings.
+scripts/localizations/*.isl -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+scripts/localizations/INNO-LICENSE.txt -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
