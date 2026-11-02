@@ -39,9 +39,9 @@ Download the installer and tutorial data from [GitHub Releases](https://github.c
 
 ### Windows
 
-The Windows code, tutorials and packaging are updated together with the Mac version. Use the x64 installer actually listed in Releases; native Windows runtime validation is a separate, pending step unless that release explicitly includes a completed record.
+Use the Windows Hotfix1 installer or a later corrected release. Hotfix1 fixes the native model startup and logging issues reproduced in the original 0.2.3 test packages. Check the Windows acceptance record accompanying the particular installer; Mac validation does not replace Windows validation.
 
-1. On Windows 10/11 x64, download the `windows-x64-setup-unsigned.exe` installer when available.
+1. On Windows 10/11 x64, use the `windows-x64-setup-hotfix1-unsigned.exe` installer or a later corrected release.
 2. Run the installer, choose the installation options, then open NaNoBO from the Start menu or its shortcut. You do not need WSL, Python or a terminal to use the installed application.
 3. The unsigned preview may trigger Windows reputation checks. Review the source and release information; do not disable Defender or other system protection.
 4. Save experiment projects in your own Documents folder so they remain separate from installation files. Windows ARM64 is not part of the validated target described here.

@@ -411,12 +411,13 @@ def _atlas(project: dict, blocked: list[dict], count: int, seed: int) -> list[di
     def available(values):
         candidate = dict(zip(names, values))
         return not any(_same(candidate, row, project["parameters"]) for row in excluded)
-    # Upstream gradient mixed-space enumeration misaligns categorical features
-    # when continuous parameters precede them; use its native Pymoo optimizer.
-    use_pymoo = count > 1 or any(p["type"] != "continuous" for p in project["parameters"])
+    # The upstream gradient path drops the KnownConstraints container during
+    # continuous optimization and may return an already measured boundary point.
+    # Use Atlas's native Pymoo optimizer for every space so ask/tell exclusions
+    # apply to single requests as well as mixed variables and batches.
     planner = GPPlanner(goal={"min": "minimize", "max": "maximize"}[project["objectives"][0]["goal"]],
                         batch_size=count, random_seed=seed, num_init_design=5,
-                        init_design_strategy="random", acquisition_optimizer_kind="pymoo" if use_pymoo else "gradient", known_constraints=[available])
+                        init_design_strategy="random", acquisition_optimizer_kind="pymoo", known_constraints=[available])
     planner.set_param_space(space)
     result = []
     for _ in range(count):

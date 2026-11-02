@@ -190,7 +190,11 @@ class Gryffin(Logger):
         # -----------
         self.log_chapter('Summary')
         GB, MB, kB = memory_usage()
-        self.log(f'Memory usage: {GB:.0f} GB, {MB:.0f} MB, {kB:.0f} kB', 'STATS')
+        # NaNoBO fix: Windows has no Unix resource statistics; logging must not fail a calculation.
+        if GB is None:
+            self.log('Memory usage: unavailable on this platform', 'STATS')
+        else:
+            self.log(f'Memory usage: {GB:.0f} GB, {MB:.0f} MB, {kB:.0f} kB', 'STATS')
         self.log_chapter("End", line='=', style='bold #d9ed92')
         self.log('', 'INFO')
 
@@ -372,7 +376,11 @@ class Gryffin(Logger):
         # --------------------------------
         self.log_chapter('Summary')
         GB, MB, kB = memory_usage()
-        self.log(f'Memory usage: {GB:.0f} GB, {MB:.0f} MB, {kB:.0f} kB', 'STATS')
+        # NaNoBO fix: Windows has no Unix resource statistics; logging must not fail a calculation.
+        if GB is None:
+            self.log('Memory usage: unavailable on this platform', 'STATS')
+        else:
+            self.log(f'Memory usage: {GB:.0f} GB, {MB:.0f} MB, {kB:.0f} kB', 'STATS')
         end_time = time.time()
         time_string = parse_time(start_time, end_time)
         self.log(f'Overall time required: {time_string}', 'STATS')

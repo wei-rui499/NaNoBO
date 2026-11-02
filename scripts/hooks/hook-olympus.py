@@ -7,6 +7,7 @@ from PyInstaller.utils.hooks import collect_data_files
 
 datas = collect_data_files("olympus", include_py_files=True, excludes=["**/__pycache__/**", "**/__OLD*/**", "**/__BACKUP*", "**/.scratch/**"])
 hiddenimports = [
+    "olympus.campaigns.campaign", "olympus.campaigns.observations", "olympus.campaigns.param_space",
     "olympus.planners.abstract_planner", "olympus.planners.custom_planner", "olympus.planners.planner",
     "olympus.planners.planner_random_search", "olympus.planners.planner_sobol",
     "olympus.planners.planner_latin_hypercube",

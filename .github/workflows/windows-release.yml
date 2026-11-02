@@ -1,4 +1,4 @@
-name: Windows native installer (build only)
+name: Windows native installer (runtime validated)
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
       publish_draft:
         description: Attach the build to a draft GitHub Release
         type: boolean
-        default: true
+        default: false
 
 permissions:
   contents: read
@@ -24,7 +24,7 @@ env:
 
 jobs:
   build:
-    name: Native Windows x64 package, no runtime tests
+    name: Native Windows x64 build, model and installation acceptance
     runs-on: windows-2022
     timeout-minutes: 120
     outputs:
@@ -71,28 +71,45 @@ jobs:
           $PSNativeCommandUseErrorActionPreference = $true
           .venv\Scripts\python.exe scripts/build.py --bundle-only
           .venv\Scripts\python.exe scripts/fetch_library_sources.py
-      - name: Create EXE installer, portable ZIP and build-only evidence
+      - name: Run Windows source regressions
         run: |
           $PSNativeCommandUseErrorActionPreference = $true
-          $compiler = 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
-          if (-not (Test-Path $compiler)) {
-            choco install innosetup --version=6.5.4 -y --no-progress
-            if ($LASTEXITCODE -ne 0) { throw 'Inno Setup 6 installation failed' }
-          }
+          $env:QT_QPA_PLATFORM = 'offscreen'
+          .venv\Scripts\python.exe -m pytest -q tests --ignore=tests/test_modern.py --ignore=tests/test_modeling.py --junitxml=validation/windows-regressions.xml
+      - name: Verify the actual frozen native models and synthetic workflows
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          .venv\Scripts\python.exe scripts/validate_windows_runtime.py --bundle dist/NaNoBO --output validation/windows-portable --fail-fast
+      - name: Create EXE installer, portable ZIP and build evidence
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          $compilerRoot = Join-Path $env:RUNNER_TEMP 'inno-7.1.1'
+          $compilerSetup = Join-Path $env:RUNNER_TEMP 'innosetup-7.1.1-x64.exe'
+          Invoke-WebRequest 'https://github.com/jrsoftware/issrc/releases/download/is-7_1_1/innosetup-7.1.1-x64.exe' -OutFile $compilerSetup
+          if ((Get-FileHash $compilerSetup -Algorithm SHA256).Hash.ToLowerInvariant() -ne '8a5a6711c3766a6e5fb74f280ba0e3551e719ce94538d901fdbd1f8f9920b3f0') { throw 'Official compiler checksum mismatch' }
+          $compilerInstall = Start-Process $compilerSetup -ArgumentList @('/CURRENTUSER','/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-','/NOICONS',('/DIR="'+$compilerRoot+'"')) -WindowStyle Hidden -Wait -PassThru
+          if ($compilerInstall.ExitCode -ne 0) { throw 'Inno Setup 7 installation failed' }
+          $compiler = Join-Path $compilerRoot 'ISCC.exe'
           .venv\Scripts\python.exe scripts/package_windows.py --compiler "$compiler"
-      - name: Record the Windows validation boundary
+      - name: Install and verify the distributed application, then uninstall it
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          $version = '${{ steps.version.outputs.version }}'
+          .venv\Scripts\python.exe scripts/validate_windows_installation.py --installer "installers/NaNoBO-$version-windows-x64-setup-unsigned.exe" --output validation/windows-installation --build-record "installers/WINDOWS_BUILD-$version.json"
+      - name: Record Windows runtime acceptance
         run: |
           @'
-          ## Windows build only
-          The native x64 EXE and ZIP were compiled, required packaged files were checked,
-          and archive CRCs / SHA-256 values were computed.
-          As requested, this workflow does **not** launch NaNoBO or its workers,
-          run model / GUI tests, or install / uninstall the application.
-          Windows runtime behavior remains unverified; the user will test it.
+          ## Native Windows runtime verified
+          Source regressions and the real frozen Gryffin, Atlas and BoTorch workers passed.
+          The generated installer was installed into a Chinese/spaces path and its installed
+          model workflows, Qt handoff, CSV/XLS/XLSX readers and PNG/PDF/SVG exports passed.
+          Uninstallation passed and the separately saved synthetic user project was preserved.
+          These are synthetic software acceptance checks, not wet-lab or every-PC validation.
+          The installer is unsigned. Artifacts are uploaded only after these checks pass.
           '@ >> $env:GITHUB_STEP_SUMMARY
       - uses: actions/upload-artifact@v7.0.2
         with:
-          name: NaNoBO-${{ steps.version.outputs.version }}-windows-x64-build-only
+          name: NaNoBO-${{ steps.version.outputs.version }}-windows-x64-validated
           path: installers/*
           if-no-files-found: error
           compression-level: 0
@@ -101,7 +118,7 @@ jobs:
   release:
     name: Attach Windows files to a draft release
     needs: build
-    if: ${{ github.event_name == 'push' || inputs.publish_draft }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_draft }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -113,7 +130,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v8.0.2
         with:
-          name: NaNoBO-${{ needs.build.outputs.version }}-windows-x64-build-only
+          name: NaNoBO-${{ needs.build.outputs.version }}-windows-x64-validated
           path: installers
       - name: Create or reuse the matching draft without publishing it
         shell: bash
@@ -136,7 +153,7 @@ jobs:
             cat > notes.md <<'NOTES'
           Native Windows x64 build of the same NaNoBO source, Chinese/English tutorials and practice data.
 
-          Windows status: **BUILD ONLY / RUNTIME UNVERIFIED**. Application, model, GUI and installer behavior have not been tested on Windows; the user will perform those checks. The workflow checks packaged files and archive integrity only. The EXE is unsigned.
+          Windows status: **RUNTIME VALIDATED**. Source regressions, real frozen models, installed Qt workflows, file imports/exports and uninstall/project preservation passed native Windows synthetic acceptance. This does not establish wet-lab performance or compatibility with every PC. The EXE is unsigned.
 
           Original scientific methods, authors, licenses and citation instructions remain in ACKNOWLEDGMENTS.md, THIRD_PARTY_NOTICES.md and REFERENCES.bib.
           NOTES

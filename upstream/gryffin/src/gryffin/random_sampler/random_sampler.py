@@ -167,18 +167,21 @@ class RandomSampler(Logger):
 
     def _perturb_single_parameter(self, ref_value, num, param_type, specs, scale, perturb_categorical=False):
         if param_type in ['continuous', 'discrete']:
+            # NaNoBO fix: discrete samples are zero-based option indices, not user values.
+            low = 0 if param_type == 'discrete' else specs['low']
+            high = specs['high'] - specs['low'] if param_type == 'discrete' else specs['high']
             # draw uniform within unit range
             sampled_values = self._draw_continuous(-scale, scale, (num, 1))
             # scale to actual range
-            sampled_values *= specs['high'] - specs['low']
+            sampled_values *= high - low
             # if discrete, we round to nearest integer
             if param_type == 'discrete':
                 sampled_values = np.around(sampled_values, decimals=0)
             # add +/- 5% perturbation to sample
             perturbed_sample = ref_value + sampled_values
             # make sure we do not cross optimization boundaries
-            perturbed_sample = np.where(perturbed_sample < specs['low'], specs['low'], perturbed_sample)
-            perturbed_sample = np.where(perturbed_sample > specs['high'], specs['high'], perturbed_sample)
+            perturbed_sample = np.where(perturbed_sample < low, low, perturbed_sample)
+            perturbed_sample = np.where(perturbed_sample > high, high, perturbed_sample)
         elif param_type == 'categorical':
             # i.e. do not perturb
             if perturb_categorical is False:

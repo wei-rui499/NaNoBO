@@ -1,0 +1,106 @@
+{
+  "product": "NaNoBO",
+  "version": "0.2.3",
+  "windows_hotfix": 1,
+  "date": "2026-11-02",
+  "status": "WINDOWS_HOTFIX1_RUNTIME_VALIDATED",
+  "os": "Windows 11 Pro x64 10.0.26200",
+  "data_status": "SYNTHETIC",
+  "release_url": "https://github.com/wei-rui499/NaNoBO/releases/tag/v0.2.3-windows-hotfix1",
+  "portable": {
+    "passed": 48,
+    "total": 48
+  },
+  "installed": {
+    "passed": 48,
+    "total": 48
+  },
+  "gui": {
+    "passed": 13,
+    "total": 13,
+    "figure_exports": 15,
+    "formats": [
+      "CSV",
+      "XLS",
+      "XLSX",
+      "PNG",
+      "PDF",
+      "SVG"
+    ]
+  },
+  "regressions": {
+    "tests": 146,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 20,
+    "passed": 126,
+    "skip_reasons": {
+      "Requires real scientific backends": 3,
+      "opt-in real scientific models": 15,
+      "This test host cannot create symlinks": 1,
+      "The Windows test user cannot create symbolic links": 1
+    }
+  },
+  "install": {
+    "exit_code": 0,
+    "executable_present": true
+  },
+  "uninstall": {
+    "exit_code": 0,
+    "executable_removed": true,
+    "user_project_preserved": true
+  },
+  "distribution_audit": {
+    "ok": true,
+    "compared_files": 9175,
+    "installed_differences": [],
+    "portable_differences": [],
+    "portable_extras": [],
+    "executable_sha256": "15a931fa7dc054d3cbcb9ca0e0989367a6df4be5237a0b9e2f6ac44e66191a1d"
+  },
+  "patches": {
+    "gryffin.gryffin": {
+      "source": "upstream/gryffin/src/gryffin/gryffin.py",
+      "sha256": "d87bbde3cacfba27e81fa707f6c040943342a95d3f98df128c9b1fd49ebfdbbc"
+    },
+    "gryffin.random_sampler.random_sampler": {
+      "source": "upstream/gryffin/src/gryffin/random_sampler/random_sampler.py",
+      "sha256": "fa3ceb64b73d59107c3b78162a23db4872d45d88a8a3d4cfa8a6cc5da6f580fc"
+    },
+    "olympus": {
+      "source": "upstream/olympus-runtime/src/olympus/__init__.py",
+      "sha256": "e1282e25b66e48d6257ca688abf406f96a743a57e000bac474e1bec6d9a2530b"
+    },
+    "olympus.campaigns": {
+      "source": "upstream/olympus-runtime/src/olympus/campaigns/__init__.py",
+      "sha256": "2631ea19eee306ab5d4aafc01be72ba2d6a0bb552a3e9a6f2674c03c74198d2e"
+    },
+    "chembo.worker": {
+      "source": "src/chembo/worker.py",
+      "sha256": "f620fc1a83bbad9ad97899add7573f579e8ff9bf268b23b978bb18f9c8573f20"
+    },
+    "chembo.engine": {
+      "source": "src/chembo/engine.py",
+      "sha256": "22848ba898b4809ce9c5ad1901911cd2dfa19940b1253d24d45905c0076c1dfe"
+    }
+  },
+  "artifacts": [
+    {
+      "name": "NaNoBO-0.2.3-windows-x64-setup-hotfix1-unsigned.exe",
+      "bytes": 393959610,
+      "sha256": "9eb6dbc25258776914cd6a11f3edf60314c528c4e9be6d59d43ade90ae9cc06b"
+    },
+    {
+      "name": "NaNoBO-0.2.3-windows-x64-portable-hotfix1-unsigned.zip",
+      "bytes": 455556369,
+      "sha256": "d20c51727c263811ea9bc23f49cec091e1bb32b723fdf48202c7cab2c283849e"
+    }
+  ],
+  "signature": "NotSigned",
+  "scope": [
+    "Windows 11 x64 only; no clean VM or other PC/Windows 10/ARM64 matrix",
+    "Unsigned installer may trigger reputation or institutional-policy restrictions",
+    "Synthetic functional acceptance, not wet-lab performance or all possible data combinations",
+    "The original v0.2.3 Windows attachments remain historical; this publication uses a separate Windows Hotfix1 tag."
+  ]
+}

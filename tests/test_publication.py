@@ -2,6 +2,7 @@
 import importlib.util
 from pathlib import Path
 import zipfile
+import pytest
 
 
 def load_script(name):
@@ -15,7 +16,12 @@ def test_source_archive_keeps_citations_and_excludes_private_metadata(tmp_path,m
     script=load_script('source_archive')
     for name in ['LICENSE','.gitignore','CITATION.cff','REFERENCES.bib','ACKNOWLEDGMENTS.md','src/chembo/app.py','docs/project-inventory/private.txt','src/.DS_Store','src/._app.py','upstream/gryffin/src/gryffin/kernel.pyxbldc']:
         path=tmp_path/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text('fixture')
-    (tmp_path/'src/link.py').symlink_to(tmp_path/'LICENSE')
+    try:
+        (tmp_path/'src/link.py').symlink_to(tmp_path/'LICENSE')
+    except OSError as exc:
+        if getattr(exc, 'winerror', None) == 1314:
+            pytest.skip('The Windows test user cannot create symbolic links')
+        raise
     monkeypatch.setattr(script,'ROOT',tmp_path)
     target=script.main()
     with zipfile.ZipFile(target) as archive:

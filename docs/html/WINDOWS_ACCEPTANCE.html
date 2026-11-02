@@ -1,0 +1,62 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Windows Hotfix1 验收说明 · NaNoBO</title><style>*{box-sizing:border-box}body{margin:0;background:#f7faf8;color:#243d33;font:16px/1.8 -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif}header{padding:20px 5%;background:#e8f2ec;border-bottom:1px solid #ccdcd1}header a{margin-right:24px}a{color:#176b50}a:hover{color:#104331}main{max-width:1280px;margin:28px auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;padding:0 24px}nav{position:sticky;top:20px;max-height:90vh;overflow:auto;font-size:14px}nav a{display:block;text-decoration:none;padding:5px 10px;border-left:2px solid #d5e4db}nav .sub{padding-left:24px}article{min-width:0;background:white;border:1px solid #dce7df;border-radius:12px;padding:26px 36px}h1,h2,h3{line-height:1.35;scroll-margin-top:20px}h1{font-size:30px}h2{margin-top:2em;border-bottom:1px solid #dce7df;padding-bottom:10px}h3{margin-top:1.7em}table{border-collapse:collapse;display:block;overflow-x:auto;font-size:14px;width:100%;margin:18px 0}th,td{border:1px solid #d5e1d9;padding:9px 12px;text-align:left}th{background:#edf5ef}pre{overflow:auto;background:#f1f5f2;padding:14px;border-radius:6px}code{font-family:ui-monospace,Consolas,monospace;font-size:.91em}img{max-width:100%;height:auto}blockquote{margin-left:0;border-left:4px solid #6c9d83;padding:8px 18px;background:#f3f8f4}footer{margin-top:32px;color:#64786b;font-size:13px;border-top:1px solid #dce7df;padding-top:14px}@media(max-width:850px){main{display:block;padding:0 12px}nav{position:static;max-height:270px;margin-bottom:20px}article{padding:20px}header a{display:inline-block;margin-right:16px}}</style><header><strong>NaNoBO</strong> &nbsp; <a href="TUTORIAL.zh-CN.html">简体中文</a><a href="TUTORIAL.en.html">English</a><a href="index.html">教程首页 / Help home</a></header><main><nav aria-label="Table of contents"><a class="" href="#原版问题与根因">原版问题与根因</a><a class="" href="#验收内容">验收内容</a><a class="" href="#交付范围">交付范围</a></nav><article><h1 id="windows-hotfix1-验收说明">Windows Hotfix1 验收说明</h1>
+<p><a href="https://github.com/wei-rui499/NaNoBO/releases/tag/v0.2.3-windows-hotfix1">下载 Windows Hotfix1</a> · <a href="https://github.com/wei-rui499/NaNoBO/blob/main/docs/WINDOWS_ACCEPTANCE-hotfix1.json">机器可读验收摘要</a></p>
+<p>本次只验证 Windows。基线为 GitHub v0.2.3，提交 <code>9d0b2d6ead88282a0cc774200c957d3016e2e9d1</code>。基线便携包 SHA-256 为 <code>461cf348b3dc49da82646a59df90045cd464913c2cfea24883204a9364fc6825</code>。所有输入均为合成数据，实际模型由应用自带的 EXE 执行。</p>
+<h2 id="原版问题与根因">原版问题与根因</h2>
+<p>原版 Windows 原生模型验收 39 项中仅 32 项通过：Gryffin 四项、Atlas 三项失败。安装成功、文件齐全和 BoTorch 可运行不足以证明整个软件开箱即用。</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>实际原因</th>
+<th>修复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gryffin 完成计算后报错</td>
+<td>Windows 无 Unix resource，统计函数返回 None，但 build_surrogate 与 recommend 的汇总日志仍以数值格式化</td>
+<td>两条真实路径都在统计不可用时输出 unavailable，不改变模型计算</td>
+</tr>
+<tr>
+<td>Gryffin 有限整数域推荐越界</td>
+<td>扰动采样使用零起始的选项编号，但按用户的原始整数上下限裁剪</td>
+<td>整数扰动按 0 到 high-low 裁剪；连续变量仍使用原始上下限</td>
+</tr>
+<tr>
+<td>Atlas 无法导入</td>
+<td>Dataset 加载 ParameterSpace 时提前导入 Campaign，Campaign 和 data_transformer 又导入尚未初始化的 Dataset</td>
+<td>campaigns 包延迟导出 Campaign，保留原公开类名</td>
+</tr>
+<tr>
+<td>Atlas 中文 Windows 管道报错</td>
+<td>欢迎日志含 GBK 不能编码的 Unicode 字符，计算进程因此异常退出</td>
+<td>worker 启动时将 stdout/stderr 配置为 UTF-8，并处理无控制台情况</td>
+</tr>
+<tr>
+<td>Atlas 单条连续推荐返回已测点</td>
+<td>上游梯度优化未识别 KnownConstraints 容器，最终优化未执行已测/待办排除</td>
+<td>统一预设为 Atlas 原生 Pymoo 采集优化器；保留相同 GP 与采集函数</td>
+</tr>
+<tr>
+<td>Atlas 成功仍要求安装 seaborn</td>
+<td>Olympus 顶层提前加载未使用的 Plotter 和基准运行器</td>
+<td>延迟加载两项可选接口；NaNoBO 自带绘图不需要 seaborn</td>
+</tr>
+<tr>
+<td>自定义深目录安装失败</td>
+<td>Inno Setup 6 在复制长路径依赖许可证时 MoveFile 失败并回滚</td>
+<td>安装器改用支持扩展路径的 Inno Setup 7；保留全部许可证，不要求用户改系统设置</td>
+</tr>
+</tbody>
+</table>
+<p>修复均保留在 bootstrap 重建流程中。新增回归测试覆盖内存日志的两条路径、延迟导出及缓存、补丁幂等、GBK 流输入的 UTF-8 输出。</p>
+<h2 id="验收内容">验收内容</h2>
+<p><code>scripts/validate_windows_runtime.py</code> 通过实际冻结工作进程覆盖三个引擎的已有数据训练、无数据初始设计、类别与整数混合变量、批量推荐、教程四类工作流、待办排除和补录、留一验证、多目标、分类、约束、复现与数据敏感性，以及非法输入和不支持组合的拒绝。成功案例不允许隐藏缺失模块报错，也不允许用其他模型顶替。</p>
+<p><code>scripts/validate_windows_installation.py</code> 安装到中文与空格路径后，清除开发用环境变量，并只保留系统 PATH。再次运行实际模型，再运行 Qt 界面到工作进程的交接、表格导入及图表导出，最后卸载并核对项目文件保留。测试控制器使用外部 Python 收集结果；用户程序的计算依赖全部来自安装目录。</p>
+<p>此前人工界面验收还检查了项目保存重开、待办导出与补录、CSV/Excel 导入、留一图、分类概率和混淆矩阵、三目标 Pareto、预测表和图表导出、计算取消与数据保留、离线教程。</p>
+<p>本次本机实际系统为 Windows 11 Pro x64 10.0.26200。具体最终通过数、安装器和 ZIP 的 SHA-256、原始测试记录位置见交付目录中的 <code>WINDOWS_ACCEPTANCE-hotfix1.md</code> 与 <code>WINDOWS_ACCEPTANCE-hotfix1.json</code>。早期失败及中间构建记录保留在 validation/，不能冒充最终包的验收证据。</p>
+<h2 id="交付范围">交付范围</h2>
+<p>三个选项是真实 Gryffin、Atlas 与 BoTorch 的预设算法配置，由用户实验数据拟合。用户不需要安装 Python、设置环境或申请 API 账户。安装器未签名；Windows 10、ARM64、其他电脑及安全策略尚未实测。此处不承诺所有 Windows 电脑无提示安装，也不代表湿实验性能得到验证。</p>
+<p>修复版发布在 <a href="https://github.com/wei-rui499/NaNoBO/releases/tag/v0.2.3-windows-hotfix1">Windows Hotfix1</a>，该页提供安装器、便携版、对应源码、脱敏验收资料和 SHA-256。原 v0.2.3 的 Windows 附件保留作历史基线，日常使用请下载 Hotfix1。</p>
+<p>Windows 源码重建配置已加入运行验收门禁。本次已验收安装包的本机测试记录与后续 GitHub Actions 源码重建是独立记录；远程构建状态以 Actions 实际结果为准。</p>
+<footer>NaNoBO · 离线教程 / Offline guide · 教学实验数据均为模拟 / Teaching data are synthetic.</footer></article></main></html>

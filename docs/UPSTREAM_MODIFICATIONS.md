@@ -1,6 +1,6 @@
 # 固定来源及修改记录
 
-核对日期：2026-10-31。
+核对日期：2026-11-02。
 
 | 来源 | 固定提交 | 本地处理 |
 |---|---|---|
@@ -10,6 +10,14 @@
 | AccelerationConsortium/bo-mcp | 56d590b91ac120d0f22a3e41e770843d271808cd | 兼容路径保留 bo-engine 的原生 BoTorchBackend；独立 Python 3.13 进程。v0.2 增强工作流在 NaNoBO modeling.py 中直接使用 BoTorch / scikit-learn；未把可选 BayBE/RDKit/MCP 服务一起装入 |
 
 没有改写模型公式，没有拿随机搜索代替训练失败。类别描述符等未接入能力见 README。
+
+Windows Hotfix1 补齐 Gryffin 两个计算路径中的内存统计日志：系统不能提供统计时输出 unavailable，避免计算完成后对 None 做数值格式化而丢失整批建议。Olympus 的 campaigns 包延迟导出 Campaign，允许 Dataset 先加载 ParameterSpace，切断包括 data_transformer 在内的循环依赖；未使用的 Olympus 基准运行器和 Plotter 同样延迟加载，日常模型推荐不要求安装 seaborn。公开类名及显式导入接口保留。
+
+Gryffin 整数变量的扰动按内部零起始编号范围裁剪，修复原实现误用用户上下限导致的越界及遗漏选项；连续变量的边界处理保持一致。新增正、负和零起始整数边界回归，并用实际冻结模型验证有限域和最大批量。
+
+Atlas 单条连续推荐同样固定使用其原生 Pymoo 采集优化器，避免上游梯度路径未识别 KnownConstraints 容器而返回已测边界点；GP 与采集函数不变，不切换引擎或采用随机补救。
+
+NaNoBO 的经典工作进程在启动时把现有 stdout/stderr 管道配置为 UTF-8，并处理无控制台的情况，避免 Atlas 的 Unicode 日志在中文 Windows 的 GBK 默认编码下中断计算。修复随 bootstrap 重建流程和冻结模型验收一起保留。
 
 公开源码省略 Gryffin 上游遗留的两个 `.pyxbldc` 文件。它们是 Python 2.7 生成的构建配置字节码缓存，包含上游开发机器路径；当前构建使用保留的 `.pyx`、`.pyxbld` 和 `.c` 源文件，不依赖这些缓存。原始缓存仅保存在本地历史档案，不随公开源码分发。
 

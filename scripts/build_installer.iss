@@ -1,4 +1,7 @@
-; Build on native Windows with Inno Setup 6. No WSL or user Python is required.
+; Inno Setup 7 supports deep dependency paths without user registry changes.
+#if VER < EncodeVer(7, 0, 0)
+  #error Inno Setup 7 or newer is required for long-path installation support.
+#endif
 #ifndef AppVersion
   #define AppVersion "0.2.3"
 #endif
@@ -7,6 +10,7 @@
 #endif
 
 [Setup]
+SetupArchitecture=x64
 AppId={{B04C2468-D93F-4641-8D6F-CB7A78600EB1}
 AppName=NaNoBO
 AppVersion={#AppVersion}

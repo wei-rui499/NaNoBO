@@ -6,14 +6,22 @@ import traceback
 from pathlib import Path
 
 
+def prepare_streams():
+    """Qt pipes use UTF-8 logs, including on Windows systems with a GBK locale."""
+    for name in ("stdout", "stderr"):
+        stream = getattr(sys, name)
+        if stream is None:
+            setattr(sys, name, open(os.devnull, "w", encoding="utf-8"))
+        elif callable(getattr(stream, "reconfigure", None)):
+            stream.reconfigure(encoding="utf-8", errors="replace")
+
+
 def main(args):
     if len(args) != 2:
         return 2
-    # Windows windowed executables have no attached console; upstream loggers expect streams.
-    if sys.stdout is None:
-        sys.stdout = open(os.devnull, "w", encoding="utf-8")
-    if sys.stderr is None:
-        sys.stderr = open(os.devnull, "w", encoding="utf-8")
+    # Windowed EXEs can have no console or a GBK-encoded QProcess pipe.
+    # Atlas logs Unicode characters before fitting; neither case may fail a model.
+    prepare_streams()
     request, result = [Path(value).resolve() for value in args]
     try:
         # All engine scratch files belong to this calculation, including in a frozen app.

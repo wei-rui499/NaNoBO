@@ -1,42 +1,28 @@
-# Windows 原生安装包与构建说明
+# Windows 安装与验收
 
-[简体中文教程](TUTORIAL.zh-CN.md) · [English tutorial](TUTORIAL.en.md) · [下载页](https://github.com/wei-rui499/NaNoBO/releases)
+[简体中文教程](TUTORIAL.zh-CN.md) · [English tutorial](TUTORIAL.en.md) · [Windows 验收说明](WINDOWS_ACCEPTANCE.md)
 
-## 给使用者：下载哪个文件
+[Windows Hotfix1 下载与完整验收资料](https://github.com/wei-rui499/NaNoBO/releases/tag/v0.2.3-windows-hotfix1)：推荐普通用户下载名称带 `setup-hotfix1` 的 EXE，安装后直接打开。无需运行下文的维护者命令。
 
-Windows 版使用与 Mac 相同的应用源码、模型适配、双语教程和练习数据，直接在原生 Windows 上运行。使用者无需安装 WSL、Ubuntu、Python、Conda、Docker 或编译器，也不要求 GPU。
+## 使用者安装
 
-| 文件 | 用途 |
-| --- | --- |
-| `NaNoBO-0.2.3-windows-x64-setup-unsigned.exe` | 普通用户安装器；安装到自己的用户目录，可建立开始菜单和桌面快捷方式 |
-| `NaNoBO-0.2.3-windows-x64-portable-unsigned.zip` | 便携版；完整解压后打开 `NaNoBO/NaNoBO.exe`，保留旁边的 `_internal` 文件夹 |
-| `WINDOWS_BUILD-0.2.3.json` | 构建记录、文件清单、依赖版本及本次验证边界 |
-| `SHA256SUMS-windows-0.2.3.txt` | 下载文件的 SHA-256 校验值 |
-| `NaNoBO-0.2.3-windows-source.zip` | 该 Windows 构建对应的应用与适配源码 |
-| `NaNoBO-0.2.3-windows-library-sources.zip` | 适用第三方依赖的对应版本源码和校验记录 |
+Windows Hotfix1 修复了原 0.2.3 测试包中的 Gryffin 与 Atlas 运行错误。使用对应的 `NaNoBO-0.2.3-windows-x64-setup-hotfix1-unsigned.exe`，按中文安装向导完成安装后，从开始菜单打开 NaNoBO。便携版需要完整解压 ZIP 后打开 `NaNoBO/NaNoBO.exe`，保留旁边的 `_internal` 文件夹。
 
-安装后，从帮助菜单打开“中文使用教程”或“English tutorial”，通过“导出教程练习数据…”把练习文件复制到自己的实验文件夹。教程、练习数据和计算引擎均随程序安装，日常使用不需网络或 API 账户。
+应用自带 Python、CPU 计算库、三个预设引擎、双语教程和练习数据。普通使用者无需安装 Python、Conda、WSL、编译器，不需要 API 账户，也不需要设置环境变量。首次练习可从帮助菜单导出教程数据，再按照中文教程导入、生成建议、补录结果和查看分析。
 
-本次按使用者要求，**只在 Windows 编译和封装，不启动应用，不进行模型、GUI、安装／卸载功能测试**。下载页和构建记录标为 **BUILD ONLY / RUNTIME UNVERIFIED**，Windows 实际运行由使用者自行验收。Mac 的功能验收不作为 Windows 已验证的证据。
+Gryffin、Atlas 和 BoTorch 是本地运行的真实算法，由用户的实验数据拟合；不是预训练的大语言模型。可选功能由界面按引擎支持范围检查，不能执行的组合会提示用户，不会换成其他模型继续计算。
 
-安装器目前未进行代码签名；若受机构终端策略限制，按所在机构的软件安装流程处理。Windows ARM64 上运行 x64 程序未纳入本次兼容声明。当前目标为 Windows 10/11 x64；较老系统或受限环境的运行情况待实际反馈。
+原 GitHub v0.2.3 附件曾标记为 BUILD ONLY / RUNTIME UNVERIFIED，不能把它当作 Hotfix1。应核对实际文件名及随包验收记录。Hotfix1 的本机验收范围为 Windows 11 Pro x64；Windows 10、ARM64、其他硬件和机构策略未实测。安装器仍未签名，尚不能保证所有电脑首次安装都没有系统信誉提示。
 
-## GitHub 如何构建并保存 Windows 版本
+## 修复与验证依据
 
-工作流文件是 [`.github/workflows/windows-release.yml`](../.github/workflows/windows-release.yml)，名称为 **Windows native installer (build only)**。
+详见 [Windows 验收说明](WINDOWS_ACCEPTANCE.md)。核心修复包括 Gryffin 对不可用内存统计的日志处理、Olympus 导入循环与非必要可视化依赖的延迟加载、Atlas 日志管道的 UTF-8 编码。
 
-1. `main` 有新提交时自动构建，也可在仓库 **Actions → Windows native installer (build only) → Run workflow** 手动启动。
-2. 在原生 `windows-2022` x64 runner 上建立 Python 3.10 经典环境和 Python 3.13 现代环境。Gryffin 的两个 Cython 扩展由目标系统的 Microsoft C++ 工具链编译，PyTorch 从官方 CPU 轮子源安装。
-3. 分别用 PyInstaller 封装现代工作进程与桌面应用；两套 Python 运行时保持隔离，避免 DLL 或模型依赖版本混用。随后把同一份离线教程和练习文件放入应用。
-4. 仅检查打包目录中所需的 EXE、DLL、C 扩展、Qt 插件、许可证、双语教程和至少四个练习项目是否存在；生成 Inno Setup 安装器和便携 ZIP，校验 ZIP CRC 与文件 SHA-256。**不执行应用或安装器。**
-5. 构建产物保存在 `NaNoBO-0.2.3-windows-x64-build-only` Artifact 中，保留 14 天。只有上一步成功才进入产物上传和 Release 附件步骤。
-6. 发布步骤只新建或复用对应源码提交的 **Draft / Pre-release**，附加 Windows 文件，绝不自动把草稿公开，也不覆盖已经公开的同版本 Release。尚未创建标签的草稿可更新到本次修正构建的精确提交；已经存在的标签必须与构建提交一致。维护者完成本次发布整理后统一公开。若已有标签，必须指向本次构建的提交。
+安装验收使用合成数据。除了直接运行便携版实际引擎，还从安装器安装到带中文和空格的目录，运行安装后的模型和 Qt 工作流，检查 CSV/XLS/XLSX、PNG/PDF/SVG 导出以及卸载后项目保留。软件测试不代表实验结果或科研结论得到验证。
 
-工作流启动、排队或配置文件存在，都不代表 EXE 已经构建成功；以 Actions 的最终状态和实际下载附件为准。构建完成也不代表 Windows 应用功能已验证。
+## 维护者重建
 
-## 维护者在 Windows 本机重建
-
-需要原生 Windows x64、Python 3.10 和 3.13、Microsoft C++ Build Tools（含 Windows SDK），以及 Inno Setup 6.5+。这些是发布端工具，最终使用者不需要安装。以下命令在仓库根目录的 PowerShell 中执行：
+发布端需要原生 Windows x64、Python 3.10 与 3.13、Microsoft C++ Build Tools 和 Inno Setup 7+。普通使用者不需要这些工具。经典与现代运行时保持隔离，模型公式和上游来源保留。旧 Inno Setup 6 在深目录下复制依赖许可证时会触及 MAX_PATH；新版安装器使用 Inno Setup 7 的扩展路径支持，无需用户修改注册表或挪动文件。
 
 ```powershell
 $env:PYTHONUTF8 = '1'
@@ -54,25 +40,15 @@ py -3.13 -m venv .venv-modern
 
 .venv\Scripts\python.exe scripts\build.py --bundle-only
 .venv\Scripts\python.exe scripts\fetch_library_sources.py
-.venv\Scripts\python.exe scripts\package_windows.py --compiler 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
+.venv\Scripts\python.exe scripts\validate_windows_runtime.py --bundle dist/NaNoBO --output validation/windows-portable --fail-fast
+.venv\Scripts\python.exe scripts\package_windows.py --compiler 'C:\Program Files\Inno Setup 7\ISCC.exe'
+.venv\Scripts\python.exe scripts\validate_windows_installation.py --installer installers/NaNoBO-0.2.3-windows-x64-setup-unsigned.exe --output validation/windows-installation --build-record installers/WINDOWS_BUILD-0.2.3.json
 ```
 
-产物位于 `installers/`。`package_windows.py` 只编译、封装和检查文件完整性；不会启动应用、worker 或安装器。Mac 的锁文件包含 Mac 平台解析结果，不能直接作为 Windows 全量依赖锁使用；本次实际 Windows 依赖版本会写入 `WINDOWS_BUILD-*.json`。
+`package_windows.py` 只封装和校验文件，不能单独作为运行验收。`validate_windows_runtime.py` 和 `validate_windows_installation.py` 必须成功，才能把构建记录标为已验证。工作流 [windows-release.yml](../.github/workflows/windows-release.yml) 已加入这些门禁，任一模型或安装后界面检查失败便不上传发布产物。工作流修改仍须提交后在 GitHub 上实际运行；文件存在不等于远程构建已经通过。
 
-安装器可选择简体中文或英文。官方简体中文消息文件固定保存在 `scripts/localizations/`，不依赖构建机器是否预装中文语言包；原作者署名、Inno Setup 许可、固定上游提交及 SHA-256 一并保留在该目录。
+本次本机 Hotfix1 从已校验 SHA-256 的官方便携版保留原生科学库，使用同版本 CPython 3.10 重新编译六个修复模块，并逐项核对冻结模块。工具是 `scripts/repack_windows_hotfix.py`，来源及修复源码摘要记录在 `WINDOWS_HOTFIX.json`。它不需要普通用户运行。长期发布应使用以上完整源码重建流程。
 
-经典环境保留 Gryffin 所需的 NumPy 1.23.5。DEAP 的 moocore 依赖在 Windows 固定为支持该 NumPy 版本的 0.1.10，下载脚本按实际安装版本附带对应源码；不把 Mac 环境中已有的 0.3.2 对应源码冒充为 Windows 版本。Gryffin 的 Cython 代码在临时文件中重生成后原子替换，既保留修改声明，也允许从已带声明的源码快照再次构建。
+## 来源与许可
 
-## 使用者自行测试时如何反馈
-
-建议先用教程的合成练习，保存文件到安装目录以外的工作文件夹。反馈时说明 Windows 版本、NaNoBO 版本、所用教程步骤、弹窗内容和最小可复现的合成项目。请先移除真实实验数据、个人目录与其他敏感信息。若问题涉及计算，在界面保留的日志中定位报错；不要为了运行程序关闭系统防护。
-
-原有 `scripts/smoke_frozen.py` 和 `--verify-ui` 是可选维护工具，本次 Windows 工作流没有调用。源码中保留这些工具不表示本次 Windows 已经运行过这些检查。
-
-## 科研来源与许可
-
-Gryffin、Atlas、BoTorch、scikit-learn 等原始方法的作者署名见 [公开致谢](../ACKNOWLEDGMENTS.md)；按实际使用的方法引用，见 [如何引用](HOW_TO_CITE.md)。完整许可证、修改说明及适用依赖的对应源码随应用或 Release 提供，见 [第三方说明](../THIRD_PARTY_NOTICES.md)。教程或安装包不会改变上游算法归属。
-
-技术依据：[PyInstaller 目标系统构建要求](https://pyinstaller.org/en/stable/operating-mode.html)、[Windows DLL 搜索路径](https://pyinstaller.org/en/stable/common-issues-and-pitfalls.html)、[Inno Setup 普通用户安装](https://jrsoftware.org/ishelp/topic_setup_privilegesrequired.htm)、[GitHub Windows runner 软件清单](https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md)。
-
-Gryffin 原有内存统计工具使用 Unix 专有的 `resource` 模块。本分发将该统计改为可选：系统没有此模块时明确显示不可用，不阻止 Windows 导入优化引擎，也不改模型计算公式。
+原作者、方法和引用见 [公开致谢](../ACKNOWLEDGMENTS.md)、[如何引用](HOW_TO_CITE.md) 和 [第三方说明](../THIRD_PARTY_NOTICES.md)。上游修改见 [修改记录](UPSTREAM_MODIFICATIONS.md)。安装器包含第三方许可证；适用的第三方对应源码与原官方 Windows 发布附件配套保留。

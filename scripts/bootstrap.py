@@ -131,6 +131,61 @@ def patch_olympus_metadata(text):
     return text.replace(original, original + notice + fixed)
 
 
+def patch_gryffin_memory_logging(text):
+    marker = "# NaNoBO fix: Windows has no Unix resource statistics; logging must not fail a calculation."
+    if marker in text:
+        if text.count(marker) != 2:
+            raise RuntimeError("Incomplete Gryffin memory logging patch")
+        return text
+    original = "        self.log(f'Memory usage: {GB:.0f} GB, {MB:.0f} MB, {kB:.0f} kB', 'STATS')"
+    if text.count(original) != 2:
+        raise RuntimeError("Unexpected Gryffin memory logging source")
+    fixed = ("        " + marker + "\n"
+             "        if GB is None:\n"
+             "            self.log('Memory usage: unavailable on this platform', 'STATS')\n"
+             "        else:\n    " + original)
+    return text.replace(original, fixed)
+
+
+def patch_gryffin_discrete_perturbation(text):
+    marker = "# NaNoBO fix: discrete samples are zero-based option indices, not user values."
+    if marker in text:
+        return text
+    replacements = {
+        "        if param_type in ['continuous', 'discrete']:\n": (
+            "        if param_type in ['continuous', 'discrete']:\n"
+            "            " + marker + "\n"
+            "            low = 0 if param_type == 'discrete' else specs['low']\n"
+            "            high = specs['high'] - specs['low'] if param_type == 'discrete' else specs['high']\n"),
+        "            sampled_values *= specs['high'] - specs['low']": "            sampled_values *= high - low",
+        "            perturbed_sample = np.where(perturbed_sample < specs['low'], specs['low'], perturbed_sample)": "            perturbed_sample = np.where(perturbed_sample < low, low, perturbed_sample)",
+        "            perturbed_sample = np.where(perturbed_sample > specs['high'], specs['high'], perturbed_sample)": "            perturbed_sample = np.where(perturbed_sample > high, high, perturbed_sample)",
+    }
+    for original, fixed in replacements.items():
+        if text.count(original) != 1:
+            raise RuntimeError("Unexpected Gryffin discrete perturbation source")
+        text = text.replace(original, fixed)
+    return text
+
+
+def patch_olympus_campaign_package(text):
+    marker = "# NaNoBO fix: importing ParameterSpace for Dataset must not eagerly import Campaign and re-enter Dataset."
+    if marker in text:
+        return text
+    original = "from olympus.campaigns.campaign import Campaign\n"
+    if text.count(original) != 1:
+        raise RuntimeError("Unexpected Olympus campaign package source")
+    return text.replace(original, "") + (
+        "\n" + marker + "\n"
+        '__all__ = ["Campaign", "Observations", "ParameterSpace"]\n\n\n'
+        "def __getattr__(name):\n"
+        '    if name == "Campaign":\n'
+        "        from olympus.campaigns.campaign import Campaign\n"
+        "        globals()[name] = Campaign\n"
+        "        return Campaign\n"
+        '    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")\n')
+
+
 def patch_snapshot_version(text, package):
     snapshot = "0+chembo." + PINS[package][1][:7]
     text = text.replace("version=versioneer.get_version()", f"version='{snapshot}'")
@@ -141,16 +196,47 @@ def patch_snapshot_version(text, package):
     return text
 
 
+def patch_olympus_optional_plotter(text):
+    marker = "# NaNoBO fix: the desktop uses its own plots; an unused optional Plotter must not request seaborn during model startup."
+    if marker in text:
+        return text
+    original = "from .plotter import Plotter\n"
+    benchmark = "from .olympus import Olympus\n"
+    if text.count(original) != 1 or text.count(benchmark) != 1:
+        raise RuntimeError("Unexpected Olympus optional plotter source")
+    return text.replace(original, "").replace(benchmark, "") + (
+        "\n" + marker + "\n"
+        "def __getattr__(name):\n"
+        '    if name == "Olympus":\n'
+        "        from .olympus import Olympus\n"
+        "        globals()[name] = Olympus\n"
+        "        return Olympus\n"
+        '    if name == "Plotter":\n'
+        "        from .plotter import Plotter\n"
+        "        globals()[name] = Plotter\n"
+        "        return Plotter\n"
+        '    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")\n\n\n'
+        '__all__ = [name for name in globals() if not name.startswith("_")] + ["Olympus", "Plotter"]\n')
+
+
 def prepare_classic_sources():
     """Prepare the complete pinned source snapshot without installing packages."""
     gryffin = ROOT / "upstream" / "gryffin"
     memory_info = gryffin / "src/gryffin/utilities/infos.py"
     memory_info.write_text(patch_gryffin_memory_info(memory_info.read_text(encoding="utf-8")), encoding="utf-8")
+    planner_source = gryffin / "src/gryffin/gryffin.py"
+    planner_source.write_text(patch_gryffin_memory_logging(planner_source.read_text(encoding="utf-8")), encoding="utf-8")
+    sampler_source = gryffin / "src/gryffin/random_sampler/random_sampler.py"
+    sampler_source.write_text(patch_gryffin_discrete_perturbation(sampler_source.read_text(encoding="utf-8")), encoding="utf-8")
     for stem in ("kernel_evaluations", "kernel_prob_reshaping"):
         source = gryffin / "src" / "gryffin" / "bayesian_network" / (stem + ".pyx")
         regenerate_extension(source)
     for package in ("gryffin", "olympus-runtime", "atlas"):
         if package == "olympus-runtime":
+            initializer = ROOT / "upstream" / package / "src/olympus/__init__.py"
+            initializer.write_text(patch_olympus_optional_plotter(initializer.read_text(encoding="utf-8")), encoding="utf-8")
+            campaign = ROOT / "upstream" / package / "src/olympus/campaigns/__init__.py"
+            campaign.write_text(patch_olympus_campaign_package(campaign.read_text(encoding="utf-8")), encoding="utf-8")
             for module in ("noises", "models", "planners", "surfaces", "scalarizers"):
                 source = ROOT / "upstream" / package / "src" / "olympus" / module / "__init__.py"
                 text = source.read_text(encoding="utf-8")

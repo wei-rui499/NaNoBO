@@ -12,6 +12,8 @@ NaNoBO 是给化学研究者使用的桌面实验规划工具。你告诉它“�
 
 [下载安装包](https://github.com/wei-rui499/NaNoBO/releases) · [从配套数据开始学习](docs/TUTORIAL.zh-CN.md) · [English tutorial](docs/TUTORIAL.en.md)
 
+**Windows 用户：[直接下载安装器](https://github.com/wei-rui499/NaNoBO/releases/download/v0.2.3-windows-hotfix1/NaNoBO-0.2.3-windows-x64-setup-hotfix1-unsigned.exe) · [Windows Hotfix1 发布与验收资料](https://github.com/wei-rui499/NaNoBO/releases/tag/v0.2.3-windows-hotfix1)。** 已在 Windows 11 x64 实测：便携版与安装后各 48/48 项，界面及文件检查 13/13 项。程序自带计算依赖、离线教程和练习数据；原 v0.2.3 Windows 旧包存在模型故障，请使用 Hotfix1。
+
 ![NaNoBO 桌面界面：实验条件、已完成实验、下一批实验与模型分析](docs/screenshots/NaNoBO-preview.png)
 
 ## 先花十分钟跑通一轮
@@ -33,7 +35,7 @@ NaNoBO 是给化学研究者使用的桌面实验规划工具。你告诉它“�
 | 电脑 | 使用方法与发布状态 |
 | --- | --- |
 | M 系列 Mac，macOS 14+ | 从 Releases 下载 `macOS-arm64.dmg`，打开后将 NaNoBO 拖入“应用程序”。已有经过模拟验收的安装版。 |
-| Windows 10/11，x64 | 代码、教程和打包配置已与 Mac 同步；安装器以 Releases 实际提供的 `windows-x64-setup-unsigned.exe` 为准。**Windows 实机运行待验证**，见 [Windows 构建说明](docs/WINDOWS_BUILD.md)。 |
+| Windows x64 | 使用 [Windows Hotfix1 安装器](https://github.com/wei-rui499/NaNoBO/releases/download/v0.2.3-windows-hotfix1/NaNoBO-0.2.3-windows-x64-setup-hotfix1-unsigned.exe) 或 [便携版](https://github.com/wei-rui499/NaNoBO/releases/download/v0.2.3-windows-hotfix1/NaNoBO-0.2.3-windows-x64-portable-hotfix1-unsigned.zip)。仅在 Windows 11 x64 实测，Windows 10 未实测。见 [Windows 验收说明](docs/WINDOWS_ACCEPTANCE.md) 与 [安装说明](docs/WINDOWS_BUILD.md)。 |
 | Intel Mac / Windows ARM64 | 当前没有经过验证的对应安装版。 |
 
 Mac 测试版尚未完成 Apple 公证；首次打开如被系统拦截，可按 [Apple 官方说明](https://support.apple.com/en-us/102445) 在“隐私与安全”中确认。Windows 未签名测试安装器也可能出现系统信誉提示；不要关闭系统安全保护。详细步骤见[完整教程](docs/TUTORIAL.zh-CN.md#1-安装与第一次打开)。

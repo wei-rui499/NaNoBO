@@ -75,13 +75,13 @@ def zip_tree(folder, target, prefix, compression=zipfile.ZIP_DEFLATED):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--compiler", type=Path, default=Path(os.environ.get("ProgramFiles(x86)", "C:/Program Files (x86)")) / "Inno Setup 6/ISCC.exe")
+    parser.add_argument("--compiler", type=Path, default=Path(os.environ.get("ProgramFiles", "C:/Program Files")) / "Inno Setup 7/ISCC.exe")
     parser.add_argument("--output", type=Path, default=ROOT / "installers")
     args = parser.parse_args()
     if sys.platform != "win32":
         raise SystemExit("Windows packages must be compiled on native Windows, without WSL.")
     if not args.compiler.is_file():
-        raise SystemExit("Inno Setup 6 compiler is missing; pass --compiler with its ISCC.exe path.")
+        raise SystemExit("Inno Setup 7 compiler is missing; pass --compiler with its ISCC.exe path.")
     version = app_version(ROOT)
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)

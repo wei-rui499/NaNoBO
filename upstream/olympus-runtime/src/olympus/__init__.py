@@ -51,10 +51,23 @@ from .objects import (
     ParameterDiscrete,
     ParameterVector,
 )
-from .olympus import Olympus
 from .planners import Planner, list_planners
-from .plotter import Plotter
 from .surfaces import Surface
+
+# NaNoBO fix: the desktop uses its own plots; an unused optional Plotter must not request seaborn during model startup.
+def __getattr__(name):
+    if name == "Olympus":
+        from .olympus import Olympus
+        globals()[name] = Olympus
+        return Olympus
+    if name == "Plotter":
+        from .plotter import Plotter
+        globals()[name] = Plotter
+        return Plotter
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+__all__ = [name for name in globals() if not name.startswith("_")] + ["Olympus", "Plotter"]
 
 # ===============================================================================
 

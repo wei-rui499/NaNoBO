@@ -12,6 +12,8 @@ For example: which temperature and additive should you try next to improve yield
 
 [Download installers](https://github.com/wei-rui499/NaNoBO/releases) · [Start with the practice data](docs/TUTORIAL.en.md) · [中文教程](docs/TUTORIAL.zh-CN.md)
 
+**Windows: [download the installer](https://github.com/wei-rui499/NaNoBO/releases/download/v0.2.3-windows-hotfix1/NaNoBO-0.2.3-windows-x64-setup-hotfix1-unsigned.exe) · [Windows Hotfix1 release and evidence](https://github.com/wei-rui499/NaNoBO/releases/tag/v0.2.3-windows-hotfix1).** Native Windows 11 x64 acceptance passed 48/48 checks for both the portable and installed applications, plus 13/13 GUI and file checks. Dependencies, offline tutorials and practice data are included. Use Hotfix1: the original v0.2.3 Windows attachments have model runtime defects.
+
 ![NaNoBO desktop: experiment settings, completed experiments, next batch and model analysis](docs/screenshots/NaNoBO-preview.png)
 
 ## Your first ten minutes
@@ -33,7 +35,7 @@ These numbers teach the software workflow; they are not real chemistry recipes o
 | Computer | Installation and release status |
 | --- | --- |
 | Apple Silicon Mac, macOS 14+ | Download `macOS-arm64.dmg` from Releases, open it and drag NaNoBO into Applications. An installation build has completed synthetic workflow validation. |
-| Windows 10/11, x64 | Code, tutorials and packaging are synchronized with Mac. Use the `windows-x64-setup-unsigned.exe` actually provided in Releases. **Windows runtime validation is pending**; see the [Windows build guide](docs/WINDOWS_BUILD.md). |
+| Windows x64 | Use the [Windows Hotfix1 installer](https://github.com/wei-rui499/NaNoBO/releases/download/v0.2.3-windows-hotfix1/NaNoBO-0.2.3-windows-x64-setup-hotfix1-unsigned.exe) or [portable ZIP](https://github.com/wei-rui499/NaNoBO/releases/download/v0.2.3-windows-hotfix1/NaNoBO-0.2.3-windows-x64-portable-hotfix1-unsigned.zip). Tested on Windows 11 x64 only; Windows 10 is untested. See the [acceptance notes](docs/WINDOWS_ACCEPTANCE.md) and [installation guide](docs/WINDOWS_BUILD.md). |
 | Intel Mac / Windows ARM64 | A corresponding validated installer is not currently available. |
 
 The Mac research preview is not Apple-notarized. If macOS blocks the first launch, follow [Apple's instructions](https://support.apple.com/en-us/102445) to review it in Privacy & Security. An unsigned Windows preview may also trigger a reputation warning; do not disable system security protection. See the [installation walkthrough](docs/TUTORIAL.en.md#1-install-and-open-the-application).
